@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STOC Advisory - MedSpa Market Intelligence Report</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   STOC DESIGN SYSTEM - EXACT BRAND COLORS
+═══════════════════════════════════════════════════════ */
+:root {
+  --blue:        #0F75BD;
+  --indigo:      #383B6E;
+  --navy:        #041E3F;
+  --white:       #FFFFFF;
+  --light-blue:  #BACAEC;
+
+  /* Functional palette derived from brand */
+  --navy-mid:    #0A2A50;
+  --navy-90:     #071E3A;
+  --blue-dark:   #0A5F9A;
+  --blue-light:  #D6E8F7;
+  --blue-xlt:    #EBF4FD;
+  --indigo-lt:   #ECEDF6;
+  --slate:       #4A5E7A;
+  --muted:       #8299B8;
+  --border:      #CDD8EA;
+  --border-lt:   #E4EAFA;
+  --bg:          #F2F6FB;
+  --bg-alt:      #E8EFF8;
+
+  /* Accent */
+  --green:       #1A9A6C;
+  --green-lt:    #E6F7F2;
+  --amber:       #C47A0F;
+  --amber-lt:    #FDF3E3;
+  --red:         #B83232;
+  --red-lt:      #FDEAEA;
+  --teal:        #0D8A7A;
+  --teal-lt:     #E5F6F4;
+
+  --font: 'DM Sans', sans-serif;
+  --font-serif: 'DM Serif Display', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 14px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: #1A2438;
+  color: var(--navy);
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAVIGATION RAIL
+═══════════════════════════════════════════════════════ */
+.nav {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 52px;
+  background: var(--navy);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  gap: 4px;
+  border-right: 1px solid rgba(186,202,236,0.08);
+}
+
+.nav-logo {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue);
+  letter-spacing: 0.1em;
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(186,202,236,0.15);
+  width: 100%;
+  text-align: center;
+}
+
+.nav-item {
+  width: 36px; height: 36px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+}
+
+.nav-item:hover { background: rgba(15,117,189,0.15); color: var(--light-blue); border-color: rgba(15,117,189,0.2); }
+.nav-item.active { background: var(--blue); color: var(--white); }
+
+/* ═══════════════════════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════════════════════ */
+.main { margin-left: 52px; }
+
+/* ═══════════════════════════════════════════════════════
+   SLIDE WRAPPER
+═══════════════════════════════════════════════════════ */
+.slide {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  border-bottom: 3px solid var(--navy);
+  scroll-margin-top: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SHARED COMPONENTS
+═══════════════════════════════════════════════════════ */
+
+/* Slide header */
+.slide-header {
+  background: var(--white);
+  padding: 20px 36px 16px;
+  border-bottom: 2px solid var(--border);
+  position: relative;
+}
+
+.slide-header::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--blue);
+}
+
+.slide-num {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--blue);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  padding-left: 12px;
+}
+
+.slide-title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--navy);
+  line-height: 1.1;
+  padding-left: 12px;
+  letter-spacing: -0.01em;
+}
+
+.slide-sub {
+  font-size: 12.5px;
+  color: var(--slate);
+  font-weight: 300;
+  margin-top: 4px;
+  padding-left: 12px;
+  font-style: italic;
+}
+
+.slide-footer {
+  margin-top: auto;
+  padding: 8px 36px;
+  background: var(--navy);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: rgba(186,202,236,0.45);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Section label */
+.section-label {
+  padding: 8px 36px;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--slate);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* KPI tiles */
+.kpi-grid { display: grid; padding: 20px 36px; gap: 16px; }
+.kpi-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.kpi-grid-5 { grid-template-columns: repeat(5, 1fr); }
+.kpi-grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+.kpi-tile {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  box-shadow: 0 1px 4px rgba(4,30,63,0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-accent {
+  width: 4px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.kpi-body { flex: 1; min-width: 0; }
+
+.kpi-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.kpi-value {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  color: var(--navy);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.kpi-desc {
+  font-size: 11px;
+  color: var(--slate);
+  margin-top: 3px;
+  font-weight: 400;
+}
+
+/* Content area */
+.content { padding: 0 36px 20px; flex: 1; display: flex; flex-direction: column; gap: 20px; }
+.content-row { display: grid; gap: 20px; }
+.col-2 { grid-template-columns: 1fr 1fr; }
+.col-2-wide { grid-template-columns: 1.6fr 1fr; }
+.col-2-narrow { grid-template-columns: 1fr 1.6fr; }
+.col-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* Card */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(4,30,63,0.05);
+}
+
+.card-header {
+  padding: 10px 16px 8px;
+  border-bottom: 1px solid var(--border-lt);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+  background: var(--bg-alt);
+}
+
+.card-body { padding: 16px; }
+
+/* Table */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+
+.data-table thead th {
+  background: var(--navy);
+  color: var(--white);
+  padding: 9px 12px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  white-space: nowrap;
+}
+
+.data-table thead th:last-child { border-right: none; }
+
+.data-table thead th.th-center { text-align: center; }
+
+.data-table tbody tr:nth-child(even) { background: var(--bg); }
+.data-table tbody tr:nth-child(odd)  { background: var(--white); }
+.data-table tbody tr:hover { background: var(--blue-xlt); }
+
+.data-table tbody td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-lt);
+  border-right: 1px solid var(--border-lt);
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+}
+
+.data-table tbody td:last-child { border-right: none; }
+
+.td-bold { font-weight: 700; color: var(--navy); }
+.td-blue { color: var(--blue); font-weight: 600; }
+.td-indigo { color: var(--indigo); font-weight: 500; }
+.td-muted { color: var(--muted); }
+.td-green { color: var(--green); font-weight: 600; }
+.td-amber { color: var(--amber); font-weight: 600; }
+.td-red { color: var(--red); }
+.td-center { text-align: center; }
+.td-right  { text-align: right; }
+
+/* Horizontal bar */
+.hbar-wrap { display: flex; align-items: center; gap: 10px; }
+.hbar-label { font-size: 12px; color: var(--slate); min-width: 180px; }
+.hbar-track { flex: 1; height: 8px; background: var(--border-lt); border-radius: 2px; overflow: hidden; }
+.hbar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+.hbar-pct { font-size: 12px; font-weight: 700; color: var(--navy); min-width: 36px; text-align: right; }
+
+/* Tier badge */
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+.tier-a { background: var(--blue); color: var(--white); }
+.tier-b { background: var(--indigo); color: var(--white); }
+.tier-c { background: var(--light-blue); color: var(--navy); }
+
+/* Priority badge */
+.priority-a { color: var(--blue); font-weight: 800; font-size: 13px; }
+.priority-b { color: var(--indigo); font-weight: 700; font-size: 13px; }
+.priority-c { color: var(--muted); font-weight: 600; font-size: 13px; }
+
+/* Dot rating */
+.dots { letter-spacing: -1px; font-size: 13px; }
+
+/* Pct mini bar in cell */
+.pct-cell { display: flex; align-items: center; gap: 6px; }
+.pct-mini-track { width: 44px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.pct-mini-fill { height: 100%; border-radius: 2px; }
+.pct-val { min-width: 40px; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; }
+
+/* Archetype card */
+.archetype-card {
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.archetype-top {
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid var(--border-lt);
+}
+.archetype-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+.archetype-pct { font-family: var(--font-serif); font-size: 22px; color: var(--blue); line-height: 1; }
+.archetype-body { padding: 12px 16px; font-size: 11.5px; color: var(--slate); line-height: 1.5; }
+.archetype-tag { font-size: 11px; font-style: italic; color: var(--blue); margin-top: 6px; }
+
+/* Stat pill row */
+.stat-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.stat-pill {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 8px 12px;
+  font-size: 11.5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  flex: 1;
+}
+.stat-pill-val { font-weight: 700; font-size: 15px; color: var(--navy); }
+.stat-pill-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; text-align: center; }
+
+/* Info card (score definitions) */
+.info-card {
+  border-radius: 2px;
+  overflow: hidden;
+  border-left: 3px solid var(--border);
+}
+.info-card.blue  { border-left-color: var(--blue); background: var(--blue-xlt); }
+.info-card.indigo { border-left-color: var(--indigo); background: var(--indigo-lt); }
+.info-card.teal  { border-left-color: var(--teal); background: var(--teal-lt); }
+.info-card.navy  { border-left-color: var(--navy); background: var(--bg); }
+.info-card-header { padding: 8px 12px 4px; font-weight: 700; font-size: 12.5px; color: var(--navy); }
+.info-card-body { padding: 4px 12px 10px; font-size: 11.5px; color: var(--slate); }
+.info-card-fields { padding: 0 12px 8px; font-size: 10.5px; font-style: italic; color: var(--blue); }
+
+/* Signal card */
+.signal-card {
+  border-radius: 2px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.signal-top { height: 4px; }
+.signal-body { padding: 12px 16px; }
+.signal-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.signal-desc { font-size: 11.5px; color: var(--slate); line-height: 1.5; }
+
+/* ═══════════════════════════════════════════════════════
+   SLIDE 1 - COVER
+═══════════════════════════════════════════════════════ */
+#s1 {
+  background: var(--navy);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+#s1::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: var(--blue);
+}
+
+#s1::after {
+  content: '';
+  position: absolute;
+  right: -120px; top: -120px;
+  width: 480px; height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(15,117,189,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.cover-body {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  padding: 60px 60px 40px 60px;
+  gap: 60px;
+}
+
+.cover-left { flex: 1; padding-top: 20px; }
+
+.cover-eyebrow {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--blue);
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.cover-title {
+  font-family: var(--font-serif);
+  font-size: 58px;
+  color: var(--white);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+}
+
+.cover-title span { color: var(--light-blue); font-style: italic; }
+
+.cover-tagline {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.7;
+  max-width: 520px;
+  border-left: 2px solid rgba(15,117,189,0.4);
+  padding-left: 16px;
+}
+
+.cover-right {
+  width: 260px;
+  flex-shrink: 0;
+  padding-top: 20px;
+}
+
+.cover-toc-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 14px;
+}
+
+.cover-toc-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 2px;
+  font-size: 12px;
+  color: rgba(186,202,236,0.55);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+}
+
+.cover-toc-item:hover { color: var(--light-blue); background: rgba(15,117,189,0.08); border-left-color: var(--blue); }
+
+.cover-toc-item.active { color: var(--white); border-left-color: var(--blue); background: rgba(15,117,189,0.12); }
+
+.cover-toc-num { font-size: 9.5px; font-weight: 700; color: var(--blue); min-width: 18px; }
+
+.cover-footer {
+  padding: 16px 60px;
+  border-top: 1px solid rgba(186,202,236,0.1);
+  display: flex;
+  gap: 0;
+}
+
+.cover-meta {
+  flex: 1;
+  padding: 10px 24px 10px 0;
+  border-right: 1px solid rgba(186,202,236,0.1);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--blue);
+  letter-spacing: 0.08em;
+}
+
+.cover-meta:last-child { border-right: none; padding-left: 24px; }
+
+.cover-meta span { display: block; font-size: 9px; color: var(--muted); font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 3px; }
+
+/* ═══════════════════════════════════════════════════════
+   DONUT CHART (CSS only)
+═══════════════════════════════════════════════════════ */
+.donut-wrap { display: flex; align-items: center; gap: 24px; }
+
+.donut {
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: conic-gradient(
+    var(--teal) 0deg 266deg,
+    var(--indigo) 266deg 331deg,
+    var(--blue) 331deg 360deg
+  );
+  position: relative;
+}
+
+.donut::after {
+  content: '';
+  position: absolute;
+  inset: 28px;
+  border-radius: 50%;
+  background: var(--white);
+}
+
+.donut-legend { display: flex; flex-direction: column; gap: 6px; }
+.donut-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.donut-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.donut-legend-pct { font-weight: 700; color: var(--navy); min-width: 32px; }
+.donut-legend-lbl { color: var(--slate); }
+
+/* Rating bar */
+.rating-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.rating-label { font-size: 12px; color: var(--slate); min-width: 110px; }
+.rating-track { flex: 1; height: 14px; background: var(--border-lt); border-radius: 2px; overflow: hidden; }
+.rating-fill { height: 100%; border-radius: 2px; }
+.rating-pct { font-size: 12px; font-weight: 700; color: var(--navy); min-width: 32px; text-align: right; }
+
+/* Outreach tier rows */
+.outreach-tier {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1.4fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-lt);
+}
+.outreach-tier:last-child { border-bottom: none; }
+.outreach-tier:nth-child(even) { background: var(--bg); }
+
+.ot-name { font-weight: 700; font-size: 12.5px; color: var(--navy); }
+.ot-sub { font-size: 11px; color: var(--muted); }
+.ot-records { font-size: 12px; color: var(--slate); }
+.ot-contacts { font-size: 12px; color: var(--blue); }
+.ot-badge {
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: center;
+}
+.ot-badge.ready { background: var(--green-lt); color: var(--green); }
+.ot-badge.partial { background: var(--amber-lt); color: var(--amber); }
+.ot-badge.low { background: var(--bg-alt); color: var(--muted); }
+
+/* PE heat row */
+.pe-heat-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-lt);
+}
+.pe-heat-row:nth-child(even) { background: var(--bg); }
+.pe-heat-row:last-child { border-bottom: none; }
+.pe-region { font-size: 12.5px; color: var(--slate); }
+.pe-label-hot  { font-weight: 700; color: var(--red); font-size: 12px; }
+.pe-label-warm { font-weight: 700; color: var(--amber); font-size: 12px; }
+.pe-label-cool { font-weight: 600; color: var(--teal); font-size: 12px; }
+.pe-label-min  { color: var(--green); font-weight: 600; font-size: 12px; }
+
+/* State table specifics */
+.td-state-row { font-weight: 700; font-size: 12px; color: var(--navy); letter-spacing: 0.06em; }
+.td-pct-hot  { color: var(--blue); font-weight: 700; }
+.td-pct-warm { color: var(--blue-dark); font-weight: 600; }
+.td-pct-cool { color: var(--muted); }
+
+</style>
+</head>
+<body>
+
+<!-- ══ NAVIGATION RAIL ══════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-logo">STOC</div>
+  <a href="#s1"  class="nav-item active" title="Cover">CV</a>
+  <a href="#s2"  class="nav-item" title="Market Overview">01</a>
+  <a href="#s3"  class="nav-item" title="Top Target Markets">02</a>
+  <a href="#s4"  class="nav-item" title="Quality &amp; Maturity">03</a>
+  <a href="#s5"  class="nav-item" title="Geographic Opportunity">04</a>
+  <a href="#s6"  class="nav-item" title="Competitive Landscape">05</a>
+  <a href="#s7"  class="nav-item" title="Opportunity Profile">06</a>
+  <a href="#s8"  class="nav-item" title="PE Consolidation">07</a>
+  <a href="#s9"  class="nav-item" title="By State Summary">08</a>
+  <a href="#s10" class="nav-item" title="Appendix">AP</a>
+</nav>
+
+<div class="main">
+
+<!-- ══════════════════════════════════════════════════════
+  SLIDE 1 - COVER
+══════════════════════════════════════════════════════ -->
+<section id="s1" class="slide">
+  <div class="cover-body">
+    <div class="cover-left">
+      <div class="cover-eyebrow">Sector Intelligence Report &nbsp;·&nbsp; MedSpa &nbsp;·&nbsp; Sector 01 of 05</div>
+      <div class="cover-title">MedSpa<br>Market<br><span>Intelligence</span><br>Report</div>
+      <div class="cover-tagline">
+        Fragmentation Analysis &nbsp;·&nbsp; Geographic Opportunity &nbsp;·&nbsp; PE Consolidation Activity &nbsp;·&nbsp; Operator Quality Benchmarks &nbsp;·&nbsp; Outreach Readiness
+      </div>
+    </div>
+    <div class="cover-right">
+      <div class="cover-toc-label">Contents</div>
+      <a href="#s2"  class="cover-toc-item active"><span class="cover-toc-num">01</span> Market Overview</a>
+      <a href="#s3"  class="cover-toc-item"><span class="cover-toc-num">02</span> Top Target Markets</a>
+      <a href="#s4"  class="cover-toc-item"><span class="cover-toc-num">03</span> Quality &amp; Maturity</a>
+      <a href="#s5"  class="cover-toc-item"><span class="cover-toc-num">04</span> Geographic Opportunity</a>
+      <a href="#s6"  class="cover-toc-item"><span class="cover-toc-num">05</span> Competitive Landscape</a>
+      <a href="#s7"  class="cover-toc-item"><span class="cover-toc-num">06</span> Opportunity Profile</a>
+      <a href="#s8"  class="cover-toc-item"><span class="cover-toc-num">07</span> PE Consolidation</a>
+      <a href="#s9"  class="cover-toc-item"><span class="cover-toc-num">08</span> By State Summary</a>
+      <a href="#s10" class="cover-toc-item"><span class="cover-toc-num">09</span> Appendix</a>
+    </div>
+  </div>
+  <div class="cover-footer">
+    <div class="cover-meta"><span>Firm</span>STOC Advisory</div>
+    <div class="cover-meta"><span>Date</span>February 2026</div>
+    <div class="cover-meta"><span>Sector</span>MedSpa - 01 of 05</div>
+    <div class="cover-meta"><span>Classification</span>Confidential</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  SLIDE 2 - MARKET OVERVIEW
+══════════════════════════════════════════════════════ -->
+
+<section id="s2" class="slide">
+  <div class="slide-header">
+    <div class="slide-num">01 &nbsp;·&nbsp; Market Overview</div>
+    <div class="slide-title">Market Overview</div>
+    <div class="slide-sub">Total opportunity universe, geographic spread &amp; CBSA concentration - sourced from STOC MedSpa dataset</div>
+  </div>
+
+  <div class="kpi-grid kpi-grid-4">
+    <div class="kpi-tile">
+      <div class="kpi-accent" style="background:var(--blue)"></div>
+      <div class="kpi-body">
+        <div class="kpi-label">Total MedSpa Opportunities</div>
+        <div class="kpi-value">4,800+</div>
+        <div class="kpi-desc">Across 48 states, 312 CBSAs</div>
+      </div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-accent" style="background:var(--indigo)"></div>
+      <div class="kpi-body">
+        <div class="kpi-label">CBSAs Represented</div>
+        <div class="kpi-value">312</div>
+        <div class="kpi-desc">Metro statistical areas covered</div>
+      </div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-accent" style="background:var(--light-blue)"></div>
+      <div class="kpi-body">
+        <div class="kpi-label">States with Coverage</div>
+        <div class="kpi-value">48</div>
+        <div class="kpi-desc">Near-complete national footprint</div>
+      </div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-accent" style="background:var(--navy)"></div>
+      <div class="kpi-body">
+        <div class="kpi-label">Tier 1–2 CBSA Concentration</div>
+        <div class="kpi-value">67%</div>
+        <div class="kpi-desc">High-density urban opportunity pool</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="content-row col-2-wide">
+      <div class="card">
+        <div class="card-header">Opportunity Density by State - [Tableau Map Placeholder]</div>
+        <div class="card-body" style="height:220px;display:flex;align-items:center;justify-content:center;background:var(--bg-alt);">
+          <div style="text-align:center;color:var(--muted)">
+            <div style="font-size:36px;margin-bottom:8px;">🗺</div>
+            <div style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;">Tableau Map - Opportunity Density by State</div>
+            <div style="font-size:10.5px;margin-top:4px;font-style:italic;">Bubble size = opportunity count · Color = State Attractiveness Score</div>
+          </div>
+        </div>
+        <div style="padding:12px 16px;border-top:1px solid var(--border-lt)">
+          <div class="section-label" style="padding:0;background:none;border:none;margin-bottom:10px">Opportunity Distribution by Region</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+            <div class="stat-pill"><div class="stat-pill-val" style="color:var(--blue)">1,820</div><div class="stat-pill-lbl">South / SE</div></div>
+            <div class="stat-pill"><div class="stat-pill-val" style="color:var(--indigo)">1,240</div><div class="stat-pill-lbl">West Coast</div></div>
+            <div class="stat-pill"><div class="stat-pill-val" style="color:var(--navy)">980</div><div class="stat-pill-lbl">Northeast</div></div>
+            <div class="stat-pill"><div class="stat-pill-val" style="color:var(--muted)">760</div><div class="stat-pill-lbl">Midwest</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Top 10 States by Opportunity Count</div>
+        <table class="data-table">
+          <thead><tr>
+            <th style="width:28px">#</th>
+            <th>State</th>
+            <th class="th-center">Opportunities</th>
+            <th class="th-center">Attractiveness</th>
+          </tr></thead>
+          <tbody id="top10States"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
+    <span>Slide 2 / 10 · Market Overview</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  SLIDE 3 - QUALITY & MATURITY
+══════════════════════════════════════════════════════ -->
+
+<section id="s3" class="slide">
+  <div class="slide-header">
+    <div class="slide-num">08 &nbsp;·&nbsp; Top Target Markets</div>
+    <div class="slide-title">Top Target Markets</div>
+    <div class="slide-sub">Ranked CBSA &amp; state list by composite score - recommended priority order for BD deployment</div>
+  </div>
+
+  <div class="content" style="padding-top:16px">
+    <div class="content-row col-3">
+      <div class="signal-card">
+        <div class="signal-top" style="background:var(--blue)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Tier A - Immediate Priority</div>
+          <div class="signal-desc">High volume + high quality + low PE saturation. Lead with these in sponsor conversations.</div>
+        </div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-top" style="background:var(--indigo)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Tier B - Secondary Priority</div>
+          <div class="signal-desc">Strong fundamentals with moderate competition. Strong add-on pipeline markets.</div>
+        </div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-top" style="background:var(--light-blue)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Tier C - Monitor / Watch</div>
+          <div class="signal-desc">Emerging or contested. Track for thesis development but lower urgency.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Priority CBSA Rankings - Composite Score</div>
+      <table class="data-table">
+        <thead><tr>
+          <th style="width:28px">#</th>
+          <th>CBSA Market</th>
+          <th>St.</th>
+          <th class="th-center">Tier</th>
+          <th class="th-center">Opps.</th>
+          <th class="th-center">Attract.</th>
+          <th>Comp. Density</th>
+          <th class="th-center">Val. Score</th>
+          <th class="th-center">Vol. Score</th>
+          <th class="th-center">Priority</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="td-muted">1</td><td class="td-bold">Dallas–Fort Worth</td><td>TX</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">410</td><td class="td-center td-blue">91</td><td style="font-size:11px;color:var(--slate)">Medium</td><td class="td-center td-blue">84%</td><td class="td-center">88</td><td class="td-center priority-a">A</td></tr>
+          <tr><td class="td-muted">2</td><td class="td-bold">Atlanta–Sandy Springs</td><td>GA</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">310</td><td class="td-center td-blue">88</td><td style="font-size:11px;color:var(--green)">Low</td><td class="td-center td-blue">81%</td><td class="td-center">85</td><td class="td-center priority-a">A</td></tr>
+          <tr><td class="td-muted">3</td><td class="td-bold">Phoenix–Mesa</td><td>AZ</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">290</td><td class="td-center td-blue">85</td><td style="font-size:11px;color:var(--slate)">Medium</td><td class="td-center td-indigo">79%</td><td class="td-center">82</td><td class="td-center priority-a">A</td></tr>
+          <tr><td class="td-muted">4</td><td class="td-bold">Denver–Aurora</td><td>CO</td><td class="td-center"><span class="tier-badge tier-b">2</span></td><td class="td-center">240</td><td class="td-center td-blue">82</td><td style="font-size:11px;color:var(--green)">Low</td><td class="td-center td-indigo">77%</td><td class="td-center">80</td><td class="td-center priority-a">A</td></tr>
+          <tr><td class="td-muted">5</td><td class="td-bold">Nashville–Murfreesboro</td><td>TN</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">195</td><td class="td-center td-indigo">80</td><td style="font-size:11px;color:var(--green)">Low</td><td class="td-center td-blue">82%</td><td class="td-center">79</td><td class="td-center priority-a">A</td></tr>
+          <tr><td class="td-muted">6</td><td class="td-bold">Charlotte–Concord</td><td>NC</td><td class="td-center"><span class="tier-badge tier-b">2</span></td><td class="td-center">170</td><td class="td-center td-indigo">78</td><td style="font-size:11px;color:var(--green)">Low</td><td class="td-center td-indigo">74%</td><td class="td-center">75</td><td class="td-center priority-b">B</td></tr>
+          <tr><td class="td-muted">7</td><td class="td-bold">Miami–Fort Lauderdale</td><td>FL</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">380</td><td class="td-center td-indigo">77</td><td style="font-size:11px;color:var(--amber)">High</td><td class="td-center td-indigo">76%</td><td class="td-center">74</td><td class="td-center priority-b">B</td></tr>
+          <tr><td class="td-muted">8</td><td class="td-bold">Seattle–Tacoma</td><td>WA</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">220</td><td class="td-center td-indigo">75</td><td style="font-size:11px;color:var(--slate)">Medium</td><td class="td-center td-indigo">73%</td><td class="td-center">72</td><td class="td-center priority-b">B</td></tr>
+          <tr><td class="td-muted">9</td><td class="td-bold">Los Angeles–Long Beach</td><td>CA</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">680</td><td class="td-center td-indigo">72</td><td style="font-size:11px;color:var(--red)">Very High</td><td class="td-center td-indigo">71%</td><td class="td-center">88</td><td class="td-center priority-b">B</td></tr>
+          <tr><td class="td-muted">10</td><td class="td-bold">New York–Newark</td><td>NY</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">520</td><td class="td-center td-muted">70</td><td style="font-size:11px;color:var(--red)">Very High</td><td class="td-center td-indigo">69%</td><td class="td-center">86</td><td class="td-center priority-c">C</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="padding:10px 0;text-align:center;font-size:10.5px;color:var(--muted);font-style:italic">
+      [Tableau Map - Top Markets ranked by Composite Score · Color = Priority Tier A / B / C · Bubble Size = Opportunity Count]
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
+    <span>Slide 3 / 10 · Top Target Markets</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  SLIDE 10 - BY STATE SUMMARY
+══════════════════════════════════════════════════════ -->
+
+<section id="s4" class="slide">
+  <div class="slide-header">
+    <div class="slide-num">02 &nbsp;·&nbsp; Market Quality &amp; Maturity</div>
+    <div class="slide-title">Market Quality &amp; Maturity</div>
+    <div class="slide-sub">Review Strength Score, Business Maturity, Average Rating distribution - derived from dataset signals</div>
+  </div>
+
+  <div class="content" style="padding-top:16px">
+    <div class="content-row col-3">
+      <div class="info-card blue">
+        <div class="info-card-header">Review Strength Score</div>
+        <div class="info-card-body">Composite: Review Count × Average Rating, normalized 0–100. High = established, trusted opportunities with market proof.</div>
+        <div class="info-card-fields">Fields: ReviewCount, AverageRating</div>
+      </div>
+      <div class="info-card indigo">
+        <div class="info-card-header">Business Maturity Score</div>
+        <div class="info-card-body">Signals: Location Count, Service Count, Has Medical Director, RN Count. Higher = institutionally operated.</div>
+        <div class="info-card-fields">Fields: Location Count, Service Count, RN Count, Medical Director</div>
+      </div>
+      <div class="info-card teal">
+        <div class="info-card-header">Validation Score</div>
+        <div class="info-card-body">Data completeness across 5 fields: phone, email, LinkedIn, website, address. Proxy for outreach readiness.</div>
+        <div class="info-card-fields">Fields: Phone, Email, LinkedIn, Website, Address</div>
+      </div>
+    </div>
+
+    <div class="content-row col-2">
+      <div class="card">
+        <div class="card-header">Average Rating Distribution</div>
+        <div class="card-body">
+          <div id="ratingBars"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Review Count Tiers - % of Universe</div>
+        <div class="card-body">
+          <div id="reviewBars"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Business Maturity Signals - % of Opportunities with Attribute</div>
+      <div class="card-body" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+        <div class="stat-pill"><div class="stat-pill-val" style="color:var(--blue)">34%</div><div class="stat-pill-lbl">Medical Director on Staff</div></div>
+        <div class="stat-pill"><div class="stat-pill-val" style="color:var(--indigo)">52%</div><div class="stat-pill-lbl">Has Registered Nurse(s)</div></div>
+        <div class="stat-pill"><div class="stat-pill-val" style="color:var(--navy)">61%</div><div class="stat-pill-lbl">Licensed Aesthetician</div></div>
+        <div class="stat-pill"><div class="stat-pill-val" style="color:var(--blue)">43%</div><div class="stat-pill-lbl">Website Verified</div></div>
+        <div class="stat-pill"><div class="stat-pill-val" style="color:var(--muted)">28%</div><div class="stat-pill-lbl">LinkedIn Present</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
+    <span>Slide 4 / 10 · Market Quality &amp; Maturity</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  SLIDE 4 - GEOGRAPHIC OPPORTUNITY
+══════════════════════════════════════════════════════ -->
+
+<section id="s5" class="slide">
+  <div class="slide-header">
+    <div class="slide-num">03 &nbsp;·&nbsp; Geographic Opportunity</div>
+    <div class="slide-title">Geographic Opportunity</div>
+    <div class="slide-sub">State Attractiveness Score, CBSA Strength, density heatmap - priority geographies for sponsor outreach</div>
+  </div>
+
+  <div class="content" style="padding-top:16px">
+    <div class="content-row col-2-narrow">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="info-card blue">
+          <div class="info-card-header">Volume Score</div>
+          <div class="info-card-body">Opportunity count relative to state population - high = fragmented, underpenetrated</div>
+        </div>
+        <div class="info-card indigo">
+          <div class="info-card-header">Quality Score %</div>
+          <div class="info-card-body">% opportunities rated 4.5+ - proxy for market maturity and consumer demand</div>
+        </div>
+        <div class="info-card teal">
+          <div class="info-card-header">Avg Score Strength</div>
+          <div class="info-card-body">Average location-level composite score - identifies high-quality market clusters</div>
+        </div>
+        <div class="info-card navy">
+          <div class="info-card-header">CBSA Concentration</div>
+          <div class="info-card-body">% of opportunities in CBSA Tier 1–2 - signals consolidatable urban density</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">CBSA Tier Map - [Tableau Placeholder]</div>
+        <div style="height:180px;display:flex;align-items:center;justify-content:center;background:var(--bg-alt);">
+          <div style="text-align:center;color:var(--muted)">
+            <div style="font-size:28px;margin-bottom:6px">🗺</div>
+            <div style="font-size:10.5px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase">Tableau CBSA Tier Map</div>
+            <div style="font-size:10px;font-style:italic;margin-top:3px">Color = State Attractiveness Score · Bubbles = CBSA Opportunity Density</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Top CBSA Markets by Composite Score</div>
+      <table class="data-table">
+        <thead><tr>
+          <th>CBSA Market</th>
+          <th>State</th>
+          <th class="th-center">Tier</th>
+          <th class="th-center">Opportunities</th>
+          <th class="th-center">Vol. Score</th>
+          <th class="th-center">Quality %</th>
+          <th>Attractiveness Score</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="td-bold">Los Angeles–Long Beach</td><td>CA</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">680</td><td class="td-center td-blue">92</td><td class="td-center">74%</td><td><span class="dots" style="color:var(--blue)">●●●●●</span> <span style="font-size:11px;color:var(--blue);font-weight:600">Very High</span></td></tr>
+          <tr><td class="td-bold">New York–Newark</td><td>NY</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">520</td><td class="td-center td-blue">88</td><td class="td-center">71%</td><td><span class="dots" style="color:var(--blue)">●●●●●</span> <span style="font-size:11px;color:var(--blue);font-weight:600">Very High</span></td></tr>
+          <tr><td class="td-bold">Dallas–Fort Worth</td><td>TX</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">410</td><td class="td-center td-blue">85</td><td class="td-center">69%</td><td><span class="dots" style="color:var(--blue)">●●●●○</span> <span style="font-size:11px;color:var(--navy);font-weight:600">High</span></td></tr>
+          <tr><td class="td-bold">Miami–Fort Lauderdale</td><td>FL</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">380</td><td class="td-center td-blue">83</td><td class="td-center">72%</td><td><span class="dots" style="color:var(--blue)">●●●●○</span> <span style="font-size:11px;color:var(--navy);font-weight:600">High</span></td></tr>
+          <tr><td class="td-bold">Atlanta–Sandy Springs</td><td>GA</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">310</td><td class="td-center td-indigo">80</td><td class="td-center">68%</td><td><span class="dots" style="color:var(--indigo)">●●●●○</span> <span style="font-size:11px;color:var(--navy);font-weight:600">High</span></td></tr>
+          <tr><td class="td-bold">Phoenix–Mesa</td><td>AZ</td><td class="td-center"><span class="tier-badge tier-a">1</span></td><td class="td-center">290</td><td class="td-center td-indigo">78</td><td class="td-center">65%</td><td><span class="dots" style="color:var(--indigo)">●●●○○</span> <span style="font-size:11px;color:var(--slate)">Medium</span></td></tr>
+          <tr><td class="td-bold">Denver–Aurora</td><td>CO</td><td class="td-center"><span class="tier-badge tier-b">2</span></td><td class="td-center">240</td><td class="td-center td-indigo">74</td><td class="td-center">70%</td><td><span class="dots" style="color:var(--indigo)">●●●○○</span> <span style="font-size:11px;color:var(--slate)">Medium</span></td></tr>
+          <tr><td class="td-bold">Seattle–Tacoma</td><td>WA</td><td class="td-center"><span class="tier-badge tier-b">2</span></td><td class="td-center">220</td><td class="td-center td-muted">72</td><td class="td-center">73%</td><td><span class="dots" style="color:var(--indigo)">●●●○○</span> <span style="font-size:11px;color:var(--slate)">Medium</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
+    <span>Slide 5 / 10 · Geographic Opportunity</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  SLIDE 5 - COMPETITIVE LANDSCAPE
+══════════════════════════════════════════════════════ -->
+
+<section id="s6" class="slide">
+  <div class="slide-header">
+    <div class="slide-num">04 &nbsp;·&nbsp; Competitive Landscape</div>
+    <div class="slide-title">Competitive Landscape</div>
+    <div class="slide-sub">Competitive Density Score, chain vs. independent split, service mix - identifies fragmentation opportunity</div>
+  </div>
+
+  <div class="content" style="padding-top:16px">
+    <div class="content-row col-2">
+      <div class="card">
+        <div class="card-header">Competitive Density Score</div>
+        <div class="card-body">
+          <p style="font-size:12px;color:var(--slate);line-height:1.6;margin-bottom:14px">Opportunities per 100K population in a CBSA, normalized 0–100.<br><strong style="color:var(--navy)">High</strong> = crowded market &nbsp;·&nbsp; <strong style="color:var(--navy)">Low</strong> = underpenetrated opportunity<br><span style="font-size:11px">Key inputs: opportunity count, population size, chain %, service overlap</span></p>
+          <div class="donut-wrap">
+            <div class="donut"></div>
+            <div class="donut-legend">
+              <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--teal)"></div><div class="donut-legend-pct">74%</div><div class="donut-legend-lbl">Independent</div></div>
+              <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--indigo)"></div><div class="donut-legend-pct">18%</div><div class="donut-legend-lbl">Chain / Multi-Location</div></div>
+              <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--blue)"></div><div class="donut-legend-pct">8%</div><div class="donut-legend-lbl">PE-Backed (Known)</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Top Services Offered - % of Opportunities Listing</div>
+        <div class="card-body" id="servicesBars"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Competitive Density Score Distribution - % of CBSAs</div>
+      <div class="card-body" id="densityBars"></div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
+    <span>Slide 6 / 10 · Competitive Landscape</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  SLIDE 6 - OPPORTUNITY PROFILE
+══════════════════════════════════════════════════════ -->
+
+<section id="s7" class="slide">
+  <div class="slide-header">
+    <div class="slide-num">05 &nbsp;·&nbsp; Opportunity Profile</div>
+    <div class="slide-title">Opportunity Profile</div>
+    <div class="slide-sub">Location count, service count, staffing composition - characterizes the typical independent MedSpa opportunity</div>
+  </div>
+
+  <div class="content" style="padding-top:16px">
+    <div class="content-row col-3">
+      <div class="archetype-card">
+        <div class="archetype-top" style="background:var(--blue-xlt);border-left:3px solid var(--blue)">
+          <div class="archetype-name">Solo Operator</div>
+          <div class="archetype-pct">58% <span style="font-size:13px;color:var(--muted);font-family:var(--font)">of universe</span></div>
+        </div>
+        <div class="archetype-body">
+          <div style="margin-bottom:6px">1 location · 3–5 services · No MD · 1–2 staff · &lt;50 reviews</div>
+          <div class="archetype-tag">Primary acquisition target for PE build-and-buy platforms - highest fragmentation signal</div>
+        </div>
+      </div>
+      <div class="archetype-card">
+        <div class="archetype-top" style="background:var(--indigo-lt);border-left:3px solid var(--indigo)">
+          <div class="archetype-name">Established Single-Site</div>
+          <div class="archetype-pct" style="color:var(--indigo)">28% <span style="font-size:13px;color:var(--muted);font-family:var(--font)">of universe</span></div>
+        </div>
+        <div class="archetype-body">
+          <div style="margin-bottom:6px">1 location · 6–10 services · Has MD · 3–6 staff · 50–200 reviews</div>
+          <div class="archetype-tag" style="color:var(--indigo)">Strong cash-flow profile, defensible patient base - platform add-on or anchor acquisition</div>
+        </div>
+      </div>
+      <div class="archetype-card">
+        <div class="archetype-top" style="background:var(--bg);border-left:3px solid var(--navy)">
+          <div class="archetype-name">Multi-Location / Chain</div>
+          <div class="archetype-pct" style="color:var(--navy)">14% <span style="font-size:13px;color:var(--muted);font-family:var(--font)">of universe</span></div>
+        </div>
+        <div class="archetype-body">
+          <div style="margin-bottom:6px">2–8 locations · 8+ services · Has MD · 7+ staff · 200+ reviews</div>
+          <div class="archetype-tag" style="color:var(--navy)">Already consolidated - relevant as platform intelligence or competing consolidator data</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Staffing Composition - % of Opportunities with Attribute</div>
+      <div class="card-body" id="staffingBars"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Location Count Distribution</div>
+      <div class="card-body">
+        <div class="stat-pills">
+          <div class="stat-pill"><div class="stat-pill-val" style="color:var(--blue)">58%</div><div class="stat-pill-lbl">1 Location</div></div>
+          <div class="stat-pill"><div class="stat-pill-val" style="color:var(--indigo)">20%</div><div class="stat-pill-lbl">2 Locations</div></div>
+          <div class="stat-pill"><div class="stat-pill-val" style="color:var(--navy)">13%</div><div class="stat-pill-lbl">3–5 Locations</div></div>
+          <div class="stat-pill"><div class="stat-pill-val" style="color:var(--slate)">6%</div><div class="stat-pill-lbl">6–10 Locations</div></div>
+          <div class="stat-pill"><div class="stat-pill-val" style="color:var(--muted)">3%</div><div class="stat-pill-lbl">10+ Locations</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
+    <span>Slide 7 / 10 · Opportunity Profile</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  SLIDE 7 - PE & CONSOLIDATION
+══════════════════════════════════════════════════════ -->
+
+<section id="s8" class="slide">
+  <div class="slide-header">
+    <div class="slide-num">06 &nbsp;·&nbsp; PE &amp; Consolidation Activity</div>
+    <div class="slide-title">PE &amp; Consolidation Activity</div>
+    <div class="slide-sub">Platform landscape, acquisition heat by region, white space - where consolidation is happening and where it isn't</div>
+  </div>
+
+  <div class="kpi-grid kpi-grid-4">
+    <div class="kpi-tile">
+      <div class="kpi-accent" style="background:var(--navy)"></div>
+      <div class="kpi-body"><div class="kpi-label">Known PE Platforms Active</div><div class="kpi-value">12+</div><div class="kpi-desc">In MedSpa sector</div></div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-accent" style="background:var(--blue)"></div>
+      <div class="kpi-body"><div class="kpi-label">Total PE-Backed Locations</div><div class="kpi-value">180+</div><div class="kpi-desc">Estimated, publicly confirmed</div></div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-accent" style="background:var(--indigo)"></div>
+      <div class="kpi-body"><div class="kpi-label">Universe PE-Consolidated</div><div class="kpi-value">8%</div><div class="kpi-desc">Still highly fragmented</div></div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-accent" style="background:var(--light-blue)"></div>
+      <div class="kpi-body"><div class="kpi-label">Remains Independent</div><div class="kpi-value">92%</div><div class="kpi-desc">Addressable opportunity pool</div></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="content-row col-2">
+      <div class="card">
+        <div class="card-header">Known Platform Landscape</div>
+        <table class="data-table">
+          <thead><tr>
+            <th>Platform</th><th>Sponsor</th><th class="th-center">Locs.</th><th>Geography</th><th>Strategy</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="td-bold">Platform A</td><td>Sponsor X</td><td class="td-center td-blue">22</td><td>SE + Midwest</td><td>Add-on acq.</td></tr>
+            <tr><td class="td-bold">Platform B</td><td>Sponsor Y</td><td class="td-center td-indigo">14</td><td>TX + SW</td><td>Build-and-buy</td></tr>
+            <tr><td class="td-bold">Platform C</td><td>Sponsor Z</td><td class="td-center td-indigo">8</td><td>Northeast</td><td>Organic + tuck-in</td></tr>
+            <tr><td class="td-bold">Platform D</td><td>TBD</td><td class="td-center td-muted">5</td><td>West Coast</td><td>Unknown</td></tr>
+            <tr><td class="td-bold">Platform E</td><td>TBD</td><td class="td-center td-muted">3</td><td>Southeast</td><td>Early stage</td></tr>
+          </tbody>
+        </table>
+        <div style="padding:8px 12px;font-size:10.5px;color:var(--muted);font-style:italic;border-top:1px solid var(--border-lt)">* Sourced from public deal announcements + PitchBook where available. Verify before use.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Consolidation Heat by Region</div>
+        <div style="padding:0">
+          <div style="display:grid;grid-template-columns:1.2fr 0.8fr 1fr;padding:8px 12px;background:var(--navy)">
+            <span style="font-size:9.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--light-blue)">Region</span>
+            <span style="font-size:9.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--light-blue)">PE Activity</span>
+            <span style="font-size:9.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--light-blue)">Density</span>
+          </div>
+          <div id="peHeatRows"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-row col-3">
+      <div class="signal-card">
+        <div class="signal-top" style="background:var(--blue)"></div>
+        <div class="signal-body">
+          <div class="signal-title">White Space Priority</div>
+          <div class="signal-desc">High opportunity count, &lt;10% PE penetration - primary focus for platform thesis. Midwest, Mountain, SE Rural.</div>
+        </div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-top" style="background:var(--amber)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Monitor Closely</div>
+          <div class="signal-desc">Active consolidation in progress - 2+ PE platforms competing. Relevant for add-on sourcing and competitive intel.</div>
+        </div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-top" style="background:var(--red)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Late Stage / Avoid</div>
+          <div class="signal-desc">Significant PE density, fragmentation largely captured - de-prioritize for new platform entry.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
+    <span>Slide 8 / 10 · PE &amp; Consolidation Activity</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  SLIDE 8 - VALIDATION & OUTREACH
+══════════════════════════════════════════════════════ -->
+
+<section id="s9" class="slide">
+  <div class="slide-header">
+    <div class="slide-num">09 &nbsp;·&nbsp; By State Summary</div>
+    <div class="slide-title">By State Summary</div>
+    <div class="slide-sub">Opportunity breakdown by state - High / Med / Low tiers, total count, and attractiveness percentage</div>
+  </div>
+
+  <!-- KPI summary row -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);background:var(--navy-mid);border-bottom:2px solid var(--blue)">
+    <div style="padding:12px 20px;border-right:1px solid rgba(186,202,236,0.1);display:flex;align-items:center;gap:10px">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0"></div>
+      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">High Tier</div><div style="font-size:13px;font-weight:700;color:var(--white)">2,837 opportunities</div></div>
+    </div>
+    <div style="padding:12px 20px;border-right:1px solid rgba(186,202,236,0.1);display:flex;align-items:center;gap:10px">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--indigo);flex-shrink:0"></div>
+      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Med Tier</div><div style="font-size:13px;font-weight:700;color:var(--white)">7,104 opportunities</div></div>
+    </div>
+    <div style="padding:12px 20px;border-right:1px solid rgba(186,202,236,0.1);display:flex;align-items:center;gap:10px">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--light-blue);flex-shrink:0"></div>
+      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Attractive (H+M)</div><div style="font-size:13px;font-weight:700;color:var(--white)">9,941 opportunities</div></div>
+    </div>
+    <div style="padding:12px 20px;display:flex;align-items:center;gap:10px">
+      <div style="width:8px;height:8px;border-radius:50%;border:1.5px solid var(--muted);flex-shrink:0"></div>
+      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Total Universe</div><div style="font-size:13px;font-weight:700;color:var(--white)">14,800+ opportunities</div></div>
+    </div>
+  </div>
+
+  <div style="padding:0 36px 20px;flex:1">
+    <table class="data-table" style="margin-top:0">
+      <thead>
+        <tr>
+          <th rowspan="2" style="text-align:left;background:var(--navy);padding-left:16px">State</th>
+          <th colspan="4" style="background:var(--navy-mid);color:var(--light-blue);font-size:10.5px;letter-spacing:0.08em;border-left:1px solid rgba(186,202,236,0.15)">Count (#)</th>
+          <th colspan="4" style="background:var(--indigo);color:var(--light-blue);font-size:10.5px;letter-spacing:0.08em;border-left:1px solid rgba(186,202,236,0.15)">Distribution (%)</th>
+        </tr>
+        <tr>
+          <th class="th-center" style="color:var(--blue);border-bottom:2px solid var(--blue)">High</th>
+          <th class="th-center" style="color:var(--light-blue);border-bottom:2px solid var(--blue)">Med</th>
+          <th class="th-center" style="color:var(--muted);border-bottom:2px solid var(--blue)">Low</th>
+          <th class="th-center" style="color:var(--white);border-bottom:2px solid var(--blue);border-right:2px solid rgba(186,202,236,0.2)">Total</th>
+          <th class="th-center" style="color:#6BBFE8;border-bottom:2px solid var(--blue)">Attractive</th>
+          <th class="th-center" style="color:var(--blue);border-bottom:2px solid var(--blue)">High %</th>
+          <th class="th-center" style="color:var(--light-blue);border-bottom:2px solid var(--blue)">Med %</th>
+          <th class="th-center" style="color:var(--muted);border-bottom:2px solid var(--blue)">Low %</th>
+        </tr>
+      </thead>
+      <tbody id="stateTableBody"></tbody>
+    </table>
+  </div>
+
+  <div style="background:var(--navy);padding:12px 36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--muted)"><div style="width:8px;height:8px;border-radius:50%;background:var(--blue)"></div><strong style="color:var(--light-blue)">High</strong> Score 75-100. Primary acquisition target.</div>
+    <div style="width:1px;height:14px;background:rgba(186,202,236,0.2)"></div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--muted)"><div style="width:8px;height:8px;border-radius:50%;background:var(--indigo)"></div><strong style="color:var(--light-blue)">Med</strong> Score 40-74. Secondary / add-on candidate.</div>
+    <div style="width:1px;height:14px;background:rgba(186,202,236,0.2)"></div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--muted)"><div style="width:8px;height:8px;border-radius:50%;background:var(--light-blue)"></div><strong style="color:var(--light-blue)">Low</strong> Score &lt;40. Monitor or deprioritize.</div>
+    <div style="width:1px;height:14px;background:rgba(186,202,236,0.2)"></div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--muted)"><div style="width:8px;height:8px;border-radius:50%;background:#6BBFE8"></div><strong style="color:var(--light-blue)">Attractive</strong> High + Med. Actionable pool.</div>
+    <div style="margin-left:auto;font-size:10px;color:rgba(186,202,236,0.3);font-style:italic">Source: STOC MedSpa Proprietary Dataset</div>
+  </div>
+
+  <div class="slide-footer">
+    <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
+    <span>Slide 9 / 10 · By State Summary</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  SLIDE 11 - APPENDIX
+══════════════════════════════════════════════════════ -->
+
+<section id="s10" class="slide">
+  <div class="slide-header">
+    <div class="slide-num">10 &nbsp;·&nbsp; Appendix</div>
+    <div class="slide-title">Appendix</div>
+    <div class="slide-sub">Score methodology, field definitions, data notes &amp; outbound content deployment map</div>
+  </div>
+
+  <div class="content" style="padding-top:16px">
+    <div class="content-row col-2">
+      <div class="card">
+        <div class="card-header">Score Definitions &amp; Formulas</div>
+        <table class="data-table">
+          <thead><tr><th>Score Name</th><th>Formula / Inputs</th><th class="th-center">Scale</th></tr></thead>
+          <tbody>
+            <tr><td class="td-bold td-blue">Review Strength</td><td>(ReviewCount × AverageRating) / MAX × 100</td><td class="td-center">0–100</td></tr>
+            <tr><td class="td-bold td-indigo">Business Maturity</td><td>Locations(40%) + Services(20%) + HasMD(20%) + Staff(20%)</td><td class="td-center">0–100</td></tr>
+            <tr><td class="td-bold" style="color:var(--teal)">Validation Score</td><td>Fields present / 5 total fields × 100</td><td class="td-center">0–100</td></tr>
+            <tr><td class="td-bold td-blue">Competitive Density</td><td>(Opportunities / CBSA Pop × 100K) normalized by tier benchmark</td><td class="td-center">0–100</td></tr>
+            <tr><td class="td-bold td-indigo">Volume Score</td><td>State opportunity count / Expected by population × 100</td><td class="td-center">0–100</td></tr>
+            <tr><td class="td-bold td-blue">CBSA Strength</td><td>Vol(30%) + Quality%(30%) + AvgScore(20%) + CBSAConc(20%)</td><td class="td-center">0–100</td></tr>
+            <tr><td class="td-bold" style="color:var(--navy)">State Attractiveness</td><td>Vol Score + Quality % + CBSA Concentration + Avg Score (weighted)</td><td class="td-center">0–100</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Outbound Content Deployment Map</div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:12px">
+          <div class="info-card blue"><div class="info-card-header">LinkedIn Post</div><div class="info-card-body">Key stat + map from Slide 4. Hook: acceleration / white space angle.</div></div>
+          <div class="info-card indigo"><div class="info-card-header">BD Email Asset</div><div class="info-card-body">Slides 4 + 9 condensed - top markets for sponsor's target region.</div></div>
+          <div class="info-card teal"><div class="info-card-header">Intelligence Memo</div><div class="info-card-body">Slides 2–5 narrative: market size, quality, density, PE white space.</div></div>
+          <div class="info-card navy"><div class="info-card-header">Full Report</div><div class="info-card-body">All 11 slides - for live sponsor conversations and leave-behind.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Data Notes</div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;font-size:12px;color:var(--slate);line-height:1.6"><span style="color:var(--blue);font-weight:700;flex-shrink:0">1.</span><span>Source dataset: STOC MedSpa proprietary list - fields include Company Name, Website, CBSA Tier, City, State, Region, Address, Phone, Email, LinkedIn, ReviewCount, AverageRating, Lat/Long, Zipcode, CBSA City, Location Count, Service Count, RN Count, Medical Director, Aestheticians, Top 3 Services, Plastic Services, Dermatology Check, Chain flag, Population, Place ID, Owner Name, Contact Fields, Email Sent, Reply Status, Ownership, Geocode validation.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;color:var(--slate);line-height:1.6"><span style="color:var(--blue);font-weight:700;flex-shrink:0">2.</span><span>PE platform data is partially sourced from public deal announcements and PitchBook where available. All PE data will be verified before use in sponsor conversations.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;color:var(--slate);line-height:1.6"><span style="color:var(--blue);font-weight:700;flex-shrink:0">3.</span><span>Score calculations are based on available fields and update as data is enriched. Records with missing fields receive partial scores - they are not excluded from analysis.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;color:var(--slate);line-height:1.6"><span style="color:var(--blue);font-weight:700;flex-shrink:0">4.</span><span>This framework replicates across all STOC sectors.</span></div>
+      </div>
+      <div style="padding:10px 16px;background:var(--navy);font-size:11px;color:var(--muted);font-style:italic;text-align:center;letter-spacing:0.04em">
+        Sector 1: MedSpa &nbsp;·&nbsp; Sector 2: Landscaping &nbsp;·&nbsp; Sector 3: Vet/Pet &nbsp;·&nbsp; Sector 4: TBD &nbsp;·&nbsp; Sector 5: TBD
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
+    <span>Slide 10 / 10 · Appendix</span>
+  </div>
+</section>
+
+</div><!-- /main -->
+
+<script>
+/* ═══════════════════════════════════════════
+   DATA & RENDER FUNCTIONS
+═══════════════════════════════════════════ */
+
+// Nav active highlight on scroll
+const navItems = document.querySelectorAll('.nav-item');
+const sections = document.querySelectorAll('.slide');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navItems.forEach(n => n.classList.remove('active'));
+      const id = entry.target.id;
+      const match = document.querySelector(`.nav-item[href="#${id}"]`);
+      if (match) match.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+
+// ── Horizontal bar renderer ────────────────
+function renderHbars(containerId, rows, colorFn) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = rows.map(([label, pct, color]) => `
+    <div class="hbar-wrap" style="margin-bottom:10px">
+      <div class="hbar-label">${label}</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="hbar-pct">${pct}%</div>
+    </div>`).join('');
+}
+
+// ── SLIDE 2: Top 10 States ─────────────────
+const top10 = [
+  ["California","CA",680,"★★★"],["Texas","TX",520,"★★★"],["Florida","FL",490,"★★★"],
+  ["New York","NY",310,"★★☆"],["Georgia","GA",240,"★★☆"],["Illinois","IL",210,"★★☆"],
+  ["Arizona","AZ",195,"★★☆"],["Colorado","CO",170,"★★☆"],["Washington","WA",155,"★☆☆"],["Nevada","NV",140,"★☆☆"]
+];
+document.getElementById('top10States').innerHTML = top10.map(([state,abbr,count,stars],i) => `
+  <tr>
+    <td class="td-muted td-center" style="font-size:11px">${i+1}</td>
+    <td class="td-bold">${state}</td>
+    <td class="td-center td-blue" style="font-weight:700">${count.toLocaleString()}</td>
+    <td class="td-center" style="font-size:14px;letter-spacing:-1px;color:var(--blue)">${stars}</td>
+  </tr>`).join('');
+
+// ── SLIDE 3: Rating bars ───────────────────
+renderHbars('ratingBars', [
+  ["5.0 ★★★★★",22,"var(--green)"],
+  ["4.5–4.9 ★★★★",38,"var(--blue)"],
+  ["4.0–4.4 ★★★",24,"var(--indigo)"],
+  ["3.5–3.9 ★★",10,"var(--muted)"],
+  ["Below 3.5 ★",6,"var(--red)"]
+]);
+
+renderHbars('reviewBars', [
+  ["0–10 reviews",28,"var(--muted)"],
+  ["11–50 reviews",34,"var(--indigo)"],
+  ["51–100 reviews",18,"var(--blue)"],
+  ["101–500 reviews",14,"var(--navy)"],
+  ["500+ reviews",6,"var(--green)"]
+]);
+
+// ── SLIDE 5: Services bars ─────────────────
+renderHbars('servicesBars', [
+  ["Botox / Neurotoxin",88,"var(--blue)"],
+  ["Dermal Fillers",82,"var(--blue)"],
+  ["Laser / IPL Treatment",64,"var(--indigo)"],
+  ["Body Contouring",51,"var(--indigo)"],
+  ["Skin Tightening",48,"var(--light-blue)"],
+  ["Chemical Peels",44,"var(--light-blue)"],
+  ["IV Therapy",31,"var(--muted)"],
+  ["Weight Loss (Semaglutide)",28,"var(--red)"]
+]);
+
+renderHbars('densityBars', [
+  ["Very Low (0–20)",12,"var(--green)"],
+  ["Low (21–40)",28,"var(--teal)"],
+  ["Medium (41–60)",35,"var(--blue)"],
+  ["High (61–80)",18,"var(--indigo)"],
+  ["Very High (81–100)",7,"var(--red)"]
+]);
+
+// ── SLIDE 6: Staffing bars ─────────────────
+renderHbars('staffingBars', [
+  ["Medical Director on Staff",34,"var(--indigo)"],
+  ["Registered Nurse(s)",52,"var(--blue)"],
+  ["Licensed Aesthetician(s)",61,"var(--blue)"],
+  ["Plastic Surgery Services",22,"var(--red)"],
+  ["Dermatology Services",18,"var(--red)"]
+]);
+
+// ── SLIDE 7: PE heat rows ──────────────────
+const peRegions = [
+  ["Southeast","High",82,"pe-label-hot"],
+  ["Texas / SW","High",74,"pe-label-hot"],
+  ["West Coast","Medium",51,"pe-label-warm"],
+  ["Northeast","Medium",48,"pe-label-warm"],
+  ["Midwest","Low",28,"pe-label-cool"],
+  ["Mountain / CO","Low",22,"pe-label-cool"],
+  ["SE Rural","Minimal",8,"pe-label-min"]
+];
+document.getElementById('peHeatRows').innerHTML = peRegions.map(([region,label,pct,cls],i) => `
+  <div class="pe-heat-row" style="${i%2===0?'background:var(--bg)':''}">
+    <div class="pe-region">${region}</div>
+    <div class="${cls}">${label}</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="flex:1;height:6px;background:var(--border);border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${pct>70?'var(--red)':pct>40?'var(--amber)':pct>15?'var(--teal)':'var(--green)'};border-radius:2px"></div>
+      </div>
+      <span style="font-size:11px;color:var(--muted);min-width:28px">${pct}%</span>
+    </div>
+  </div>`).join('');
+
+// ── SLIDE 8: Validation bars ───────────────
+renderHbars('validationBars', [
+  ["90–100 (Fully Validated)",44,"var(--blue)"],
+  ["70–89 (Mostly Complete)",26,"var(--indigo)"],
+  ["50–69 (Partial)",18,"var(--light-blue)"],
+  ["< 50 (Incomplete)",12,"var(--muted)"]
+]);
+
+renderHbars('emailStatusBars', [
+  ["Email Sent",62,"var(--blue)"],
+  ["Replied (Positive)",14,"var(--green)"],
+  ["No Reply",48,"var(--muted)"]
+]);
+
+// ── SLIDE 10: By State Table ───────────────
+const stateData = [
+  ["AL",22,129,212,363,151,6.1,35.5,58.4],["AR",28,47,191,266,75,10.5,17.7,71.8],
+  ["AZ",168,174,87,429,342,39.2,40.6,20.3],["CA",931,1786,567,3284,2717,28.3,54.4,17.3],
+  ["CO",132,252,152,536,384,24.6,47.0,28.4],["CT",17,159,168,344,176,4.9,46.2,48.8],
+  ["DE",11,43,39,93,54,11.8,46.2,41.9],["FL",233,738,616,1587,971,14.7,46.5,38.8],
+  ["GA",256,198,176,630,454,40.6,31.4,27.9],["IA",18,77,177,272,95,6.6,28.3,65.1],
+  ["ID",43,89,54,186,132,23.1,47.8,29.0],["IL",101,416,480,997,517,10.1,41.7,48.1],
+  ["IN",60,164,246,470,224,12.8,34.9,52.3],["KS",23,53,234,310,76,7.4,17.1,75.5],
+  ["KY",33,119,154,306,152,10.8,38.9,50.3],["LA",18,95,213,326,113,5.5,29.1,65.3],
+  ["MA",117,191,131,439,308,26.7,43.5,29.8],["MD",89,203,148,440,292,20.2,46.1,33.6],
+  ["MI",98,287,312,697,385,14.1,41.2,44.8],["MN",71,184,201,456,255,15.6,40.4,44.1],
+  ["MO",84,192,268,544,276,15.4,35.3,49.3],["NC",189,312,248,749,501,25.2,41.7,33.1],
+  ["NJ",142,381,298,821,523,17.3,46.4,36.3],["NV",97,183,148,428,280,22.7,42.8,34.6],
+  ["NY",310,742,468,1520,1052,20.4,48.8,30.8],["OH",112,388,412,912,500,12.3,42.5,45.2],
+  ["OR",87,164,142,393,251,22.1,41.7,36.1],["PA",148,421,398,967,569,15.3,43.5,41.2],
+  ["SC",78,142,168,388,220,20.1,36.6,43.3],["TN",142,248,196,586,390,24.2,42.3,33.4],
+  ["TX",520,1124,612,2256,1644,23.1,49.8,27.1],["UT",88,176,124,388,264,22.7,45.4,32.0],
+  ["VA",132,284,218,634,416,20.8,44.8,34.4],["WA",155,312,244,711,467,21.8,43.9,34.3],
+  ["WI",67,182,228,477,249,14.0,38.2,47.8],
+];
+
+function pctHClass(v) {
+  return v >= 30 ? 'td-pct-hot' : v >= 18 ? 'td-pct-warm' : 'td-pct-cool';
+}
+
+function tierAccent(hp) {
+  if (hp >= 25) return 'var(--blue)';
+  if (hp >= 15) return 'var(--indigo)';
+  return 'var(--light-blue)';
+}
+
+document.getElementById('stateTableBody').innerHTML = stateData.map(([st,h,m,l,t,a,hp,mp,lp],i) => `
+  <tr>
+    <td style="font-weight:700;font-size:12px;color:var(--navy);letter-spacing:0.08em;padding-left:16px;border-right:2px solid var(--border);position:relative">
+      <span style="position:absolute;left:6px;top:50%;transform:translateY(-50%);width:3px;height:14px;border-radius:2px;background:${tierAccent(hp)}"></span>
+      ${st}
+    </td>
+    <td class="td-center" style="color:var(--blue);font-weight:600">${h.toLocaleString()}</td>
+    <td class="td-center" style="color:var(--indigo)">${m.toLocaleString()}</td>
+    <td class="td-center" style="color:var(--muted)">${l.toLocaleString()}</td>
+    <td class="td-center td-bold" style="border-right:2px solid rgba(56,59,110,0.2)">${t.toLocaleString()}</td>
+    <td class="td-center" style="color:${a/t>0.3?'var(--teal)':'var(--slate)'};font-weight:${a/t>0.3?'700':'400'}">${a.toLocaleString()}</td>
+    <td class="td-center">
+      <div class="pct-cell" style="justify-content:center">
+        <span class="pct-val ${pctHClass(hp)}">${hp.toFixed(1)}%</span>
+        <div class="pct-mini-track"><div class="pct-mini-fill" style="width:${Math.min(hp*1.2,100)}%;background:${hp>=30?'var(--blue)':hp>=18?'var(--blue-dark)':'var(--border)'}"></div></div>
+      </div>
+    </td>
+    <td class="td-center" style="color:var(--slate)">${mp.toFixed(1)}%</td>
+    <td class="td-center" style="color:var(--muted)">${lp.toFixed(1)}%</td>
+  </tr>`).join('');
+
+</script>
+</body>
+</html>
