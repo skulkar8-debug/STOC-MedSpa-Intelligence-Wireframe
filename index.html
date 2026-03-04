@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STOC Advisory — Radius-Based Target Clustering Model</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:       #0F75BD;
+  --indigo:     #383B6E;
+  --navy:       #041E3F;
+  --white:      #FFFFFF;
+  --light-blue: #BACAEC;
+  --navy-mid:   #0A2A50;
+  --navy-90:    #071E3A;
+  --blue-dark:  #0A5F9A;
+  --blue-lt:    #D6E8F7;
+  --blue-xlt:   #EBF4FD;
+  --indigo-lt:  #ECEDF6;
+  --slate:      #4A5E7A;
+  --muted:      #8299B8;
+  --border:     #CDD8EA;
+  --border-lt:  #E4EAFA;
+  --bg:         #F2F6FB;
+  --bg-alt:     #E8EFF8;
+  --green:      #1A9A6C;
+  --green-lt:   #E6F7F2;
+  --amber:      #C47A0F;
+  --amber-lt:   #FDF3E3;
+  --red:        #B83232;
+  --red-lt:     #FDEAEA;
+  --teal:       #0D8A7A;
+  --teal-lt:    #E5F6F4;
+
+  /* Zone colors */
+  --z1: #B83232;
+  --z1-lt: #FDEAEA;
+  --z2: #C47A0F;
+  --z2-lt: #FDF3E3;
+  --z3: #0F75BD;
+  --z3-lt: #D6E8F7;
+  --z4: #1A9A6C;
+  --z4-lt: #E6F7F2;
+
+  --font: 'DM Sans', sans-serif;
+  --serif: 'DM Serif Display', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--bg); color: var(--navy); line-height: 1.5; }
+
+/* ── HEADER ─────────────────────────────────── */
+.report-header {
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+.report-header::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: var(--blue);
+}
+.report-header::after {
+  content: '';
+  position: absolute;
+  right: -100px; top: -100px;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(15,117,189,0.09) 0%, transparent 65%);
+  pointer-events: none;
+}
+.header-inner {
+  padding: 22px 36px 18px 48px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+.header-eyebrow {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--blue);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.header-title {
+  font-family: var(--serif);
+  font-size: 28px;
+  color: var(--white);
+  line-height: 1.1;
+}
+.header-title em { color: var(--light-blue); font-style: italic; }
+.header-sub {
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 300;
+}
+.header-pills { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; flex-shrink: 0; }
+.pill {
+  padding: 3px 10px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--light-blue);
+  letter-spacing: 0.06em;
+  border: 1px solid rgba(186,202,236,0.18);
+  white-space: nowrap;
+}
+.pill.accent { background: rgba(15,117,189,0.2); border-color: rgba(15,117,189,0.35); color: #7AC8F0; }
+
+/* ── OBJECTIVE STRIP ─────────────────────────── */
+.obj-strip {
+  background: var(--navy-mid);
+  border-top: 1px solid rgba(186,202,236,0.08);
+  border-bottom: 2px solid var(--blue);
+  padding: 10px 48px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.obj-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+.obj-text {
+  font-size: 12px;
+  color: var(--light-blue);
+  font-weight: 400;
+}
+.obj-correction {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+}
+.correction-tag {
+  background: rgba(26,154,108,0.15);
+  border: 1px solid rgba(26,154,108,0.3);
+  color: #4ECBA5;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+
+/* ── LAYOUT ──────────────────────────────────── */
+.page { padding: 22px 36px; }
+.section { margin-bottom: 22px; }
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--blue);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--navy);
+}
+.section-sub {
+  font-size: 11.5px;
+  color: var(--slate);
+  font-style: italic;
+  margin-top: 2px;
+}
+.section-badge {
+  padding: 4px 11px;
+  border-radius: 2px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* ── GRID ────────────────────────────────────── */
+.g2   { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.g3   { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.g4   { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.gw   { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+.gn   { display: grid; grid-template-columns: 1fr 1.6fr; gap: 16px; }
+
+/* ── CARDS ───────────────────────────────────── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(4,30,63,0.05);
+}
+.card-hd {
+  padding: 8px 14px 7px;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border-lt);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-hd-navy { background: var(--navy); color: var(--light-blue); }
+.card-body { padding: 14px; }
+
+/* ── ZONE BAND CARDS ─────────────────────────── */
+.zone-card {
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.zone-top { height: 4px; }
+.zone-body { padding: 12px 14px; background: var(--white); }
+.zone-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.zone-range {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--navy);
+  line-height: 1;
+  margin-bottom: 5px;
+}
+.zone-tag {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 2px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+.zone-desc {
+  font-size: 11.5px;
+  color: var(--slate);
+  line-height: 1.5;
+  border-top: 1px solid var(--border-lt);
+  padding-top: 7px;
+  margin-top: 7px;
+}
+
+/* ── DENSITY TIER TABLE ──────────────────────── */
+.dt-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.dt-table th {
+  background: var(--navy);
+  color: var(--white);
+  padding: 8px 11px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: left;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  white-space: nowrap;
+}
+.dt-table th:last-child { border-right: none; }
+.dt-table td {
+  padding: 8px 11px;
+  border-bottom: 1px solid var(--border-lt);
+  border-right: 1px solid var(--border-lt);
+  vertical-align: middle;
+}
+.dt-table td:last-child { border-right: none; }
+.dt-table tr:nth-child(even) td { background: var(--bg); }
+.dt-table tr:nth-child(odd) td  { background: var(--white); }
+.dt-table tr:hover td { background: var(--blue-xlt); }
+
+.tier-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.band-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.band-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+.band-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.band-miles { font-weight: 600; min-width: 52px; font-variant-numeric: tabular-nums; }
+.band-lbl { color: var(--muted); font-size: 10.5px; }
+
+/* ── DRIVE TIME NOTE ─────────────────────────── */
+.drive-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 12px;
+  background: var(--blue-xlt);
+  border: 1px solid var(--blue-lt);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 2px 2px 0;
+  font-size: 11.5px;
+  color: var(--slate);
+  line-height: 1.55;
+}
+.drive-note strong { color: var(--navy); }
+.drive-note-tag {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+  background: var(--blue-lt);
+  padding: 2px 6px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── HAVERSINE CODE ──────────────────────────── */
+.code-block {
+  background: var(--navy-90);
+  border-radius: 2px;
+  padding: 13px 15px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--light-blue);
+  line-height: 1.75;
+  overflow-x: auto;
+}
+.cc { color: rgba(186,202,236,0.35); }
+.ck { color: #7AC8F0; }
+.cf { color: var(--blue); }
+.cn { color: #A8E6CF; }
+.cv { color: var(--white); }
+
+/* ── MAP VISUAL ──────────────────────────────── */
+.map-wrap {
+  position: relative;
+  background: var(--navy-90);
+  border-radius: 2px;
+  overflow: hidden;
+  aspect-ratio: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-rings {
+  position: relative;
+  width: 280px;
+  height: 280px;
+}
+/* Concentric rings */
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.r4 { width: 260px; height: 260px; border-color: rgba(26,154,108,0.35); background: rgba(26,154,108,0.04); }
+.r3 { width: 190px; height: 190px; border-color: rgba(15,117,189,0.4);  background: rgba(15,117,189,0.06); }
+.r2 { width: 130px; height: 130px; border-color: rgba(196,122,15,0.5);  background: rgba(196,122,15,0.07); }
+.r1 { width: 72px;  height: 72px;  border-color: rgba(184,50,50,0.6);   background: rgba(184,50,50,0.1); }
+
+/* Ring labels */
+.ring-label {
+  position: absolute;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  top: 50%;
+}
+
+/* Center dot */
+.center-dot {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 0 8px rgba(255,255,255,0.4);
+  z-index: 10;
+}
+
+/* Scatter dots (simulated MedSpa locations) */
+.scatter-dot {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+/* Map legend */
+.map-legend {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.map-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: rgba(186,202,236,0.6);
+}
+.map-legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* Map note */
+.map-note {
+  position: absolute;
+  top: 8px; right: 8px;
+  font-size: 9px;
+  color: rgba(186,202,236,0.35);
+  font-style: italic;
+}
+
+/* ── CBSA DENSITY SELECTOR ───────────────────── */
+.density-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.ds-btn {
+  padding: 6px 14px;
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--slate);
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+.ds-btn:hover { background: var(--blue-xlt); border-color: var(--blue); color: var(--blue); }
+.ds-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+/* ── OUTPUT TABLE ────────────────────────────── */
+.out-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.out-table thead th {
+  background: var(--navy);
+  color: var(--white);
+  padding: 8px 11px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  white-space: nowrap;
+}
+.out-table thead .thc { text-align: center; }
+.out-table thead th:last-child { border-right: none; }
+.out-table tbody tr:nth-child(even) { background: var(--bg); }
+.out-table tbody tr:nth-child(odd)  { background: var(--white); }
+.out-table tbody tr:hover { background: var(--blue-xlt); }
+.out-table tbody td {
+  padding: 7px 11px;
+  border-bottom: 1px solid var(--border-lt);
+  border-right: 1px solid var(--border-lt);
+  vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+}
+.out-table tbody .tdc { text-align: center; }
+.out-table tbody td:last-child { border-right: none; }
+
+/* ── SIGNAL / BADGE STYLES ───────────────────── */
+.sig {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.sig-ws   { background: var(--green-lt); color: var(--green); }
+.sig-ti   { background: var(--blue-lt);  color: var(--blue); }
+.sig-ci   { background: var(--indigo-lt);color: var(--indigo); }
+.sig-cr   { background: var(--red-lt);   color: var(--red); }
+.sig-em   { background: var(--amber-lt); color: var(--amber); }
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  border-radius: 2px;
+  font-size: 9.5px;
+  font-weight: 800;
+}
+.p1 { background: var(--blue); color: var(--white); }
+.p2 { background: var(--indigo); color: var(--white); }
+.p3 { background: var(--navy-mid); color: var(--white); }
+.pn { background: var(--bg-alt); color: var(--slate); font-size: 9px; }
+
+/* ── NEAREST-NEIGHBOR COUNT CELLS ────────────── */
+.nn-cell { display: flex; align-items: center; gap: 6px; }
+.nn-track { flex: 1; height: 5px; background: var(--border-lt); border-radius: 2px; overflow: hidden; }
+.nn-fill  { height: 100%; border-radius: 2px; }
+.nn-val   { min-width: 18px; text-align: right; font-weight: 700; font-size: 11.5px; }
+
+/* ── CANNIBALIZATION FLAGS ────────────────────── */
+.cannibal-flag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+.cf-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.cf-high   { color: var(--red);   }
+.cf-med    { color: var(--amber); }
+.cf-low    { color: var(--green); }
+.cf-none   { color: var(--muted); }
+
+/* ── WHITE SPACE MAP SECTION ─────────────────── */
+.ws-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.ws-quadrant {
+  border-radius: 2px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.ws-quad-top {
+  padding: 8px 12px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ws-quad-name { font-weight: 700; font-size: 12.5px; color: var(--navy); }
+.ws-quad-body { padding: 0 12px 10px; }
+.ws-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border-lt);
+  font-size: 11.5px;
+}
+.ws-metric:last-child { border-bottom: none; }
+.ws-metric-lbl { color: var(--slate); }
+.ws-metric-val { font-weight: 600; color: var(--navy); font-variant-numeric: tabular-nums; }
+
+/* ── METHODOLOGY NOTE ────────────────────────── */
+.method-footer {
+  background: var(--navy);
+  padding: 14px 36px;
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.mf-item { display: flex; gap: 8px; max-width: 220px; }
+.mf-icon {
+  width: 17px; height: 17px;
+  border-radius: 50%;
+  background: rgba(15,117,189,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8.5px; font-weight: 800; color: var(--blue);
+  flex-shrink: 0; margin-top: 1px;
+}
+.mf-text { font-size: 10.5px; color: rgba(186,202,236,0.45); line-height: 1.5; }
+.mf-text strong { color: var(--light-blue); display: block; margin-bottom: 1px; }
+
+.doc-footer {
+  background: var(--navy-90);
+  padding: 7px 36px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: rgba(186,202,236,0.3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+.lbl-sm {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--slate);
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.lbl-sm::after { content: ''; flex: 1; height: 1px; background: var(--border-lt); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.card { animation: fadeUp 0.35s ease both; }
+.zone-card { animation: fadeUp 0.35s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════ -->
+<header class="report-header">
+  <div class="header-inner">
+    <div>
+      <div class="header-eyebrow">STOC Advisory · MedSpa Sector Intelligence · Model Component 02</div>
+      <div class="header-title"><em>Radius-Based</em> Target Clustering</div>
+      <div class="header-sub">Intra-CBSA white space identification · Density-adjusted zone bands · Nearest-neighbor analysis · Cannibalization risk flagging</div>
+    </div>
+    <div class="header-pills">
+      <div class="pill accent">STOC Advisory</div>
+      <div class="pill">February 2026</div>
+      <div class="pill">Framework v1.0</div>
+      <div class="pill">Confidential</div>
+    </div>
+  </div>
+  <div class="obj-strip">
+    <div class="obj-label">Objective</div>
+    <div class="obj-text">Identify <strong style="color:var(--white)">underserved sub-markets within a CBSA</strong> — not proximity to PE platforms. Radius rings map where supply gaps exist, which targets are tuck-in candidates, and where cannibalization risk is too high.</div>
+    <div class="obj-correction">
+      <span class="correction-tag">Corrected Framing</span>
+      Not platform-proximity. Intra-CBSA supply gap analysis.
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+<!-- ══════════════════════════════════════════════════════
+  SECTION 1 — DENSITY-ADJUSTED ZONE BANDS
+══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head">
+    <div>
+      <div class="section-num">Section 01</div>
+      <div class="section-title">Density-Adjusted Zone Bands</div>
+      <div class="section-sub">Radius bands scale to CBSA density tier — 20 miles in Nashville ≠ 20 miles in Manhattan</div>
+    </div>
+    <div class="section-badge" style="background:var(--navy);color:var(--light-blue)">3 Density Tiers</div>
+  </div>
+
+  <!-- Drive time rationale -->
+  <div class="drive-note" style="margin-bottom:14px">
+    <div class="drive-note-tag">Design Rationale</div>
+    <div>
+      <strong>Bands are expressed in miles but interpreted as drive-time equivalents.</strong> MedSpa is a repeat-visit, convenience-loyalty service — patients choose on proximity + quality. Urban patients accept 10–15 min drives; suburban patients 15–20 min. The Northeast in particular: 20–50 miles crosses state lines and multiple competing CBSAs. Bands therefore shrink as CBSA density increases. A single fixed radius set would overestimate white space in dense markets and underestimate it in sprawl markets.
+    </div>
+  </div>
+
+  <!-- CBSA Tier selector + zone display -->
+  <div class="lbl-sm">Select CBSA Density Tier to View Zone Bands</div>
+  <div class="density-selector">
+    <button class="ds-btn active" onclick="setTier('dense')">Dense Urban<br><span style="font-size:9px;font-weight:400;opacity:0.7">NYC · LA · Chicago · SF · Boston</span></button>
+    <button class="ds-btn" onclick="setTier('mid')">Mid-Density<br><span style="font-size:9px;font-weight:400;opacity:0.7">Dallas · Atlanta · Denver · Phoenix</span></button>
+    <button class="ds-btn" onclick="setTier('sub')">Suburban / Spread<br><span style="font-size:9px;font-weight:400;opacity:0.7">Nashville · Charlotte · Austin · Raleigh</span></button>
+  </div>
+
+  <!-- Zone cards — dynamically swapped -->
+  <div class="g4" id="zoneBands"><!-- filled by JS --></div>
+
+  <div style="margin-top:14px"></div>
+
+  <!-- Full tier comparison table -->
+  <div class="lbl-sm">Full Band Comparison Across All Density Tiers</div>
+  <div class="card">
+    <div class="card-hd card-hd-navy">Zone Band Reference Table — Miles by CBSA Density Tier</div>
+    <table class="dt-table">
+      <thead>
+        <tr>
+          <th>Zone</th>
+          <th>Signal</th>
+          <th>Dense Urban<br><span style="font-weight:400;opacity:0.6">NYC / LA / Chicago / SF / Boston</span></th>
+          <th>Mid-Density<br><span style="font-weight:400;opacity:0.6">Dallas / Atlanta / Denver / Phoenix</span></th>
+          <th>Suburban / Spread<br><span style="font-weight:400;opacity:0.6">Nashville / Charlotte / Austin / Raleigh</span></th>
+          <th>Drive-Time Equiv.</th>
+          <th>Strategic Use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span style="font-weight:700;color:var(--z1)">Zone 1</span></td>
+          <td><span class="sig sig-cr">Saturation Core</span></td>
+          <td style="font-weight:600;color:var(--z1)">0 – 2 mi</td>
+          <td style="font-weight:600;color:var(--z1)">0 – 3 mi</td>
+          <td style="font-weight:600;color:var(--z1)">0 – 5 mi</td>
+          <td style="color:var(--slate);font-size:11px">≈ 5–8 min</td>
+          <td style="font-size:11px;color:var(--slate)">Direct overlap. High cannibalization risk. Avoid new supply here unless patient volume justifies.</td>
+        </tr>
+        <tr>
+          <td><span style="font-weight:700;color:var(--z2)">Zone 2</span></td>
+          <td><span class="sig sig-ti">Tuck-In Zone</span></td>
+          <td style="font-weight:600;color:var(--z2)">2 – 5 mi</td>
+          <td style="font-weight:600;color:var(--z2)">3 – 7 mi</td>
+          <td style="font-weight:600;color:var(--z2)">5 – 10 mi</td>
+          <td style="color:var(--slate);font-size:11px">≈ 10–15 min</td>
+          <td style="font-size:11px;color:var(--slate)">Primary tuck-in candidates. Close enough for operational synergy, far enough to grow addressable geography.</td>
+        </tr>
+        <tr>
+          <td><span style="font-weight:700;color:var(--z3)">Zone 3</span></td>
+          <td><span class="sig sig-ci">Competitive Intel</span></td>
+          <td style="font-weight:600;color:var(--z3)">5 – 10 mi</td>
+          <td style="font-weight:600;color:var(--z3)">7 – 15 mi</td>
+          <td style="font-weight:600;color:var(--z3)">10 – 20 mi</td>
+          <td style="color:var(--slate);font-size:11px">≈ 15–25 min</td>
+          <td style="font-size:11px;color:var(--slate)">Competitive density watch. Track emerging independents. Monitor before future tuck-in or threat assessment.</td>
+        </tr>
+        <tr>
+          <td><span style="font-weight:700;color:var(--z4)">Zone 4</span></td>
+          <td><span class="sig sig-ws">White Space Ring</span></td>
+          <td style="font-weight:600;color:var(--z4)">10 – 15 mi</td>
+          <td style="font-weight:600;color:var(--z4)">15 – 25 mi</td>
+          <td style="font-weight:600;color:var(--z4)">20 – 30 mi</td>
+          <td style="color:var(--slate);font-size:11px">≈ 20–35 min</td>
+          <td style="font-size:11px;color:var(--slate)">Beyond saturation ring. De novo site candidates and new-market entry. High-value discovery zone.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="padding:8px 12px;font-size:10.5px;color:var(--muted);font-style:italic;background:var(--bg);border-top:1px solid var(--border-lt)">
+      * Dense Urban caps Zone 4 at 15 mi intentionally — beyond this boundary you are in a different CBSA sub-market (e.g. NJ → NYC) or a competing metro. Mid-Density caps at 25 mi. Suburban at 30 mi to avoid crossing into adjacent CBSA territory.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+  SECTION 2 — HAVERSINE + MAP VISUAL
+══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head">
+    <div>
+      <div class="section-num">Section 02</div>
+      <div class="section-title">Distance Calculation &amp; Intra-CBSA Map</div>
+      <div class="section-sub">Haversine formula applied from each MedSpa centroid — zones map onto supply gap regions within the metro</div>
+    </div>
+    <div class="section-badge" style="background:var(--blue);color:var(--white)">Haversine</div>
+  </div>
+
+  <div class="gw" style="gap:16px">
+    <!-- Code + inputs -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="card">
+        <div class="card-hd">Haversine Formula — Distance in Miles</div>
+        <div class="card-body" style="padding:10px 14px">
+          <div class="code-block">
+<span class="cc">// Haversine: great-circle distance between two lat/lon points</span>
+<span class="ck">function</span> <span class="cf">haversine</span>(<span class="cv">lat1</span>, <span class="cv">lon1</span>, <span class="cv">lat2</span>, <span class="cv">lon2</span>) {
+  <span class="ck">const</span> <span class="cv">R</span> = <span class="cn">3958.8</span>;          <span class="cc">// Earth radius, miles</span>
+  <span class="ck">const</span> <span class="cv">toRad</span> = <span class="cv">d</span> => <span class="cv">d</span> * Math.PI / <span class="cn">180</span>;
+  <span class="ck">const</span> <span class="cv">dLat</span> = toRad(<span class="cv">lat2</span> - <span class="cv">lat1</span>);
+  <span class="ck">const</span> <span class="cv">dLon</span> = toRad(<span class="cv">lon2</span> - <span class="cv">lon1</span>);
+  <span class="ck">const</span> <span class="cv">a</span> =
+    Math.sin(<span class="cv">dLat</span>/<span class="cn">2</span>)**<span class="cn">2</span> +
+    Math.cos(toRad(<span class="cv">lat1</span>)) *
+    Math.cos(toRad(<span class="cv">lat2</span>)) *
+    Math.sin(<span class="cv">dLon</span>/<span class="cn">2</span>)**<span class="cn">2</span>;
+  <span class="ck">return</span> <span class="cv">R</span> * <span class="cn">2</span> * Math.atan2(Math.sqrt(<span class="cv">a</span>), Math.sqrt(<span class="cn">1</span>-<span class="cv">a</span>));
+}
+
+<span class="cc">// Classify each MedSpa into a zone relative to a reference point</span>
+<span class="ck">function</span> <span class="cf">classifyZone</span>(<span class="cv">dist</span>, <span class="cv">cbsaTier</span>) {
+  <span class="ck">const</span> <span class="cv">bands</span> = {
+    dense: [<span class="cn">2</span>, <span class="cn">5</span>, <span class="cn">10</span>, <span class="cn">15</span>],
+    mid:   [<span class="cn">3</span>, <span class="cn">7</span>, <span class="cn">15</span>, <span class="cn">25</span>],
+    sub:   [<span class="cn">5</span>, <span class="cn">10</span>, <span class="cn">20</span>, <span class="cn">30</span>]
+  }[<span class="cv">cbsaTier</span>];
+  <span class="ck">if</span> (<span class="cv">dist</span> <= <span class="cv">bands</span>[<span class="cn">0</span>]) <span class="ck">return</span> <span class="cn">1</span>; <span class="cc">// Saturation Core</span>
+  <span class="ck">if</span> (<span class="cv">dist</span> <= <span class="cv">bands</span>[<span class="cn">1</span>]) <span class="ck">return</span> <span class="cn">2</span>; <span class="cc">// Tuck-In Zone</span>
+  <span class="ck">if</span> (<span class="cv">dist</span> <= <span class="cv">bands</span>[<span class="cn">2</span>]) <span class="ck">return</span> <span class="cn">3</span>; <span class="cc">// Competitive Intel</span>
+  <span class="ck">if</span> (<span class="cv">dist</span> <= <span class="cv">bands</span>[<span class="cn">3</span>]) <span class="ck">return</span> <span class="cn">4</span>; <span class="cc">// White Space Ring</span>
+  <span class="ck">return</span> <span class="cn">null</span>;               <span class="cc">// Outside CBSA scope</span>
+}</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">Inputs Required</div>
+        <div class="card-body" style="padding:10px 14px">
+          <table style="width:100%;border-collapse:collapse;font-size:12px">
+            <tbody>
+              <tr>
+                <td style="padding:6px 0;border-bottom:1px solid var(--border-lt);font-weight:600;color:var(--navy);width:160px">Lat / Long</td>
+                <td style="padding:6px 0;border-bottom:1px solid var(--border-lt);color:var(--slate)">Already present in STOC dataset — no enrichment needed</td>
+                <td style="padding:6px 0;border-bottom:1px solid var(--border-lt);text-align:right"><span class="sig sig-ws">Ready</span></td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0;border-bottom:1px solid var(--border-lt);font-weight:600;color:var(--navy)">CBSA Tier</td>
+                <td style="padding:6px 0;border-bottom:1px solid var(--border-lt);color:var(--slate)">Derived from CBSA Tier field — dense / mid / sub classification</td>
+                <td style="padding:6px 0;border-bottom:1px solid var(--border-lt);text-align:right"><span class="sig sig-ws">Ready</span></td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0;border-bottom:1px solid var(--border-lt);font-weight:600;color:var(--navy)">MedSpa Locations</td>
+                <td style="padding:6px 0;border-bottom:1px solid var(--border-lt);color:var(--slate)">All records with lat/long — run pairwise Haversine matrix</td>
+                <td style="padding:6px 0;border-bottom:1px solid var(--border-lt);text-align:right"><span class="sig sig-ws">Ready</span></td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0;font-weight:600;color:var(--navy)">Reference Point</td>
+                <td style="padding:6px 0;color:var(--slate)">Any target centroid: existing portfolio location, CBSA center, or candidate site lat/long</td>
+                <td style="padding:6px 0;text-align:right"><span class="sig sig-em">Input Required</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concentric ring map visual -->
+    <div class="card">
+      <div class="card-hd">Intra-CBSA Supply Gap Map — Conceptual</div>
+      <div class="map-wrap" id="mapWrap">
+        <div class="map-rings" id="mapRings">
+          <div class="ring r4"></div>
+          <div class="ring r3"></div>
+          <div class="ring r2"></div>
+          <div class="ring r1"></div>
+          <div class="center-dot" title="Reference point"></div>
+          <!-- Scatter dots rendered by JS -->
+        </div>
+
+        <!-- Ring labels -->
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;width:280px;height:280px">
+          <span style="position:absolute;top:18px;left:50%;transform:translateX(-50%);font-size:8.5px;font-weight:700;color:rgba(184,50,50,0.7);letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap">Zone 1 · Core</span>
+          <span style="position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:700;color:rgba(196,122,15,0.7);letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap">Zone 2 · Tuck-In</span>
+          <span style="position:absolute;top:82px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:700;color:rgba(15,117,189,0.6);letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap">Zone 3 · Competitive</span>
+          <span style="position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:700;color:rgba(26,154,108,0.55);letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap">Zone 4 · White Space</span>
+        </div>
+
+        <div class="map-note">Simulated · Replace with Tableau lat/lon map</div>
+
+        <div class="map-legend">
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--z1)"></div>Existing · High density</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--z2)"></div>Existing · Tuck-in range</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--z3)"></div>Existing · Monitor range</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--z4)"></div>White space gap</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--white);border:1px solid rgba(186,202,236,0.4)"></div>Reference point</div>
+        </div>
+      </div>
+
+      <!-- Zone count summary under map -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border-lt)">
+        <div id="zoneCount1" style="padding:10px 12px;border-right:1px solid var(--border-lt);text-align:center">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--z1);margin-bottom:2px">Zone 1</div>
+          <div style="font-family:var(--serif);font-size:20px;color:var(--navy)" id="zc1">—</div>
+          <div style="font-size:10px;color:var(--muted)">locations</div>
+        </div>
+        <div id="zoneCount2" style="padding:10px 12px;border-right:1px solid var(--border-lt);text-align:center">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--z2);margin-bottom:2px">Zone 2</div>
+          <div style="font-family:var(--serif);font-size:20px;color:var(--navy)" id="zc2">—</div>
+          <div style="font-size:10px;color:var(--muted)">locations</div>
+        </div>
+        <div id="zoneCount3" style="padding:10px 12px;border-right:1px solid var(--border-lt);text-align:center">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--z3);margin-bottom:2px">Zone 3</div>
+          <div style="font-family:var(--serif);font-size:20px;color:var(--navy)" id="zc3">—</div>
+          <div style="font-size:10px;color:var(--muted)">locations</div>
+        </div>
+        <div style="padding:10px 12px;text-align:center">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--z4);margin-bottom:2px">Zone 4</div>
+          <div style="font-family:var(--serif);font-size:20px;color:var(--navy)" id="zc4">—</div>
+          <div style="font-size:10px;color:var(--muted)">locations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+  SECTION 3 — FOUR OUTPUTS
+══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head">
+    <div>
+      <div class="section-num">Section 03</div>
+      <div class="section-title">Model Outputs</div>
+      <div class="section-sub">Intra-CBSA white space · Ranked target list · Cannibalization flags · Nearest-neighbor counts</div>
+    </div>
+    <div class="section-badge" style="background:var(--indigo);color:var(--white)">4 Outputs</div>
+  </div>
+
+  <!-- OUTPUT 1: Intra-CBSA White Space Map (grid of quadrants) -->
+  <div class="lbl-sm">Output 1 — Intra-CBSA White Space by Sub-Market</div>
+  <div class="g2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-hd card-hd-navy">Dallas–Fort Worth Metro — Supply Gap by Corridor (Mid-Density)</div>
+      <div class="card-body" style="padding:10px">
+        <div class="ws-grid">
+          <div class="ws-quadrant" style="border-left:3px solid var(--green)">
+            <div class="ws-quad-top" style="background:var(--green-lt)">
+              <span class="ws-quad-name">North Frisco / Prosper</span>
+              <span class="sig sig-ws">White Space</span>
+            </div>
+            <div class="ws-quad-body">
+              <div class="ws-metric"><span class="ws-metric-lbl">MedSpas in zone</span><span class="ws-metric-val">3</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Pop. 25–64F (000s)</span><span class="ws-metric-val">48k</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Adj. density</span><span class="ws-metric-val" style="color:var(--green)">Low</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Nearest competitor</span><span class="ws-metric-val">8.2 mi</span></div>
+            </div>
+          </div>
+          <div class="ws-quadrant" style="border-left:3px solid var(--green)">
+            <div class="ws-quad-top" style="background:var(--green-lt)">
+              <span class="ws-quad-name">Southlake / Keller</span>
+              <span class="sig sig-ws">White Space</span>
+            </div>
+            <div class="ws-quad-body">
+              <div class="ws-metric"><span class="ws-metric-lbl">MedSpas in zone</span><span class="ws-metric-val">4</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Pop. 25–64F (000s)</span><span class="ws-metric-val">52k</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Adj. density</span><span class="ws-metric-val" style="color:var(--green)">Low</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Nearest competitor</span><span class="ws-metric-val">6.8 mi</span></div>
+            </div>
+          </div>
+          <div class="ws-quadrant" style="border-left:3px solid var(--blue)">
+            <div class="ws-quad-top" style="background:var(--blue-xlt)">
+              <span class="ws-quad-name">Plano / Allen</span>
+              <span class="sig sig-ti">Tuck-In</span>
+            </div>
+            <div class="ws-quad-body">
+              <div class="ws-metric"><span class="ws-metric-lbl">MedSpas in zone</span><span class="ws-metric-val">12</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Pop. 25–64F (000s)</span><span class="ws-metric-val">74k</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Adj. density</span><span class="ws-metric-val" style="color:var(--blue)">Moderate</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Nearest competitor</span><span class="ws-metric-val">3.1 mi</span></div>
+            </div>
+          </div>
+          <div class="ws-quadrant" style="border-left:3px solid var(--amber)">
+            <div class="ws-quad-top" style="background:var(--amber-lt)">
+              <span class="ws-quad-name">Uptown Dallas</span>
+              <span class="sig sig-ci">Monitor</span>
+            </div>
+            <div class="ws-quad-body">
+              <div class="ws-metric"><span class="ws-metric-lbl">MedSpas in zone</span><span class="ws-metric-val">28</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Pop. 25–64F (000s)</span><span class="ws-metric-val">61k</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Adj. density</span><span class="ws-metric-val" style="color:var(--amber)">High</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Nearest competitor</span><span class="ws-metric-val">1.4 mi</span></div>
+            </div>
+          </div>
+          <div class="ws-quadrant" style="border-left:3px solid var(--red)">
+            <div class="ws-quad-top" style="background:var(--red-lt)">
+              <span class="ws-quad-name">Knox-Henderson / Lakewood</span>
+              <span class="sig sig-cr">Saturated</span>
+            </div>
+            <div class="ws-quad-body">
+              <div class="ws-metric"><span class="ws-metric-lbl">MedSpas in zone</span><span class="ws-metric-val">41</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Pop. 25–64F (000s)</span><span class="ws-metric-val">58k</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Adj. density</span><span class="ws-metric-val" style="color:var(--red)">Very High</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Nearest competitor</span><span class="ws-metric-val">0.8 mi</span></div>
+            </div>
+          </div>
+          <div class="ws-quadrant" style="border-left:3px solid var(--green)">
+            <div class="ws-quad-top" style="background:var(--green-lt)">
+              <span class="ws-quad-name">South Fort Worth / Burleson</span>
+              <span class="sig sig-ws">White Space</span>
+            </div>
+            <div class="ws-quad-body">
+              <div class="ws-metric"><span class="ws-metric-lbl">MedSpas in zone</span><span class="ws-metric-val">5</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Pop. 25–64F (000s)</span><span class="ws-metric-val">44k</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Adj. density</span><span class="ws-metric-val" style="color:var(--green)">Low</span></div>
+              <div class="ws-metric"><span class="ws-metric-lbl">Nearest competitor</span><span class="ws-metric-val">7.6 mi</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:7px 12px;font-size:10.5px;color:var(--muted);font-style:italic;background:var(--bg);border-top:1px solid var(--border-lt)">
+        Simulated sub-market grid — replace with actual STOC dataset segmented by zipcode cluster or census tract · Mid-Density bands applied (3 / 7 / 15 / 25 mi)
+      </div>
+    </div>
+
+    <!-- Interpretation card -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="card">
+        <div class="card-hd">How to Read the White Space Map</div>
+        <div class="card-body" style="padding:0">
+          <div style="padding:10px 14px;border-bottom:1px solid var(--border-lt);display:flex;gap:10px;align-items:flex-start">
+            <span class="sig sig-ws" style="flex-shrink:0;margin-top:1px">White Space</span>
+            <span style="font-size:12px;color:var(--slate)">Low supply relative to addressable female 25–64 population. Primary de novo site candidate. No tuck-in competition in zone.</span>
+          </div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--border-lt);display:flex;gap:10px;align-items:flex-start">
+            <span class="sig sig-ti" style="flex-shrink:0;margin-top:1px">Tuck-In</span>
+            <span style="font-size:12px;color:var(--slate)">Moderate supply, existing operator in Zone 2 window. Acquisition candidate — extract value from established patient base without new-site capital.</span>
+          </div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--border-lt);display:flex;gap:10px;align-items:flex-start">
+            <span class="sig sig-ci" style="flex-shrink:0;margin-top:1px">Monitor</span>
+            <span style="font-size:12px;color:var(--slate)">Density approaching threshold. Track competition dynamics quarterly. Don't prioritize for new entry today.</span>
+          </div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--border-lt);display:flex;gap:10px;align-items:flex-start">
+            <span class="sig sig-cr" style="flex-shrink:0;margin-top:1px">Saturated</span>
+            <span style="font-size:12px;color:var(--slate)">Supply exceeds demand threshold for new entry. Existing operator acquisition only — and only if differentiated (services, premium positioning).</span>
+          </div>
+          <div style="padding:10px 14px;display:flex;gap:10px;align-items:flex-start">
+            <span class="sig sig-em" style="flex-shrink:0;margin-top:1px">Emerging</span>
+            <span style="font-size:12px;color:var(--slate)">Population growing faster than supply. Watch list — may shift to White Space within 12–18 months as population fills in.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="drive-note" style="border-left-color:var(--teal);background:var(--teal-lt)">
+        <div class="drive-note-tag" style="color:var(--teal);background:rgba(13,138,122,0.12)">Key Insight</div>
+        <div>The same CBSA can contain <strong>both saturated and white-space sub-markets simultaneously.</strong> Dallas–Fort Worth is a top-10 national market yet North Frisco and South Fort Worth are genuinely underserved. The CBSA-level view misses this — only the radius clustering model reveals it.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPUT 2: Ranked target list -->
+  <div class="lbl-sm">Output 2 — Ranked Target List by Zone &amp; Outreach Priority</div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-hd card-hd-navy">
+      <span>Simulated Target MedSpas — Dallas–Fort Worth CBSA (Mid-Density Bands)</span>
+      <span style="font-size:10px;color:var(--muted);font-weight:400">Sorted: Zone → Validation Score → Review Weakness</span>
+    </div>
+    <table class="out-table" id="targetTable">
+      <thead>
+        <tr>
+          <th style="width:28px" class="thc">Pri.</th>
+          <th>Opportunity Name</th>
+          <th>Sub-Market</th>
+          <th class="thc">Zone</th>
+          <th class="thc">Dist. (mi)</th>
+          <th class="thc">NN Count<br><span style="font-weight:400;opacity:0.6">in zone</span></th>
+          <th class="thc">Val. Score</th>
+          <th class="thc">Avg Rating</th>
+          <th>Cannibal. Risk</th>
+          <th>Signal</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- OUTPUTS 3+4: Cannibalization + Nearest Neighbor side by side -->
+  <div class="g2">
+    <div>
+      <div class="lbl-sm">Output 3 — Cannibalization Risk Logic</div>
+      <div class="card">
+        <div class="card-hd card-hd-navy">Risk Flag Criteria</div>
+        <table class="dt-table">
+          <thead>
+            <tr><th>Risk Level</th><th>Trigger Condition</th><th>Recommended Action</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cannibal-flag cf-high"><span class="cf-dot" style="background:var(--red)"></span>High</span></td>
+              <td style="font-size:11.5px;color:var(--slate)">≥3 MedSpas in Zone 1 <em>and</em> same service mix overlap ≥60%</td>
+              <td style="font-size:11.5px;color:var(--slate)">Pause acquisition. Conduct patient overlap analysis before proceeding.</td>
+            </tr>
+            <tr>
+              <td><span class="cannibal-flag cf-med"><span class="cf-dot" style="background:var(--amber)"></span>Medium</span></td>
+              <td style="font-size:11.5px;color:var(--slate)">1–2 MedSpas in Zone 1 <em>or</em> service overlap 30–60%</td>
+              <td style="font-size:11.5px;color:var(--slate)">Proceed with caution. Differentiation strategy (services, price tier) required.</td>
+            </tr>
+            <tr>
+              <td><span class="cannibal-flag cf-low"><span class="cf-dot" style="background:var(--green)"></span>Low</span></td>
+              <td style="font-size:11.5px;color:var(--slate)">0 MedSpas in Zone 1, 1–3 in Zone 2, overlap &lt;30%</td>
+              <td style="font-size:11.5px;color:var(--slate)">Clear for acquisition or de novo. Review quality/validation before outreach.</td>
+            </tr>
+            <tr>
+              <td><span class="cannibal-flag cf-none"><span class="cf-dot" style="background:var(--muted)"></span>None</span></td>
+              <td style="font-size:11.5px;color:var(--slate)">Zone 4 target — no overlap possible at current footprint</td>
+              <td style="font-size:11.5px;color:var(--slate)">White space confirmed. De novo site evaluation or anchor acquisition.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="padding:8px 12px;font-size:10.5px;color:var(--muted);font-style:italic;background:var(--bg);border-top:1px solid var(--border-lt)">
+          * Service overlap derived from Top 3 Services field in STOC dataset — already captured, no enrichment needed
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="lbl-sm">Output 4 — Nearest-Neighbor Count by Zone</div>
+      <div class="card">
+        <div class="card-hd card-hd-navy">NN Density — What the Count Tells You</div>
+        <div class="card-body" style="padding:0">
+          <div style="padding:10px 14px;border-bottom:1px solid var(--border-lt)">
+            <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Zone 1 Nearest-Neighbor Count Interpretation</div>
+            <div id="nnBars" style="display:flex;flex-direction:column;gap:8px"></div>
+          </div>
+          <div style="padding:10px 14px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Zone 2 NN Count — Tuck-In Density Signal</div>
+            <div id="nnBars2" style="display:flex;flex-direction:column;gap:8px"></div>
+          </div>
+        </div>
+        <div style="padding:8px 12px;font-size:10.5px;color:var(--muted);font-style:italic;background:var(--bg);border-top:1px solid var(--border-lt)">
+          Thresholds are CBSA-density adjusted · Mid-density shown above · Dense Urban thresholds are ~40% lower
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<!-- ══ METHODOLOGY FOOTER ═══════════════════════════════ -->
+<div class="method-footer">
+  <div class="mf-item">
+    <div class="mf-icon">Z</div>
+    <div class="mf-text"><strong>Zone Bands</strong>Density-adjusted per CBSA tier. Dense Urban caps at 15 mi to avoid crossing CBSA boundary. No 20–50 mi bands.</div>
+  </div>
+  <div class="mf-item">
+    <div class="mf-icon">H</div>
+    <div class="mf-text"><strong>Haversine</strong>Great-circle distance. Lat/Long sourced directly from STOC dataset. Pairwise matrix across all records in CBSA.</div>
+  </div>
+  <div class="mf-item">
+    <div class="mf-icon">W</div>
+    <div class="mf-text"><strong>White Space</strong>Intra-CBSA supply gap — not platform-proximity. Measured against female 25–64 addressable population per sub-market.</div>
+  </div>
+  <div class="mf-item">
+    <div class="mf-icon">C</div>
+    <div class="mf-text"><strong>Cannibalization</strong>Zone 1 count + service mix overlap from Top 3 Services field. No enrichment needed — data already in STOC dataset.</div>
+  </div>
+  <div class="mf-item">
+    <div class="mf-icon">N</div>
+    <div class="mf-text"><strong>Nearest-Neighbor</strong>Count of MedSpas within each zone radius from reference point. Thresholds adjusted per density tier.</div>
+  </div>
+  <div style="margin-left:auto;font-size:10px;color:rgba(186,202,236,0.28);font-style:italic;align-self:flex-end">All CBSA data simulated for wireframe · Replace with STOC proprietary dataset</div>
+</div>
+
+<div class="doc-footer">
+  <span>STOC Advisory · MedSpa Market Intelligence · Confidential · Model Component 02</span>
+  <span>Radius-Based Target Clustering · February 2026</span>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   DENSITY TIER DEFINITIONS
+═══════════════════════════════════════ */
+const TIERS = {
+  dense: {
+    label: 'Dense Urban',
+    examples: 'NYC · LA · Chicago · SF · Boston',
+    zones: [
+      { num:1, color:'var(--z1)', colorLt:'var(--z1-lt)', tag:'Saturation Core',    miles:'0 – 2 mi',  drive:'≈5–8 min',  desc:'Direct overlap. High cannibalization risk. Avoid new supply unless patient volume analysis clears.' },
+      { num:2, color:'var(--z2)', colorLt:'var(--z2-lt)', tag:'Tuck-In Zone',       miles:'2 – 5 mi',  drive:'≈10–12 min',desc:'Primary tuck-in candidates. Operational synergy possible. Expand addressable geography without full de novo risk.' },
+      { num:3, color:'var(--z3)', colorLt:'var(--z3-lt)', tag:'Competitive Intel',  miles:'5 – 10 mi', drive:'≈15–20 min',desc:'Competitive density watch. Track emerging independents. Multiple subway/transit zones in NYC = distinct patient populations.' },
+      { num:4, color:'var(--z4)', colorLt:'var(--z4-lt)', tag:'White Space Ring',   miles:'10 – 15 mi',drive:'≈20–30 min',desc:'Beyond saturation. De novo site candidates. Cap at 15 mi — beyond this you risk crossing into adjacent CBSA in dense markets.' },
+    ],
+    counts: [12, 8, 14, 5]
+  },
+  mid: {
+    label: 'Mid-Density',
+    examples: 'Dallas · Atlanta · Denver · Phoenix · Seattle',
+    zones: [
+      { num:1, color:'var(--z1)', colorLt:'var(--z1-lt)', tag:'Saturation Core',    miles:'0 – 3 mi',  drive:'≈6–10 min', desc:'Direct overlap zone. Existing supply captures most of the local addressable demand. Acquisition only if quality gap present.' },
+      { num:2, color:'var(--z2)', colorLt:'var(--z2-lt)', tag:'Tuck-In Zone',       miles:'3 – 7 mi',  drive:'≈10–15 min',desc:'Ideal tuck-in window. Suburban neighborhoods, strip-mall corridors. Acquire established single-site operators here first.' },
+      { num:3, color:'var(--z3)', colorLt:'var(--z3-lt)', tag:'Competitive Intel',  miles:'7 – 15 mi', drive:'≈15–25 min',desc:'Monitor zone. Understand which sub-markets are building supply. Check for emerging independents before they become targets.' },
+      { num:4, color:'var(--z4)', colorLt:'var(--z4-lt)', tag:'White Space Ring',   miles:'15 – 25 mi',drive:'≈25–35 min',desc:'True white space. Fast-growing exurbs. Cap at 25 mi — beyond this, different population cluster, assess as separate sub-market.' },
+    ],
+    counts: [8, 12, 18, 7]
+  },
+  sub: {
+    label: 'Suburban / Spread',
+    examples: 'Nashville · Charlotte · Austin · Raleigh · Salt Lake',
+    zones: [
+      { num:1, color:'var(--z1)', colorLt:'var(--z1-lt)', tag:'Saturation Core',    miles:'0 – 5 mi',  drive:'≈8–12 min', desc:'Core zone. Meaningful overlap but spread population means cannibalization risk is lower than dense tiers. Still assess service mix.' },
+      { num:2, color:'var(--z2)', colorLt:'var(--z2-lt)', tag:'Tuck-In Zone',       miles:'5 – 10 mi', drive:'≈12–18 min',desc:'Strong tuck-in zone. Residents in these markets are accustomed to 10–15 min drives for elective services. High operational synergy.' },
+      { num:3, color:'var(--z3)', colorLt:'var(--z3-lt)', tag:'Competitive Intel',  miles:'10 – 20 mi',drive:'≈20–28 min',desc:'Outer competitive ring. These markets may be separate township identities (Franklin vs Nashville). Track independently.' },
+      { num:4, color:'var(--z4)', colorLt:'var(--z4-lt)', tag:'White Space Ring',   miles:'20 – 30 mi',drive:'≈28–40 min',desc:'Adjacent sub-metros and fast-growing corridors. Cap at 30 mi — beyond this, separate market thesis required. Not a drive-time MedSpa patient.' },
+    ],
+    counts: [5, 9, 16, 11]
+  }
+};
+
+let currentTier = 'dense';
+
+function setTier(tier) {
+  currentTier = tier;
+  document.querySelectorAll('.ds-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['dense','mid','sub'][i] === tier);
+  });
+  renderZoneBands(tier);
+  renderZoneCounts(tier);
+}
+
+function renderZoneBands(tier) {
+  const t = TIERS[tier];
+  const container = document.getElementById('zoneBands');
+  container.innerHTML = t.zones.map(z => `
+    <div class="zone-card" style="animation:fadeUp 0.3s ease both">
+      <div class="zone-top" style="background:${z.color}"></div>
+      <div class="zone-body">
+        <div class="zone-label" style="color:${z.color}">Zone ${z.num} · ${t.label}</div>
+        <div class="zone-range">${z.miles}</div>
+        <div><span class="zone-tag" style="background:${z.colorLt};color:${z.color}">${z.tag}</span></div>
+        <div style="font-size:10.5px;color:var(--muted);margin-bottom:4px">${z.drive} drive-time equivalent</div>
+        <div class="zone-desc">${z.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderZoneCounts(tier) {
+  const counts = TIERS[tier].counts;
+  ['zc1','zc2','zc3','zc4'].forEach((id, i) => {
+    document.getElementById(id).textContent = counts[i];
+  });
+}
+
+/* ── Initial render ── */
+renderZoneBands('dense');
+renderZoneCounts('dense');
+
+/* ═══════════════════════════════════════
+   MAP SCATTER DOTS
+═══════════════════════════════════════ */
+// Simulated MedSpa positions on the ring map
+const scatterDots = [
+  // Zone 1 (core) — red
+  { x:52, y:44, z:1 }, { x:48, y:56, z:1 }, { x:55, y:52, z:1 },
+  { x:45, y:47, z:1 }, { x:52, y:48, z:1 },
+  // Zone 2 (tuck-in) — amber
+  { x:36, y:42, z:2 }, { x:62, y:38, z:2 }, { x:40, y:64, z:2 },
+  { x:60, y:62, z:2 }, { x:66, y:50, z:2 }, { x:34, y:54, z:2 },
+  // Zone 3 (competitive) — blue
+  { x:26, y:44, z:3 }, { x:72, y:36, z:3 }, { x:30, y:62, z:3 },
+  { x:68, y:66, z:3 }, { x:50, y:24, z:3 }, { x:50, y:76, z:3 },
+  { x:74, y:52, z:3 }, { x:24, y:52, z:3 },
+  // Zone 4 (white space) — green — sparse
+  { x:18, y:50, z:4 }, { x:82, y:50, z:4 }, { x:50, y:16, z:4 },
+  { x:50, y:84, z:4 }, { x:22, y:30, z:4 },
+];
+
+const zColors = { 1:'var(--z1)', 2:'var(--z2)', 3:'var(--z3)', 4:'var(--z4)' };
+const mapRings = document.getElementById('mapRings');
+scatterDots.forEach(d => {
+  const dot = document.createElement('div');
+  dot.className = 'scatter-dot';
+  dot.style.cssText = `left:${d.x}%;top:${d.y}%;background:${zColors[d.z]};opacity:0.7`;
+  mapRings.appendChild(dot);
+});
+
+/* ═══════════════════════════════════════
+   TARGET TABLE DATA
+=══════════════════════════════════════ */
+const targets = [
+  // [name, submarket, zone, dist, nnCount, valScore, rating, cannibal, signal]
+  ["Glow Aesthetics DFW",     "North Frisco",        2, 4.1,  2,  88, 4.7, "low",  "tuck-in"],
+  ["Revive MedSpa Southlake", "Southlake / Keller",  2, 5.8,  3,  84, 4.8, "low",  "tuck-in"],
+  ["Aesthetica Prosper",      "North Frisco",        4, 16.2, 0,  76, 4.4, "none", "white-space"],
+  ["Premier Skin Plano",      "Plano / Allen",       2, 6.4,  4,  91, 4.9, "low",  "tuck-in"],
+  ["Luxe Laser & Skin",       "S. Fort Worth",       4, 18.8, 1,  72, 4.3, "none", "white-space"],
+  ["Refresh MedSpa Allen",    "Plano / Allen",       3, 9.1,  6,  80, 4.6, "med",  "monitor"],
+  ["Dallas Aesthetics Studio","Uptown Dallas",       1, 1.4, 12,  88, 4.8, "high", "core"],
+  ["Highland Park Glow",      "Uptown Dallas",       1, 2.1, 14,  92, 4.9, "high", "core"],
+  ["Contour Med & Wellness",  "S. Fort Worth",       4, 21.4, 0,  68, 4.1, "none", "white-space"],
+  ["The MedSpa Collective",   "Plano / Allen",       2, 4.8,  3,  85, 4.5, "low",  "tuck-in"],
+  ["Luxe Aesthetics Burleson","S. Fort Worth",       4, 23.1, 0,  62, 4.0, "none", "white-space"],
+  ["Knox-Henderson Skin",     "Knox-Henderson",      1, 0.8, 18,  95, 4.9, "high", "core"],
+];
+
+const signalLabels = {
+  'tuck-in':    ['sig-ti',  'Tuck-In'],
+  'white-space':['sig-ws',  'White Space'],
+  'monitor':    ['sig-ci',  'Monitor'],
+  'core':       ['sig-cr',  'Saturation Core'],
+};
+const cannibalMap = {
+  'high': ['cf-high', 'High', 'var(--red)'],
+  'med':  ['cf-med',  'Medium', 'var(--amber)'],
+  'low':  ['cf-low',  'Low', 'var(--green)'],
+  'none': ['cf-none', 'None', 'var(--muted)'],
+};
+const zonePriority = { 2: 1, 4: 2, 3: 3, 1: 4 };
+
+// Sort: zone 2 first (tuck-in), then 4 (white space), then 3, then 1
+const sorted = [...targets].sort((a,b) => (zonePriority[a[2]]||5) - (zonePriority[b[2]]||5));
+
+const tbody = document.querySelector('#targetTable tbody');
+let pri = 1;
+sorted.forEach((row, i) => {
+  const [name, sub, zone, dist, nn, val, rat, canib, sig] = row;
+  const [scls, slbl] = signalLabels[sig] || ['sig-ci','Monitor'];
+  const [ccls, clbl, cdot] = cannibalMap[canib] || cannibalMap['none'];
+  const isHighPri = zone === 2 || (zone === 4 && canib === 'none');
+  const pBadge = zone === 2 ? `<span class="priority-badge p1">${pri++}</span>` :
+                 zone === 4 ? `<span class="priority-badge p2">${pri++}</span>` :
+                 zone === 3 ? `<span class="priority-badge p3">—</span>` :
+                              `<span class="priority-badge pn">✕</span>`;
+
+  const nnMax = 18;
+  const nnWidth = Math.min((nn/nnMax)*100, 100);
+  const nnColor = nn<=3?'var(--green)':nn<=8?'var(--blue)':nn<=14?'var(--amber)':'var(--red)';
+
+  tbody.innerHTML += `
+    <tr>
+      <td class="tdc">${pBadge}</td>
+      <td style="font-weight:600;color:var(--navy)">${name}</td>
+      <td style="font-size:11.5px;color:var(--slate)">${sub}</td>
+      <td class="tdc">
+        <span style="font-weight:700;color:${['','var(--z1)','var(--z2)','var(--z3)','var(--z4)'][zone]}">Z${zone}</span>
+      </td>
+      <td class="tdc" style="font-variant-numeric:tabular-nums;color:var(--slate)">${dist.toFixed(1)}</td>
+      <td>
+        <div class="nn-cell">
+          <div class="nn-track"><div class="nn-fill" style="width:${nnWidth}%;background:${nnColor}"></div></div>
+          <span class="nn-val" style="color:${nnColor}">${nn}</span>
+        </div>
+      </td>
+      <td class="tdc" style="font-weight:600;color:${val>=85?'var(--blue)':val>=70?'var(--indigo)':'var(--muted)'}">${val}</td>
+      <td class="tdc" style="font-weight:600;color:${rat>=4.7?'var(--green)':rat>=4.3?'var(--blue)':'var(--amber)'}">${rat.toFixed(1)}★</td>
+      <td>
+        <div class="cannibal-flag ${ccls}">
+          <span class="cf-dot" style="background:${cdot}"></span>
+          ${clbl}
+        </div>
+      </td>
+      <td><span class="sig ${scls}">${slbl}</span></td>
+    </tr>`;
+});
+
+/* ═══════════════════════════════════════
+   NEAREST-NEIGHBOR BARS
+=══════════════════════════════════════ */
+function renderNNBars(containerId, rows) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = rows.map(([lbl, val, max, color, interp]) => `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+      <span style="min-width:72px;font-size:11px;color:var(--slate)">${lbl}</span>
+      <div class="nn-track" style="flex:1;height:6px">
+        <div class="nn-fill" style="width:${Math.min(val/max*100,100)}%;background:${color}"></div>
+      </div>
+      <span style="min-width:14px;font-weight:700;font-size:12px;color:${color}">${val}</span>
+      <span style="font-size:10.5px;color:var(--muted);min-width:90px">${interp}</span>
+    </div>`).join('');
+}
+
+renderNNBars('nnBars', [
+  ['0 locations', 0,  10, 'var(--green)',  '✓ White space confirmed'],
+  ['1–2 locs.',   2,  10, 'var(--blue)',   'Low risk · Proceed'],
+  ['3–5 locs.',   4,  10, 'var(--indigo)', 'Moderate · Review mix'],
+  ['6–10 locs.',  7,  10, 'var(--amber)',  'High · Caution'],
+  ['10+ locs.',  10,  10, 'var(--red)',    '✕ Avoid new supply'],
+]);
+
+renderNNBars('nnBars2', [
+  ['0–2 locs.',  1,  10, 'var(--green)',  '✓ No tuck-in targets'],
+  ['3–5 locs.',  4,  10, 'var(--blue)',   'Ideal tuck-in density'],
+  ['6–9 locs.',  7,  10, 'var(--indigo)', 'Active market · Good'],
+  ['10–14 locs.',11, 10, 'var(--amber)',  'Competitive · Qualify'],
+  ['15+ locs.', 10,  10, 'var(--red)',    'Crowded tuck-in zone'],
+]);
+
+</script>
+</body>
+</html>
