@@ -37,8 +37,8 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 14px; scroll-behavior: smooth; }
-body { font-family: var(--font); background: #1A2438; color: var(--navy); line-height: 1.5; }
+html, body { height: 100%; overflow: hidden; font-size: 13px; }
+body { font-family: var(--font); background: #1A2438; color: var(--navy); line-height: 1.4; }
 
 /* ═══ NAVIGATION RAIL ═══ */
 .nav {
@@ -91,89 +91,76 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 }
 
 /* ═══ MAIN CONTENT ═══ */
-.main { margin-left: 52px; }
-
-/* ═══ SLIDE WRAPPER ═══ */
-.slide {
-  min-height: 100vh; background: var(--bg); display: flex; flex-direction: column;
-  border-bottom: 3px solid var(--navy); scroll-margin-top: 0;
-}
-
-/* ═══ SKIPPED SLIDE — Google Slides "hidden" aesthetic ═══ */
-.slide-skipped {
+.main {
+  margin-left: 52px;
+  height: 100vh;
+  overflow: hidden;
   position: relative;
-  opacity: 0.55;
-  pointer-events: none; /* prevents accidental interaction */
 }
-.slide-skipped::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 18px,
-    rgba(4,30,63,0.025) 18px,
-    rgba(4,30,63,0.025) 19px
-  );
-  z-index: 10;
-  pointer-events: none;
+
+/* ═══ SLIDE WRAPPER — 16:9, no scroll ═══ */
+.slide {
+  position: absolute; inset: 0;
+  background: var(--bg); display: flex; flex-direction: column;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease;
+  overflow: hidden;
 }
-.slide-skipped .slide-header::after {
-  content: 'SLIDE HIDDEN';
-  position: absolute;
-  right: 16px; top: 50%; transform: translateY(-50%);
-  font-size: 9px; font-weight: 800; letter-spacing: 0.22em;
-  color: var(--muted); background: var(--bg-alt);
-  border: 1px dashed var(--border);
-  padding: 3px 10px; border-radius: 2px;
-  z-index: 20;
+.slide.active-slide {
+  opacity: 1; pointer-events: auto;
 }
-/* Re-enable pointer events on skipped slides so user can still scroll past */
-.slide-skipped { pointer-events: auto; }
+/* Skipped slides still stack but are never shown as active */
+
+/* ═══ SKIPPED / HIDDEN SLIDES ═══
+   MUST NOT use position:relative (breaks stacking context) or opacity:0.55
+   (overrides .slide opacity:0 making them visible). display:none is the
+   only safe approach — nav rail dimming already signals hidden status. */
+.slide-skipped {
+  display: none !important;
+}
 
 /* ═══ SHARED COMPONENTS ═══ */
 .slide-header {
-  background: var(--white); padding: 20px 36px 16px;
-  border-bottom: 2px solid var(--border); position: relative;
+  background: var(--white); padding: 10px 28px 8px;
+  border-bottom: 2px solid var(--border); position: relative; flex-shrink: 0;
 }
 .slide-header::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0;
   width: 4px; background: var(--blue);
 }
-.slide-num { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; color: var(--blue); text-transform: uppercase; margin-bottom: 4px; padding-left: 12px; }
-.slide-title { font-family: var(--font-serif); font-size: 28px; color: var(--navy); line-height: 1.1; padding-left: 12px; letter-spacing: -0.01em; }
-.slide-sub { font-size: 12.5px; color: var(--slate); font-weight: 300; margin-top: 4px; padding-left: 12px; font-style: italic; }
+.slide-num { font-size: 9px; font-weight: 700; letter-spacing: 0.18em; color: var(--blue); text-transform: uppercase; margin-bottom: 2px; padding-left: 10px; }
+.slide-title { font-family: var(--font-serif); font-size: 20px; color: var(--navy); line-height: 1.1; padding-left: 10px; letter-spacing: -0.01em; }
+.slide-sub { font-size: 11px; color: var(--slate); font-weight: 300; margin-top: 2px; padding-left: 10px; font-style: italic; }
 .slide-footer {
-  margin-top: auto; padding: 8px 36px; background: var(--navy);
+  flex-shrink: 0; padding: 5px 28px; background: var(--navy);
   display: flex; justify-content: space-between; align-items: center;
-  font-size: 10px; color: rgba(186,202,236,0.45); letter-spacing: 0.06em;
+  font-size: 9px; color: rgba(186,202,236,0.45); letter-spacing: 0.06em;
   text-transform: uppercase; font-weight: 500;
 }
 .section-label {
-  padding: 8px 36px; background: var(--bg-alt); border-bottom: 1px solid var(--border);
-  font-size: 9.5px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--slate); display: flex; align-items: center; gap: 12px;
+  padding: 5px 28px; background: var(--bg-alt); border-bottom: 1px solid var(--border);
+  font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--slate); display: flex; align-items: center; gap: 10px; flex-shrink: 0;
 }
 .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-.kpi-grid { display: grid; padding: 20px 36px; gap: 16px; }
+.kpi-grid { display: grid; padding: 8px 28px; gap: 10px; flex-shrink: 0; }
 .kpi-grid-4 { grid-template-columns: repeat(4, 1fr); }
 .kpi-grid-5 { grid-template-columns: repeat(5, 1fr); }
 .kpi-grid-3 { grid-template-columns: repeat(3, 1fr); }
 .kpi-tile {
   background: var(--white); border: 1px solid var(--border); border-radius: 2px;
-  padding: 16px 20px; display: flex; align-items: stretch; gap: 12px;
-  box-shadow: 0 1px 4px rgba(4,30,63,0.05); position: relative; overflow: hidden;
+  padding: 10px 14px; display: flex; align-items: stretch; gap: 10px;
+  box-shadow: 0 1px 3px rgba(4,30,63,0.05); position: relative; overflow: hidden;
 }
 .kpi-accent { width: 4px; border-radius: 2px; flex-shrink: 0; }
 .kpi-body { flex: 1; min-width: 0; }
-.kpi-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; line-height: 1.3; }
-.kpi-value { font-family: var(--font-serif); font-size: 30px; color: var(--navy); line-height: 1; letter-spacing: -0.02em; }
-.kpi-desc { font-size: 11px; color: var(--slate); margin-top: 3px; font-weight: 400; }
+.kpi-label { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; line-height: 1.3; }
+.kpi-value { font-family: var(--font-serif); font-size: 24px; color: var(--navy); line-height: 1; letter-spacing: -0.02em; }
+.kpi-desc { font-size: 10px; color: var(--slate); margin-top: 2px; font-weight: 400; }
 
-.content { padding: 0 36px 20px; flex: 1; display: flex; flex-direction: column; gap: 20px; }
-.content-row { display: grid; gap: 20px; }
+.content { padding: 0 28px 8px; flex: 1; display: flex; flex-direction: column; gap: 10px; overflow: hidden; min-height: 0; }
+.content-row { display: grid; gap: 10px; }
 .col-2 { grid-template-columns: 1fr 1fr; }
 .col-2-wide { grid-template-columns: 1.6fr 1fr; }
 .col-2-narrow { grid-template-columns: 1fr 1.6fr; }
@@ -181,19 +168,19 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 
 .card {
   background: var(--white); border: 1px solid var(--border); border-radius: 2px;
-  overflow: hidden; box-shadow: 0 1px 4px rgba(4,30,63,0.05);
+  overflow: hidden; box-shadow: 0 1px 3px rgba(4,30,63,0.04); display: flex; flex-direction: column;
 }
 .card-header {
-  padding: 10px 16px 8px; border-bottom: 1px solid var(--border-lt);
-  font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--blue); background: var(--bg-alt);
+  padding: 5px 12px 4px; border-bottom: 1px solid var(--border-lt);
+  font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--blue); background: var(--bg-alt); flex-shrink: 0;
 }
-.card-body { padding: 16px; }
+.card-body { padding: 10px; flex: 1; overflow: hidden; }
 
-.data-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 11px; }
 .data-table thead th {
-  background: var(--navy); color: var(--white); padding: 9px 12px; font-size: 9.5px;
-  font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; text-align: left;
+  background: var(--navy); color: var(--white); padding: 6px 10px; font-size: 9px;
+  font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-align: left;
   border-right: 1px solid rgba(255,255,255,0.07); white-space: nowrap;
 }
 .data-table thead th:last-child { border-right: none; }
@@ -202,10 +189,11 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 .data-table tbody tr:nth-child(odd)  { background: var(--white); }
 .data-table tbody tr:hover { background: var(--blue-xlt); }
 .data-table tbody td {
-  padding: 8px 12px; border-bottom: 1px solid var(--border-lt);
+  padding: 5px 10px; border-bottom: 1px solid var(--border-lt);
   border-right: 1px solid var(--border-lt); font-variant-numeric: tabular-nums; vertical-align: middle;
 }
 .data-table tbody td:last-child { border-right: none; }
+.data-table tbody tr.row-hidden { display: none; }
 .td-bold { font-weight: 700; color: var(--navy); }
 .td-blue { color: var(--blue); font-weight: 600; }
 .td-indigo { color: var(--indigo); font-weight: 500; }
@@ -216,11 +204,11 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 .td-center { text-align: center; }
 .td-right  { text-align: right; }
 
-.hbar-wrap { display: flex; align-items: center; gap: 10px; }
-.hbar-label { font-size: 12px; color: var(--slate); min-width: 180px; }
-.hbar-track { flex: 1; height: 8px; background: var(--border-lt); border-radius: 2px; overflow: hidden; }
-.hbar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
-.hbar-pct { font-size: 12px; font-weight: 700; color: var(--navy); min-width: 36px; text-align: right; }
+.hbar-wrap { display: flex; align-items: center; gap: 8px; }
+.hbar-label { font-size: 11px; color: var(--slate); min-width: 150px; }
+.hbar-track { flex: 1; height: 7px; background: var(--border-lt); border-radius: 2px; overflow: hidden; }
+.hbar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+.hbar-pct { font-size: 11px; font-weight: 700; color: var(--navy); min-width: 32px; text-align: right; }
 
 .tier-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 2px; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; }
 .tier-a { background: var(--blue); color: var(--white); }
@@ -319,8 +307,8 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 
 /* ═══ COVER ═══ */
 #s1 {
-  background: var(--navy); min-height: 100vh; display: flex; flex-direction: column;
-  position: relative; overflow: hidden;
+  background: var(--navy);
+  display: flex; flex-direction: column;
 }
 #s1::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--blue); }
 #s1::after {
@@ -328,49 +316,131 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
   border-radius: 50%; background: radial-gradient(circle, rgba(15,117,189,0.08) 0%, transparent 65%); pointer-events: none;
 }
 
-.cover-body { flex: 1; display: flex; align-items: flex-start; padding: 60px 60px 40px 60px; gap: 60px; }
-.cover-left { flex: 1; padding-top: 20px; }
-.cover-eyebrow { font-size: 10.5px; font-weight: 600; letter-spacing: 0.2em; color: var(--blue); text-transform: uppercase; margin-bottom: 18px; }
-.cover-title { font-family: var(--font-serif); font-size: 58px; color: var(--white); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 28px; }
+.cover-body { flex: 1; display: flex; align-items: flex-start; padding: 36px 48px 24px 48px; gap: 48px; overflow: hidden; min-height: 0; }
+.cover-left { flex: 1; padding-top: 12px; }
+.cover-eyebrow { font-size: 9.5px; font-weight: 600; letter-spacing: 0.2em; color: var(--blue); text-transform: uppercase; margin-bottom: 12px; }
+.cover-title { font-family: var(--font-serif); font-size: 44px; color: var(--white); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 18px; }
 .cover-title span { color: var(--light-blue); font-style: italic; }
-.cover-tagline { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.7; max-width: 520px; border-left: 2px solid rgba(15,117,189,0.4); padding-left: 16px; }
+.cover-tagline { font-size: 11.5px; color: var(--muted); font-weight: 300; line-height: 1.7; max-width: 480px; border-left: 2px solid rgba(15,117,189,0.4); padding-left: 14px; }
 
-.cover-right { width: 260px; flex-shrink: 0; padding-top: 20px; }
-.cover-toc-label { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); margin-bottom: 14px; }
+.cover-right { width: 220px; flex-shrink: 0; padding-top: 12px; }
+.cover-toc-label { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
 .cover-toc-item {
-  display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 2px;
-  font-size: 12px; color: rgba(186,202,236,0.55); cursor: pointer; text-decoration: none;
+  display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 2px;
+  font-size: 11px; color: rgba(186,202,236,0.55); cursor: pointer; text-decoration: none;
   transition: all 0.15s; border-left: 2px solid transparent;
 }
 .cover-toc-item:hover { color: var(--light-blue); background: rgba(15,117,189,0.08); border-left-color: var(--blue); }
 .cover-toc-item.active { color: var(--white); border-left-color: var(--blue); background: rgba(15,117,189,0.12); }
-
-/* Skipped TOC items — dimmed like hidden slides in deck */
-.cover-toc-item.toc-skipped {
-  opacity: 0.38;
-  font-style: italic;
-  position: relative;
-}
+.cover-toc-item.toc-skipped { opacity: 0.38; font-style: italic; position: relative; }
 .cover-toc-item.toc-skipped::after {
-  content: 'hidden';
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-left: auto;
-  border: 1px dashed rgba(186,202,236,0.2);
-  padding: 1px 5px;
-  border-radius: 2px;
+  content: 'hidden'; font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin-left: auto; border: 1px dashed rgba(186,202,236,0.2); padding: 1px 5px; border-radius: 2px;
 }
-
-.cover-toc-num { font-size: 9.5px; font-weight: 700; color: var(--blue); min-width: 18px; }
+.cover-toc-num { font-size: 9px; font-weight: 700; color: var(--blue); min-width: 16px; }
 .cover-toc-item.toc-skipped .cover-toc-num { color: var(--muted); }
 
-.cover-footer { padding: 16px 60px; border-top: 1px solid rgba(186,202,236,0.1); display: flex; gap: 0; }
-.cover-meta { flex: 1; padding: 10px 24px 10px 0; border-right: 1px solid rgba(186,202,236,0.1); font-size: 11px; font-weight: 600; color: var(--blue); letter-spacing: 0.08em; }
-.cover-meta:last-child { border-right: none; padding-left: 24px; }
-.cover-meta span { display: block; font-size: 9px; color: var(--muted); font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 3px; }
+.cover-footer { padding: 10px 48px; border-top: 1px solid rgba(186,202,236,0.1); display: flex; gap: 0; flex-shrink: 0; }
+.cover-meta { flex: 1; padding: 6px 18px 6px 0; border-right: 1px solid rgba(186,202,236,0.1); font-size: 10px; font-weight: 600; color: var(--blue); letter-spacing: 0.08em; }
+.cover-meta:last-child { border-right: none; padding-left: 18px; }
+.cover-meta span { display: block; font-size: 9px; color: var(--muted); font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; }
+
+/* ── ZONE BAND ROWS ── */
+.zbr{display:grid;grid-template-columns:110px 1fr 70px 60px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--border-lt);gap:0}
+.zbr:last-child{border-bottom:none}
+.zbz{font-size:10.5px;font-weight:800;letter-spacing:0.04em}
+.zbn{font-size:11.5px;font-weight:600;color:var(--navy)}
+.zbm{font-size:11.5px;color:var(--slate);font-variant-numeric:tabular-nums;text-align:right}
+.zba{font-size:10px;font-weight:700;text-align:right}
+
+/* ── RISK & SIGNAL BADGES ── */
+.rbadge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:2px;font-size:10px;font-weight:700;white-space:nowrap}
+.risk-high{background:var(--red-lt);color:var(--red);border:1px solid rgba(184,50,50,0.2)}
+.risk-med{background:var(--amber-lt);color:var(--amber);border:1px solid rgba(196,122,15,0.2)}
+.risk-low{background:var(--green-lt);color:var(--green);border:1px solid rgba(26,154,108,0.2)}
+.risk-none{background:var(--bg-alt);color:var(--muted);border:1px solid var(--border)}
+.sbadge{display:inline-flex;align-items:center;padding:3px 7px;border-radius:2px;font-size:9.5px;font-weight:700;white-space:nowrap}
+.sig-ws{background:var(--green-lt);color:var(--green);border:1px solid rgba(26,154,108,0.25)}
+.sig-ti{background:var(--amber-lt);color:var(--amber);border:1px solid rgba(196,122,15,0.25)}
+.sig-mo{background:var(--indigo-lt);color:var(--indigo);border:1px solid rgba(56,59,110,0.2)}
+.sig-av{background:var(--red-lt);color:var(--red);border:1px solid rgba(184,50,50,0.2)}
+
+/* ── MATURITY ROWS ── */
+.mrow{display:flex;align-items:center;gap:8px;padding:5px 12px;border-bottom:1px solid var(--border-lt)}
+.mlabel{font-size:10.5px;color:var(--navy);font-weight:600;min-width:200px}
+.msub{font-size:10px;color:var(--muted);font-weight:400}
+.mtrack{flex:1;height:7px;background:var(--border-lt);border-radius:2px;overflow:hidden}
+.mfill{height:100%;border-radius:2px}
+.mval{font-size:11px;font-weight:700;color:var(--navy);min-width:30px;text-align:right}
+.mbadge{font-size:9px;font-weight:600;padding:2px 6px;border-radius:2px;margin-left:4px;white-space:nowrap}
+
+/* ── VALIDATION ITEMS ── */
+.vitem{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px;background:var(--bg);border:1px solid var(--border);border-radius:2px}
+.vdot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+.vlbl{font-size:9.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+.vpct{font-size:14px;font-weight:700}
+
+/* ══ FILTER BAR ══ */
+.filter-bar {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 5px;
+  padding: 5px 16px; background: var(--navy-mid);
+  border-bottom: 1px solid rgba(186,202,236,0.12);
+  flex-shrink: 0; overflow: hidden;
+}
+.filter-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap; padding-right: 6px;
+  border-right: 1px solid rgba(186,202,236,0.15); margin-right: 2px;
+}
+.filter-group { display: flex; align-items: center; gap: 6px; }
+.filter-group-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(186,202,236,0.45); white-space: nowrap;
+}
+.filter-select {
+  appearance: none; -webkit-appearance: none;
+  background: rgba(255,255,255,0.05) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238299B8'/%3E%3C/svg%3E") no-repeat right 8px center;
+  border: 1px solid rgba(186,202,236,0.18); border-radius: 2px;
+  color: var(--light-blue); font-family: var(--font); font-size: 11px; font-weight: 500;
+  padding: 4px 26px 4px 9px; cursor: pointer; min-width: 130px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.filter-select:focus { outline: none; border-color: var(--blue); background-color: rgba(15,117,189,0.12); }
+.filter-select option { background: var(--navy); color: var(--white); }
+.filter-toggle-group { display: flex; gap: 2px; }
+.filter-toggle {
+  padding: 4px 10px; border-radius: 2px; font-size: 10.5px; font-weight: 700;
+  border: 1px solid rgba(186,202,236,0.18); background: transparent;
+  color: var(--muted); cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em;
+}
+.filter-toggle.on { background: var(--blue); color: var(--white); border-color: var(--blue); }
+.filter-toggle.on-indigo { background: var(--indigo); color: var(--white); border-color: var(--indigo); }
+.filter-toggle.on-green { background: var(--green); color: var(--white); border-color: var(--green); }
+.filter-toggle.on-amber { background: var(--amber); color: var(--white); border-color: rgba(196,122,15,0.6); }
+.filter-toggle.on-red { background: var(--red); color: var(--white); border-color: var(--red); }
+.filter-sep { width: 1px; height: 20px; background: rgba(186,202,236,0.12); margin: 0 4px; flex-shrink: 0; }
+.filter-pill {
+  display: flex; align-items: center; gap: 5px; padding: 3px 8px 3px 10px;
+  background: rgba(15,117,189,0.15); border: 1px solid rgba(15,117,189,0.3);
+  border-radius: 2px; font-size: 10.5px; font-weight: 600; color: var(--light-blue); cursor: pointer;
+}
+.filter-pill:hover { background: rgba(15,117,189,0.25); }
+.filter-clear-btn {
+  margin-left: auto; padding: 4px 10px; border-radius: 2px; font-size: 9.5px;
+  font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  border: 1px dashed rgba(186,202,236,0.2); background: transparent;
+  color: rgba(186,202,236,0.4); cursor: pointer; transition: all 0.15s;
+}
+.filter-clear-btn:hover { color: var(--light-blue); border-color: rgba(186,202,236,0.4); }
+/* Tableau note tag */
+.filter-tableau-note {
+  font-size: 9px; color: rgba(186,202,236,0.3); font-style: italic;
+  letter-spacing: 0.04em; margin-left: auto; white-space: nowrap;
+}
+/* Required filter — slightly highlighted */
+.filter-group.required .filter-group-label::after {
+  content: ' ✱'; color: var(--blue); font-style: normal;
+}
 </style>
 </head>
 <body>
@@ -378,21 +448,21 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 <!-- ══ NAVIGATION RAIL ══ -->
 <nav class="nav">
   <div class="nav-logo">STOC</div>
-  <a href="#s1"  class="nav-item active" title="Cover">CV</a>
+  <a data-slide="s1" class="nav-item active" title="Cover">CV</a>
   <!-- Active slides -->
-  <a href="#s2"  class="nav-item" title="Market Overview">01</a>
-  <a href="#s10" class="nav-item" title="By State Summary">02</a>
-  <a href="#s4"  class="nav-item" title="Radius Clustering">03</a>
-  <a href="#s5"  class="nav-item" title="Quality &amp; Maturity">04</a>
+  <a data-slide="s2"  class="nav-item" title="Market Overview">01</a>
+  <a data-slide="s10" class="nav-item" title="By State Summary">02</a>
+  <a data-slide="s4"  class="nav-item" title="Radius Clustering">03</a>
+  <a data-slide="s5"  class="nav-item" title="Quality &amp; Maturity">04</a>
   <!-- Divider before hidden slides -->
   <div class="nav-divider"></div>
   <!-- Skipped/hidden slides -->
-  <a href="#s3"  class="nav-item skipped" title="Top Target Markets (Hidden)">05</a>
-  <a href="#s6"  class="nav-item skipped" title="Geographic Opportunity (Hidden)">06</a>
-  <a href="#s7"  class="nav-item skipped" title="Competitive Landscape (Hidden)">07</a>
-  <a href="#s8"  class="nav-item skipped" title="Opportunity Profile (Hidden)">08</a>
-  <a href="#s9"  class="nav-item skipped" title="PE Consolidation (Hidden)">09</a>
-  <a href="#s11" class="nav-item skipped" title="Appendix (Hidden)">AP</a>
+  <a data-slide="s3"  class="nav-item skipped" title="Top Target Markets (Hidden)">05</a>
+  <a data-slide="s6"  class="nav-item skipped" title="Geographic Opportunity (Hidden)">06</a>
+  <a data-slide="s7"  class="nav-item skipped" title="Competitive Landscape (Hidden)">07</a>
+  <a data-slide="s8"  class="nav-item skipped" title="Opportunity Profile (Hidden)">08</a>
+  <a data-slide="s9"  class="nav-item skipped" title="PE Consolidation (Hidden)">09</a>
+  <a data-slide="s11" class="nav-item skipped" title="Appendix (Hidden)">AP</a>
 </nav>
 
 <div class="main">
@@ -401,7 +471,7 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 <section id="s1" class="slide">
   <div class="cover-body">
     <div class="cover-left">
-      <div class="cover-eyebrow">Sector Intelligence Report &nbsp;·&nbsp; MedSpa &nbsp;·&nbsp; Sector 01 of 03</div>
+      <div class="cover-eyebrow">Sector Intelligence Report &nbsp;·&nbsp; MedSpa &nbsp;·&nbsp; Sector 01 of 05</div>
       <div class="cover-title">MedSpa<br>Market<br><span>Intelligence</span><br>Report</div>
       <div class="cover-tagline">
         Fragmentation Analysis &nbsp;·&nbsp; Geographic Opportunity &nbsp;·&nbsp; Radius-Based Target Clustering &nbsp;·&nbsp; PE Consolidation Activity &nbsp;·&nbsp; Operator Quality Benchmarks
@@ -410,26 +480,26 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
     <div class="cover-right">
       <div class="cover-toc-label">Contents</div>
       <!-- Active slides -->
-      <a href="#s2"  class="cover-toc-item active"><span class="cover-toc-num">01</span> Market Overview</a>
-      <a href="#s10" class="cover-toc-item"><span class="cover-toc-num">02</span> By State Summary</a>
-      <a href="#s4"  class="cover-toc-item"><span class="cover-toc-num">03</span> Radius-Based Target Clustering</a>
-      <a href="#s5"  class="cover-toc-item"><span class="cover-toc-num">04</span> Quality &amp; Maturity</a>
+      <a data-slide="s2"  class="cover-toc-item active"><span class="cover-toc-num">01</span> Market Overview</a>
+      <a data-slide="s10" class="cover-toc-item"><span class="cover-toc-num">02</span> By State Summary</a>
+      <a data-slide="s4"  class="cover-toc-item"><span class="cover-toc-num">03</span> Radius-Based Target Clustering</a>
+      <a data-slide="s5"  class="cover-toc-item"><span class="cover-toc-num">04</span> Quality &amp; Maturity</a>
       <!-- Divider in TOC -->
       <div style="height:1px;background:rgba(186,202,236,0.1);margin:10px 10px 8px;"></div>
       <div style="font-size:8.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(130,153,184,0.5);padding:0 10px 6px;">Hidden Slides</div>
       <!-- Hidden slides -->
-      <a href="#s3"  class="cover-toc-item toc-skipped"><span class="cover-toc-num">05</span> Top Target Markets</a>
-      <a href="#s6"  class="cover-toc-item toc-skipped"><span class="cover-toc-num">06</span> Geographic Opportunity</a>
-      <a href="#s7"  class="cover-toc-item toc-skipped"><span class="cover-toc-num">07</span> Competitive Landscape</a>
-      <a href="#s8"  class="cover-toc-item toc-skipped"><span class="cover-toc-num">08</span> Opportunity Profile</a>
-      <a href="#s9"  class="cover-toc-item toc-skipped"><span class="cover-toc-num">09</span> PE Consolidation</a>
-      <a href="#s11" class="cover-toc-item toc-skipped"><span class="cover-toc-num">AP</span> Appendix</a>
+      <a data-slide="s3"  class="cover-toc-item toc-skipped"><span class="cover-toc-num">05</span> Top Target Markets</a>
+      <a data-slide="s6"  class="cover-toc-item toc-skipped"><span class="cover-toc-num">06</span> Geographic Opportunity</a>
+      <a data-slide="s7"  class="cover-toc-item toc-skipped"><span class="cover-toc-num">07</span> Competitive Landscape</a>
+      <a data-slide="s8"  class="cover-toc-item toc-skipped"><span class="cover-toc-num">08</span> Opportunity Profile</a>
+      <a data-slide="s9"  class="cover-toc-item toc-skipped"><span class="cover-toc-num">09</span> PE Consolidation</a>
+      <a data-slide="s11" class="cover-toc-item toc-skipped"><span class="cover-toc-num">AP</span> Appendix</a>
     </div>
   </div>
   <div class="cover-footer">
     <div class="cover-meta"><span>Firm</span>STOC Advisory</div>
-    <div class="cover-meta"><span>Date</span>February 2026</div>
-    <div class="cover-meta"><span>Sector</span>MedSpa — 01 of 05</div>
+    <div class="cover-meta"><span>Date</span>March 2026</div>
+    <div class="cover-meta"><span>Sector</span>MedSpa — 01 of 03</div>
     <div class="cover-meta"><span>Classification</span>Confidential</div>
   </div>
 </section>
@@ -442,22 +512,65 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
     <div class="slide-sub">Total opportunity universe, geographic spread &amp; CBSA concentration — sourced from STOC MedSpa dataset</div>
   </div>
 
+  <!-- FILTER BAR — Slide 1: Market Overview -->
+  <div class="filter-bar">
+    <span class="filter-label">Filters</span>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Region</span>
+      <div class="filter-toggle-group" id="fb1-region">
+        <button class="filter-toggle on" data-val="all">All</button>
+        <button class="filter-toggle" data-val="South/SE">South / SE</button>
+        <button class="filter-toggle" data-val="West">West Coast</button>
+        <button class="filter-toggle" data-val="Northeast">Northeast</button>
+        <button class="filter-toggle" data-val="Midwest">Midwest</button>
+      </div>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Tier</span>
+      <div class="filter-toggle-group" id="fb1-tier">
+        <button class="filter-toggle on" data-val="all">All</button>
+        <button class="filter-toggle" data-val="High">High</button>
+        <button class="filter-toggle" data-val="Med">Med</button>
+        <button class="filter-toggle" data-val="Low">Low</button>
+      </div>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Ownership</span>
+      <select class="filter-select" id="fb1-ownership">
+        <option value="all">All ownership types</option>
+        <option value="Independent">Independent</option>
+        <option value="Chain">Chain / Franchise</option>
+        <option value="Target">Target only</option>
+      </select>
+    </div>
+
+    <button class="filter-clear-btn" onclick="clearFilters('fb1')">Reset</button>
+    <span class="filter-tableau-note">Tableau: Region, Tier, Ownership fields → apply to sheet</span>
+  </div>
+
   <div class="kpi-grid kpi-grid-4">
     <div class="kpi-tile">
       <div class="kpi-accent" style="background:var(--blue)"></div>
-      <div class="kpi-body"><div class="kpi-label">Total MedSpa Opportunities</div><div class="kpi-value">4,800+</div><div class="kpi-desc">Across 48 states, 312 CBSAs</div></div>
+      <div class="kpi-body"><div class="kpi-label">Total MedSpa Opportunities</div><div class="kpi-value" data-kpi="total">4,800+</div><div class="kpi-desc">Across 48 states, 312 CBSAs</div></div>
     </div>
     <div class="kpi-tile">
       <div class="kpi-accent" style="background:var(--indigo)"></div>
-      <div class="kpi-body"><div class="kpi-label">CBSAs Represented</div><div class="kpi-value">312</div><div class="kpi-desc">Metro statistical areas covered</div></div>
+      <div class="kpi-body"><div class="kpi-label">CBSAs Represented</div><div class="kpi-value" data-kpi="cbsas">312</div><div class="kpi-desc">Metro statistical areas covered</div></div>
     </div>
     <div class="kpi-tile">
       <div class="kpi-accent" style="background:var(--light-blue)"></div>
-      <div class="kpi-body"><div class="kpi-label">States with Coverage</div><div class="kpi-value">48</div><div class="kpi-desc">Near-complete national footprint</div></div>
+      <div class="kpi-body"><div class="kpi-label">States with Coverage</div><div class="kpi-value" data-kpi="states">48</div><div class="kpi-desc">Near-complete national footprint</div></div>
     </div>
     <div class="kpi-tile">
       <div class="kpi-accent" style="background:var(--navy)"></div>
-      <div class="kpi-body"><div class="kpi-label">Tier 1–2 CBSA Concentration</div><div class="kpi-value">67%</div><div class="kpi-desc">High-density urban opportunity pool</div></div>
+      <div class="kpi-body"><div class="kpi-label">Tier 1–2 CBSA Concentration</div><div class="kpi-value" data-kpi="t12">67%</div><div class="kpi-desc">High-density urban opportunity pool</div></div>
     </div>
   </div>
 
@@ -465,7 +578,7 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
     <div class="content-row col-2-wide">
       <div class="card">
         <div class="card-header">Opportunity Density by State — [Tableau Map Placeholder]</div>
-        <div class="card-body" style="height:220px;display:flex;align-items:center;justify-content:center;background:var(--bg-alt);">
+        <div class="card-body" style="height:160px;display:flex;align-items:center;justify-content:center;background:var(--bg-alt);">
           <div style="text-align:center;color:var(--muted)">
             <div style="font-size:36px;margin-bottom:8px;">🗺</div>
             <div style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;">Tableau Map — Opportunity Density by State</div>
@@ -483,8 +596,9 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header">Top 10 States by Opportunity Count</div>
+      <div class="card" style="overflow:hidden;display:flex;flex-direction:column;">
+        <div class="card-header" style="flex-shrink:0">Top 10 States by Opportunity Count</div>
+        <div style="overflow-y:auto;flex:1;">
         <table class="data-table">
           <thead><tr>
             <th style="width:28px">#</th>
@@ -494,6 +608,7 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
           </tr></thead>
           <tbody id="top10States"></tbody>
         </table>
+        </div>
       </div>
     </div>
   </div>
@@ -512,27 +627,71 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
     <div class="slide-sub">Opportunity breakdown by state — High / Med / Low tiers, total count, and attractiveness percentage</div>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);background:var(--navy-mid);border-bottom:2px solid var(--blue)">
-    <div style="padding:12px 20px;border-right:1px solid rgba(186,202,236,0.1);display:flex;align-items:center;gap:10px">
+  <!-- FILTER BAR — Slide 2: By State Summary -->
+  <div class="filter-bar">
+    <span class="filter-label">Filters</span>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Region</span>
+      <select class="filter-select" id="fb2-region">
+        <option value="all">All regions</option>
+        <option value="South/SE">South / SE</option>
+        <option value="West">West Coast</option>
+        <option value="Northeast">Northeast</option>
+        <option value="Midwest">Midwest</option>
+        <option value="Mountain">Mountain / SW</option>
+      </select>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Show Tier</span>
+      <div class="filter-toggle-group" id="fb2-tier">
+        <button class="filter-toggle on" data-val="all">All</button>
+        <button class="filter-toggle" data-val="High">High only</button>
+        <button class="filter-toggle" data-val="HM">High + Med</button>
+      </div>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Min. Opportunities</span>
+      <select class="filter-select" id="fb2-minopps" style="min-width:100px">
+        <option value="0">No minimum</option>
+        <option value="50">50+</option>
+        <option value="100">100+</option>
+        <option value="200">200+</option>
+        <option value="500">500+</option>
+      </select>
+    </div>
+
+    <button class="filter-clear-btn" onclick="clearFilters('fb2')">Reset</button>
+    <span class="filter-tableau-note">Tableau: Region, Tier, Total Count fields → apply to sheet</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);background:var(--navy-mid);border-bottom:2px solid var(--blue);flex-shrink:0">
+    <div style="padding:7px 14px;border-right:1px solid rgba(186,202,236,0.1);display:flex;align-items:center;gap:8px">
       <div style="width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0"></div>
-      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">High Tier</div><div style="font-size:13px;font-weight:700;color:var(--white)">2,837 opportunities</div></div>
+      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">High Tier</div><div style="font-size:12px;font-weight:700;color:var(--white)">2,837 opportunities</div></div>
     </div>
-    <div style="padding:12px 20px;border-right:1px solid rgba(186,202,236,0.1);display:flex;align-items:center;gap:10px">
+    <div style="padding:7px 14px;border-right:1px solid rgba(186,202,236,0.1);display:flex;align-items:center;gap:8px">
       <div style="width:8px;height:8px;border-radius:50%;background:var(--indigo);flex-shrink:0"></div>
-      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Med Tier</div><div style="font-size:13px;font-weight:700;color:var(--white)">7,104 opportunities</div></div>
+      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Med Tier</div><div style="font-size:12px;font-weight:700;color:var(--white)">7,104 opportunities</div></div>
     </div>
-    <div style="padding:12px 20px;border-right:1px solid rgba(186,202,236,0.1);display:flex;align-items:center;gap:10px">
+    <div style="padding:7px 14px;border-right:1px solid rgba(186,202,236,0.1);display:flex;align-items:center;gap:8px">
       <div style="width:8px;height:8px;border-radius:50%;background:var(--light-blue);flex-shrink:0"></div>
-      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Attractive (H+M)</div><div style="font-size:13px;font-weight:700;color:var(--white)">9,941 opportunities</div></div>
+      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Attractive (H+M)</div><div style="font-size:12px;font-weight:700;color:var(--white)">9,941 opportunities</div></div>
     </div>
-    <div style="padding:12px 20px;display:flex;align-items:center;gap:10px">
+    <div style="padding:7px 14px;display:flex;align-items:center;gap:8px">
       <div style="width:8px;height:8px;border-radius:50%;border:1.5px solid var(--muted);flex-shrink:0"></div>
-      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Total Universe</div><div style="font-size:13px;font-weight:700;color:var(--white)">14,800+ opportunities</div></div>
+      <div><div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Total Universe</div><div style="font-size:12px;font-weight:700;color:var(--white)">14,800+ opportunities</div></div>
     </div>
   </div>
 
-  <div style="padding:0 36px 20px;flex:1">
-    <table class="data-table" style="margin-top:0">
+  <div style="padding:0 16px 0 16px;flex:1;overflow-y:auto;min-height:0;">
+    <table class="data-table">
       <thead>
         <tr>
           <th rowspan="2" style="text-align:left;background:var(--navy);padding-left:16px">State</th>
@@ -554,7 +713,7 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
     </table>
   </div>
 
-  <div style="background:var(--navy);padding:12px 36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+  <div style="background:var(--navy);padding:6px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;flex-shrink:0">
     <div style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--muted)"><div style="width:8px;height:8px;border-radius:50%;background:var(--blue)"></div><strong style="color:var(--light-blue)">High</strong> Score 75-100. Primary acquisition target.</div>
     <div style="width:1px;height:14px;background:rgba(186,202,236,0.2)"></div>
     <div style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--muted)"><div style="width:8px;height:8px;border-radius:50%;background:var(--indigo)"></div><strong style="color:var(--light-blue)">Med</strong> Score 40-74. Secondary / add-on candidate.</div>
@@ -574,107 +733,212 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 <!-- ══ SLIDE 3 — RADIUS-BASED TARGET CLUSTERING ══ -->
 <section id="s4" class="slide">
   <div class="slide-header">
-    <div class="slide-num">03 &nbsp;·&nbsp; Radius-Based Target Clustering</div>
+    <div class="slide-num">03 &nbsp;·&nbsp; Radius Clustering</div>
     <div class="slide-title">Radius-Based Target Clustering</div>
-    <div class="slide-sub">Intra-CBSA supply gap identification · Density-adjusted zone bands · Nearest-neighbor counts · Cannibalization risk flags</div>
+    <div class="slide-sub">The same CBSA contains both oversaturated cores and genuinely underserved sub-markets. Zone rings reveal exactly where demand exists but supply doesn't.</div>
   </div>
 
-  <div class="section-label" style="background:var(--navy);color:var(--light-blue);border-bottom:2px solid var(--blue)">
-    <span style="color:var(--blue);font-weight:800;letter-spacing:0.16em;font-size:9px">MODEL OBJECTIVE</span>
-    <span style="font-weight:400;color:rgba(186,202,236,0.75);font-size:11.5px;margin-left:8px">Identifies <strong style="color:var(--white)">underserved sub-markets within a CBSA</strong> — not proximity to PE platforms. Zone rings reveal where supply gaps exist relative to addressable female 25–64 population, which targets are tuck-in candidates, and where cannibalization risk is elevated.</span>
-    <span style="margin-left:auto;background:rgba(26,154,108,0.18);border:1px solid rgba(26,154,108,0.35);color:#4ECBA5;font-size:9px;font-weight:800;letter-spacing:0.1em;padding:2px 8px;border-radius:2px;white-space:nowrap;flex-shrink:0">Intra-CBSA · Supply Gap</span>
-  </div>
+  <!-- FILTER BAR — Slide 3 -->
+  <div class="filter-bar" style="background:var(--navy);border-bottom:2px solid rgba(15,117,189,0.4)">
+    <span class="filter-label">Filters</span>
 
-  <div class="content" style="padding-top:14px">
-    <div class="section-label">Density-Adjusted Zone Bands — Calibrated by CBSA Tier</div>
-    <div class="content-row col-3" style="margin-bottom:14px">
-      <div class="card" style="border-top:3px solid var(--indigo)">
-        <div class="card-header" style="background:var(--indigo);color:var(--white)">Dense Urban — Tier 1 Dense &nbsp;<span style="font-weight:400;opacity:0.65;font-size:9px">NYC · LA · CHI · SF · BOS</span></div>
-        <div style="padding:10px 14px">
-          <table style="width:100%;border-collapse:collapse;font-size:11.5px">
-            <tr style="border-bottom:1px solid var(--border-lt)"><td style="padding:5px 0;color:var(--red);font-weight:700">Zone 1 · Core</td><td style="text-align:right;font-weight:700">0 – 2 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 5–8 min</td></tr>
-            <tr style="border-bottom:1px solid var(--border-lt)"><td style="padding:5px 0;color:var(--amber);font-weight:700">Zone 2 · Tuck-In</td><td style="text-align:right;font-weight:700">2 – 5 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 10–12 min</td></tr>
-            <tr style="border-bottom:1px solid var(--border-lt)"><td style="padding:5px 0;color:var(--blue);font-weight:700">Zone 3 · Monitor</td><td style="text-align:right;font-weight:700">5 – 10 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 15–20 min</td></tr>
-            <tr><td style="padding:5px 0;color:var(--green);font-weight:700">Zone 4 · White Space</td><td style="text-align:right;font-weight:700">10 – 15 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 20–30 min</td></tr>
-          </table>
-          <div style="margin-top:8px;padding:6px 8px;background:var(--indigo-lt);border-radius:2px;font-size:10px;color:var(--indigo);line-height:1.5"><strong>Hard cap at 15 mi.</strong> Beyond this in NYC/BOS/SF you cross state lines or enter a competing CBSA. No 20–50 mi bands.</div>
-        </div>
-      </div>
-      <div class="card" style="border-top:3px solid var(--blue)">
-        <div class="card-header" style="background:var(--blue);color:var(--white)">Mid-Density — Tier 1/2 &nbsp;<span style="font-weight:400;opacity:0.65;font-size:9px">DAL · ATL · DEN · PHX · SEA · HOU</span></div>
-        <div style="padding:10px 14px">
-          <table style="width:100%;border-collapse:collapse;font-size:11.5px">
-            <tr style="border-bottom:1px solid var(--border-lt)"><td style="padding:5px 0;color:var(--red);font-weight:700">Zone 1 · Core</td><td style="text-align:right;font-weight:700">0 – 3 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 6–10 min</td></tr>
-            <tr style="border-bottom:1px solid var(--border-lt)"><td style="padding:5px 0;color:var(--amber);font-weight:700">Zone 2 · Tuck-In</td><td style="text-align:right;font-weight:700">3 – 7 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 10–15 min</td></tr>
-            <tr style="border-bottom:1px solid var(--border-lt)"><td style="padding:5px 0;color:var(--blue);font-weight:700">Zone 3 · Monitor</td><td style="text-align:right;font-weight:700">7 – 15 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 15–25 min</td></tr>
-            <tr><td style="padding:5px 0;color:var(--green);font-weight:700">Zone 4 · White Space</td><td style="text-align:right;font-weight:700">15 – 25 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 25–35 min</td></tr>
-          </table>
-          <div style="margin-top:8px;padding:6px 8px;background:var(--bg-alt);border-radius:2px;font-size:10px;color:var(--slate);line-height:1.5">Cap at 25 mi. Beyond this is a distinct population cluster — treat as separate sub-market thesis.</div>
-        </div>
-      </div>
-      <div class="card" style="border-top:3px solid var(--teal)">
-        <div class="card-header" style="background:var(--teal);color:var(--white)">Suburban / Spread — Tier 2/3 &nbsp;<span style="font-weight:400;opacity:0.65;font-size:9px">NSH · CLT · AUS · RAL · SLC</span></div>
-        <div style="padding:10px 14px">
-          <table style="width:100%;border-collapse:collapse;font-size:11.5px">
-            <tr style="border-bottom:1px solid var(--border-lt)"><td style="padding:5px 0;color:var(--red);font-weight:700">Zone 1 · Core</td><td style="text-align:right;font-weight:700">0 – 5 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 8–12 min</td></tr>
-            <tr style="border-bottom:1px solid var(--border-lt)"><td style="padding:5px 0;color:var(--amber);font-weight:700">Zone 2 · Tuck-In</td><td style="text-align:right;font-weight:700">5 – 10 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 12–18 min</td></tr>
-            <tr style="border-bottom:1px solid var(--border-lt)"><td style="padding:5px 0;color:var(--blue);font-weight:700">Zone 3 · Monitor</td><td style="text-align:right;font-weight:700">10 – 20 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 20–28 min</td></tr>
-            <tr><td style="padding:5px 0;color:var(--green);font-weight:700">Zone 4 · White Space</td><td style="text-align:right;font-weight:700">20 – 30 mi</td><td style="text-align:right;color:var(--muted);font-size:10px;padding-left:8px">≈ 28–40 min</td></tr>
-          </table>
-          <div style="margin-top:8px;padding:6px 8px;background:var(--teal-lt);border-radius:2px;font-size:10px;color:var(--teal);line-height:1.5">Cap at 30 mi. Beyond this is a distinct township identity (e.g. Franklin ≠ Nashville).</div>
-        </div>
+    <div class="filter-group required">
+      <span class="filter-group-label">CBSA Market</span>
+      <select class="filter-select" id="fb3-cbsa" style="min-width:200px">
+        <option value="">— Select a market —</option>
+        <optgroup label="Dense Urban">
+          <option>New York–Newark</option>
+          <option>Los Angeles–Long Beach</option>
+          <option>Chicago–Naperville</option>
+          <option>San Francisco–Oakland</option>
+          <option>Boston–Cambridge</option>
+          <option>Washington–Arlington</option>
+        </optgroup>
+        <optgroup label="Mid-Density">
+          <option selected>Dallas–Fort Worth</option>
+          <option>Atlanta–Sandy Springs</option>
+          <option>Houston–The Woodlands</option>
+          <option>Phoenix–Mesa</option>
+          <option>Seattle–Tacoma</option>
+          <option>Denver–Aurora</option>
+          <option>Miami–Fort Lauderdale</option>
+        </optgroup>
+        <optgroup label="Suburban / Spread">
+          <option>Nashville–Murfreesboro</option>
+          <option>Charlotte–Concord</option>
+          <option>Austin–Round Rock</option>
+          <option>Raleigh–Cary</option>
+          <option>Salt Lake City</option>
+          <option>Orlando–Kissimmee</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Show Zones</span>
+      <div class="filter-toggle-group" id="fb3-zone">
+        <button class="filter-toggle on" data-val="all">All</button>
+        <button class="filter-toggle" data-val="Z2">Z2 Tuck-In</button>
+        <button class="filter-toggle" data-val="Z4">Z4 White Space</button>
+        <button class="filter-toggle" data-val="Z2Z4">Z2 + Z4</button>
       </div>
     </div>
 
-    <div class="content-row col-2" style="gap:14px">
-      <div class="card">
-        <div class="card-header">Simulated Output — Dallas–Fort Worth Targets by Zone
-          <span style="float:right;font-size:9px;font-weight:400;color:var(--muted)">Mid-Density bands · Ownership = Target rows only</span>
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Risk</span>
+      <div class="filter-toggle-group" id="fb3-risk">
+        <button class="filter-toggle on" data-val="all">All</button>
+        <button class="filter-toggle" data-val="LN">Low / None</button>
+      </div>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Ownership</span>
+      <div class="filter-toggle-group" id="fb3-ownership">
+        <button class="filter-toggle on" data-val="Target">Target</button>
+        <button class="filter-toggle" data-val="all">All</button>
+      </div>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Metro Type</span>
+      <div class="filter-toggle-group" id="fb3-metrotype">
+        <button class="filter-toggle on-indigo on" data-val="auto">Auto</button>
+        <button class="filter-toggle" data-val="dense">Dense</button>
+        <button class="filter-toggle" data-val="mid">Mid</button>
+        <button class="filter-toggle" data-val="suburban">Suburban</button>
+      </div>
+    </div>
+
+    <button class="filter-clear-btn" onclick="clearFilters('fb3')">Reset</button>
+    <span class="filter-tableau-note">Tableau: CBSA City · Distance band column · Ownership · Cannibalization Risk</span>
+  </div>
+
+  <!-- MAIN CONTENT: hero table left, right panel with insight + risk logic + zone ref -->
+  <div class="content" style="padding-top:8px;gap:8px">
+    <div class="content-row col-2" style="gap:10px;align-items:stretch;flex:1;min-height:0;overflow:hidden">
+
+      <!-- LEFT: The ranked target table — THE VALUE -->
+      <div class="card" style="overflow:hidden;display:flex;flex-direction:column;">
+        <div class="card-header" style="flex-shrink:0;background:var(--navy);color:var(--white);border-bottom:2px solid var(--blue)">
+          Dallas–Fort Worth — Underserved Sub-Markets by Zone
+          <span style="float:right;font-size:9px;font-weight:400;opacity:0.6;letter-spacing:0;text-transform:none">Mid-Density bands · independent targets only</span>
         </div>
-        <table class="data-table">
-          <thead><tr>
-            <th>Target Name</th><th>Sub-Market</th>
-            <th class="th-center">Zone</th><th class="th-center">Dist.</th>
-            <th class="th-center">NN Z1</th><th class="th-center">Cannibal.</th><th class="th-center">Signal</th>
-          </tr></thead>
-          <tbody>
-            <tr><td class="td-bold">Glow Aesthetics DFW</td><td style="font-size:11px;color:var(--slate)">N. Frisco</td><td class="td-center" style="color:var(--amber);font-weight:800">Z2</td><td class="td-center td-muted">4.1</td><td class="td-center" style="color:var(--green);font-weight:700">2</td><td class="td-center" style="color:var(--green);font-size:10px;font-weight:700">Low</td><td class="td-center"><span class="tier-badge" style="background:var(--amber);color:white;font-size:9px">Tuck-In</span></td></tr>
-            <tr><td class="td-bold">Aesthetica Prosper</td><td style="font-size:11px;color:var(--slate)">N. Frisco</td><td class="td-center" style="color:var(--green);font-weight:800">Z4</td><td class="td-center td-muted">16.2</td><td class="td-center" style="color:var(--green);font-weight:700">0</td><td class="td-center" style="color:var(--muted);font-size:10px;font-weight:700">None</td><td class="td-center"><span class="tier-badge tier-a" style="background:var(--green);font-size:9px">★ White Space</span></td></tr>
-            <tr><td class="td-bold">Luxe Laser S. Fort Worth</td><td style="font-size:11px;color:var(--slate)">S. Fort Worth</td><td class="td-center" style="color:var(--green);font-weight:800">Z4</td><td class="td-center td-muted">18.8</td><td class="td-center" style="color:var(--green);font-weight:700">1</td><td class="td-center" style="color:var(--muted);font-size:10px;font-weight:700">None</td><td class="td-center"><span class="tier-badge tier-a" style="background:var(--green);font-size:9px">★ White Space</span></td></tr>
-            <tr><td class="td-bold">Premier Skin Plano</td><td style="font-size:11px;color:var(--slate)">Plano / Allen</td><td class="td-center" style="color:var(--amber);font-weight:800">Z2</td><td class="td-center td-muted">6.4</td><td class="td-center" style="color:var(--amber);font-weight:700">4</td><td class="td-center" style="color:var(--amber);font-size:10px;font-weight:700">Med</td><td class="td-center"><span class="tier-badge" style="background:var(--amber);color:white;font-size:9px">Tuck-In</span></td></tr>
-            <tr><td class="td-bold">Refresh MedSpa Allen</td><td style="font-size:11px;color:var(--slate)">Plano / Allen</td><td class="td-center" style="color:var(--blue);font-weight:800">Z3</td><td class="td-center td-muted">9.1</td><td class="td-center" style="color:var(--slate);font-weight:700">6</td><td class="td-center" style="color:var(--amber);font-size:10px;font-weight:700">Med</td><td class="td-center"><span class="tier-badge" style="background:var(--indigo);color:white;font-size:9px">Monitor</span></td></tr>
-            <tr><td class="td-bold">Knox-Henderson Skin</td><td style="font-size:11px;color:var(--slate)">Knox-Henderson</td><td class="td-center" style="color:var(--red);font-weight:800">Z1</td><td class="td-center td-muted">0.8</td><td class="td-center" style="color:var(--red);font-weight:700">18</td><td class="td-center" style="color:var(--red);font-size:10px;font-weight:700">High</td><td class="td-center"><span class="tier-badge" style="background:var(--red);color:white;font-size:9px">Core/Avoid</span></td></tr>
-          </tbody>
-        </table>
-        <div style="padding:7px 12px;font-size:10px;color:var(--muted);font-style:italic;background:var(--bg-alt);border-top:1px solid var(--border-lt)">Simulated · Replace with live STOC dataset · Ownership="Target" rows only · Distance_band_column + NN formulas applied</div>
+        <div style="overflow-y:auto;flex:1">
+          <table class="data-table">
+            <thead><tr>
+              <th>Clinic / Sub-Market</th>
+              <th class="th-center">Zone</th>
+              <th class="th-center">Miles from Core</th>
+              <th class="th-center">Z1 Neighbors</th>
+              <th class="th-center">Cannibal. Risk</th>
+              <th class="th-center">Signal</th>
+            </tr></thead>
+            <tbody id="clusterTableBody"></tbody>
+          </table>
+        </div>
+        <div style="padding:7px 14px;background:var(--bg-alt);border-top:1px solid var(--border-lt);flex-shrink:0;display:flex;gap:16px;align-items:center">
+          <span style="font-size:10px;color:var(--muted);font-style:italic">Distance measured from nearest acquired platform clinic · Haversine formula · fields: Latitude, Longitude, Distance band column</span>
+        </div>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div style="padding:11px 14px;background:var(--navy);border-left:4px solid var(--blue);border-radius:0 2px 2px 0">
-          <div style="font-size:9px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:var(--blue);margin-bottom:5px">Key Insight</div>
-          <div style="font-size:12px;color:var(--light-blue);line-height:1.6">The same CBSA can contain <strong style="color:var(--white)">both saturated and white-space sub-markets simultaneously.</strong> Dallas ranks highly nationally — yet North Frisco and South Fort Worth are genuinely underserved. CBSA-level scores alone miss this. Only radius clustering reveals it.</div>
-        </div>
-        <div class="card">
-          <div class="card-header">Four Model Outputs</div>
-          <div style="padding:0">
-            <div style="padding:8px 12px;border-bottom:1px solid var(--border-lt);display:flex;gap:10px;align-items:flex-start"><span style="background:var(--green);color:white;font-size:9px;font-weight:800;padding:2px 6px;border-radius:2px;flex-shrink:0;margin-top:1px">01</span><div><div style="font-weight:700;font-size:11.5px;color:var(--navy)">Intra-CBSA White Space Map</div><div style="font-size:10.5px;color:var(--slate)">Sub-markets with supply gaps vs. addressable female 25–64 population</div></div></div>
-            <div style="padding:8px 12px;border-bottom:1px solid var(--border-lt);display:flex;gap:10px;align-items:flex-start"><span style="background:var(--amber);color:white;font-size:9px;font-weight:800;padding:2px 6px;border-radius:2px;flex-shrink:0;margin-top:1px">02</span><div><div style="font-weight:700;font-size:11.5px;color:var(--navy)">Ranked Target List by Zone</div><div style="font-size:10.5px;color:var(--slate)">Zone 2 tuck-ins first · Zone 4 white space next · Priority scored 0–100</div></div></div>
-            <div style="padding:8px 12px;border-bottom:1px solid var(--border-lt);display:flex;gap:10px;align-items:flex-start"><span style="background:var(--red);color:white;font-size:9px;font-weight:800;padding:2px 6px;border-radius:2px;flex-shrink:0;margin-top:1px">03</span><div><div style="font-weight:700;font-size:11.5px;color:var(--navy)">Cannibalization Risk Flag</div><div style="font-size:10.5px;color:var(--slate)">Zone 1 neighbor count + service overlap → High / Medium / Low / None</div></div></div>
-            <div style="padding:8px 12px;display:flex;gap:10px;align-items:flex-start"><span style="background:var(--blue);color:white;font-size:9px;font-weight:800;padding:2px 6px;border-radius:2px;flex-shrink:0;margin-top:1px">04</span><div><div style="font-weight:700;font-size:11.5px;color:var(--navy)">Nearest-Neighbor Count</div><div style="font-size:10.5px;color:var(--slate)">MedSpa count per zone ring · Haversine from Lat/Long in STOC dataset</div></div></div>
+      <!-- RIGHT PANEL: insight box + risk key + compact zone reference -->
+      <div style="display:flex;flex-direction:column;gap:8px;overflow:hidden;min-height:0">
+
+        <!-- Core insight: underserved sub-market thesis -->
+        <div style="padding:12px 14px;background:var(--navy);border-left:4px solid var(--blue);border-radius:0 2px 2px 0;flex-shrink:0">
+          <div style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue);margin-bottom:6px">How to Read This</div>
+          <div style="font-size:11.5px;color:var(--light-blue);line-height:1.65;margin-bottom:8px">
+            Zone rings are drawn from the <strong style="color:var(--white)">existing population center</strong> of a sub-market — not from any platform clinic. A Z4 record means that zip code has consumer demand but <strong style="color:var(--white)">no MedSpa supply within 15–25 miles</strong>. That is the gap.
+          </div>
+          <div style="font-size:10.5px;color:var(--muted);line-height:1.55;border-top:1px solid rgba(186,202,236,0.12);padding-top:7px">
+            Dallas ranks <strong style="color:var(--light-blue)">#1</strong> nationally by opportunity count — yet North Frisco and South Fort Worth show genuine white space. A CBSA score alone misses this. The rings reveal it.
           </div>
         </div>
-        <div class="card">
-          <div class="card-header">Cannibalization Risk Logic</div>
-          <table class="data-table" style="font-size:11px">
-            <thead><tr><th>Risk</th><th>Trigger Condition</th><th>Action</th></tr></thead>
+
+        <!-- Cannibalization risk key -->
+        <div class="card" style="flex-shrink:0">
+          <div class="card-header">Cannibalization Risk Key</div>
+          <table class="data-table" style="font-size:10.5px">
+            <thead><tr>
+              <th style="width:60px">Level</th>
+              <th>Condition</th>
+              <th>Action</th>
+            </tr></thead>
             <tbody>
-              <tr><td style="color:var(--red);font-weight:700">High</td><td style="color:var(--slate)">≥3 Zone 1 neighbors, service overlap &gt;60%</td><td style="color:var(--slate)">Pause — run patient overlap analysis</td></tr>
-              <tr><td style="color:var(--amber);font-weight:700">Medium</td><td style="color:var(--slate)">1–2 Zone 1 neighbors or overlap 30–60%</td><td style="color:var(--slate)">Differentiation strategy required</td></tr>
-              <tr><td style="color:var(--green);font-weight:700">Low</td><td style="color:var(--slate)">0 Zone 1, thin Zone 2, &lt;30% overlap</td><td style="color:var(--slate)">Clear for tuck-in or de novo</td></tr>
-              <tr><td style="color:var(--muted);font-weight:700">None</td><td style="color:var(--slate)">Zone 4 target — no overlap possible</td><td style="color:var(--slate)">White space confirmed · De novo eval</td></tr>
+              <tr><td><span class="rbadge risk-high">High</span></td><td style="color:var(--slate)">≥3 Z1 neighbors · &gt;60% service overlap</td><td style="color:var(--slate)">Pause · run patient overlap</td></tr>
+              <tr><td><span class="rbadge risk-med">Med</span></td><td style="color:var(--slate)">1–2 Z1 neighbors · 30–60% overlap</td><td style="color:var(--slate)">Requires differentiation plan</td></tr>
+              <tr><td><span class="rbadge risk-low">Low</span></td><td style="color:var(--slate)">0 Z1 neighbors · &lt;30% overlap</td><td style="color:var(--slate)">Clear for tuck-in or de novo</td></tr>
+              <tr><td><span class="rbadge risk-none">None</span></td><td style="color:var(--slate)">Z4 — no supply present</td><td style="color:var(--slate)">White space confirmed</td></tr>
             </tbody>
           </table>
         </div>
+
+        <!-- Compact zone reference — now at bottom as a lookup, not the hero -->
+        <div class="card" style="flex:1;overflow:hidden;min-height:0">
+          <div class="card-header" style="flex-shrink:0">Zone Band Reference <span style="float:right;font-size:9px;font-weight:400;color:var(--muted);letter-spacing:0;text-transform:none">bands vary by metro density · see filter above</span></div>
+          <div style="overflow-y:auto;flex:1;display:flex;flex-direction:column">
+            <table class="data-table" style="font-size:10.5px">
+              <thead>
+                <tr>
+                  <th>Zone</th>
+                  <th>Name</th>
+                  <th class="th-center" style="color:var(--indigo)">Dense Urban</th>
+                  <th class="th-center" style="color:var(--blue)">Mid-Density</th>
+                  <th class="th-center" style="color:var(--teal)">Suburban</th>
+                  <th class="th-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span style="font-weight:800;color:var(--red)">Z1</span></td>
+                  <td style="color:var(--slate)">Saturation Ring</td>
+                  <td class="td-center td-muted">0–2 mi</td>
+                  <td class="td-center td-muted">0–3 mi</td>
+                  <td class="td-center td-muted">0–5 mi</td>
+                  <td class="td-center"><span style="font-size:9.5px;font-weight:700;color:var(--red)">Avoid</span></td>
+                </tr>
+                <tr>
+                  <td><span style="font-weight:800;color:var(--amber)">Z2</span></td>
+                  <td style="color:var(--slate)">Acquisition Zone</td>
+                  <td class="td-center td-muted">2–5 mi</td>
+                  <td class="td-center td-muted">3–7 mi</td>
+                  <td class="td-center td-muted">5–10 mi</td>
+                  <td class="td-center"><span style="font-size:9.5px;font-weight:700;color:var(--amber)">Tuck-In</span></td>
+                </tr>
+                <tr>
+                  <td><span style="font-weight:800;color:var(--blue)">Z3</span></td>
+                  <td style="color:var(--slate)">Competitive Watch</td>
+                  <td class="td-center td-muted">5–10 mi</td>
+                  <td class="td-center td-muted">7–15 mi</td>
+                  <td class="td-center td-muted">10–20 mi</td>
+                  <td class="td-center"><span style="font-size:9.5px;font-weight:700;color:var(--blue)">Track</span></td>
+                </tr>
+                <tr>
+                  <td><span style="font-weight:800;color:var(--green)">Z4</span></td>
+                  <td style="color:var(--slate)">Supply Gap</td>
+                  <td class="td-center td-muted">10–15 mi</td>
+                  <td class="td-center td-muted">15–25 mi</td>
+                  <td class="td-center td-muted">20–30 mi</td>
+                  <td class="td-center"><span style="font-size:9.5px;font-weight:700;color:var(--green)">De Novo</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="padding:6px 12px;background:var(--amber-lt);border-top:1px solid rgba(196,122,15,0.2);margin-top:auto;flex-shrink:0">
+              <span style="font-size:9.5px;color:var(--amber);font-weight:700">Dense markets (NYC·BOS·DC·SF):</span>
+              <span style="font-size:9.5px;color:var(--slate)"> max cap is 15 mi — anything beyond is a separate sub-market thesis, not a tuck-in.</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -690,47 +954,199 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
   <div class="slide-header">
     <div class="slide-num">04 &nbsp;·&nbsp; Market Quality &amp; Maturity</div>
     <div class="slide-title">Market Quality &amp; Maturity</div>
-    <div class="slide-sub">Review Strength Score, Business Maturity, Average Rating distribution — derived from dataset signals</div>
+    <div class="slide-sub">Which operators are worth a conversation? Five signals separate high-quality acquisition targets from the rest.</div>
   </div>
 
-  <div class="content" style="padding-top:16px">
-    <div class="content-row col-3">
-      <div class="info-card blue">
-        <div class="info-card-header">Review Strength Score</div>
-        <div class="info-card-body">Composite: Review Count × Average Rating, normalized 0–100. High = established, trusted opportunities with market proof.</div>
-        <div class="info-card-fields">Fields: ReviewCount, AverageRating</div>
-      </div>
-      <div class="info-card indigo">
-        <div class="info-card-header">Business Maturity Score</div>
-        <div class="info-card-body">Signals: Location Count, Service Count, Has Medical Director, RN Count. Higher = institutionally operated.</div>
-        <div class="info-card-fields">Fields: Location Count, Service Count, RN Count, Medical Director</div>
-      </div>
-      <div class="info-card teal">
-        <div class="info-card-header">Validation Score</div>
-        <div class="info-card-body">Data completeness across 5 fields: phone, email, LinkedIn, website, address. Proxy for outreach readiness.</div>
-        <div class="info-card-fields">Fields: Phone, Email, LinkedIn, Website, Address</div>
+  <!-- FIVE OBJECTIVES STRIP -->
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border);flex-shrink:0">
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 12px;border-right:1px solid var(--border);background:var(--white)">
+      <div style="width:20px;height:20px;border-radius:2px;background:var(--blue-xlt);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;margin-top:1px">01</div>
+      <div><div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:2px">Review Strength</div><div style="font-size:10px;color:var(--slate)">Consumer trust · revenue defensibility</div><div style="font-size:9.5px;font-style:italic;color:var(--blue);margin-top:3px">ReviewCount · AverageRating</div></div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 12px;border-right:1px solid var(--border);background:var(--white)">
+      <div style="width:20px;height:20px;border-radius:2px;background:var(--indigo-lt);color:var(--indigo);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;margin-top:1px">02</div>
+      <div><div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:2px">Business Maturity</div><div style="font-size:10px;color:var(--slate)">Staffing depth · MD · multi-location</div><div style="font-size:9.5px;font-style:italic;color:var(--blue);margin-top:3px">Location Count · Service Count · RN Count · Has Medical Director</div></div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 12px;border-right:1px solid var(--border);background:var(--white)">
+      <div style="width:20px;height:20px;border-radius:2px;background:var(--teal-lt);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;margin-top:1px">03</div>
+      <div><div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:2px">Contact Readiness</div><div style="font-size:10px;color:var(--slate)">Can we reach the owner directly?</div><div style="font-size:9.5px;font-style:italic;color:var(--blue);margin-top:3px">Phone · Email · LinkedIn · Website · Address</div></div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 12px;border-right:1px solid var(--border);background:var(--white)">
+      <div style="width:20px;height:20px;border-radius:2px;background:var(--amber-lt);color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;margin-top:1px">04</div>
+      <div><div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:2px">Service Breadth</div><div style="font-size:10px;color:var(--slate)">8+ services = revenue diversification</div><div style="font-size:9.5px;font-style:italic;color:var(--blue);margin-top:3px">Service Count · Top 3 Services · Plastic Services</div></div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 12px;background:var(--white)">
+      <div style="width:20px;height:20px;border-radius:2px;background:var(--green-lt);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;margin-top:1px">05</div>
+      <div><div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:2px">Platform Fit Score</div><div style="font-size:10px;color:var(--slate)">Composite rank for PE conversations</div><div style="font-size:9.5px;font-style:italic;color:var(--blue);margin-top:3px">All above · Rank · Tier · Ownership</div></div>
+    </div>
+  </div>
+
+  <!-- FILTER BAR — Slide 4: Market Quality & Maturity -->
+  <div class="filter-bar">
+    <span class="filter-label">Filters</span>
+
+    <div class="filter-group">
+      <span class="filter-group-label">State / Region</span>
+      <select class="filter-select" id="fb4-state">
+        <option value="all">All states</option>
+        <optgroup label="Region">
+          <option value="r-south">South / SE</option>
+          <option value="r-west">West Coast</option>
+          <option value="r-ne">Northeast</option>
+          <option value="r-mw">Midwest</option>
+        </optgroup>
+        <optgroup label="Top States">
+          <option>California</option>
+          <option>Texas</option>
+          <option>Florida</option>
+          <option>Georgia</option>
+          <option>Colorado</option>
+          <option>Tennessee</option>
+          <option>Arizona</option>
+          <option>North Carolina</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Tier</span>
+      <div class="filter-toggle-group" id="fb4-tier">
+        <button class="filter-toggle on" data-val="all">All</button>
+        <button class="filter-toggle" data-val="High">High</button>
+        <button class="filter-toggle" data-val="Med">Med</button>
       </div>
     </div>
 
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Min. Reviews</span>
+      <select class="filter-select" id="fb4-reviews" style="min-width:90px">
+        <option value="0">Any</option>
+        <option value="10">10+</option>
+        <option value="50">50+</option>
+        <option value="100">100+</option>
+        <option value="250">250+</option>
+      </select>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Min. Rating</span>
+      <select class="filter-select" id="fb4-rating" style="min-width:80px">
+        <option value="0">Any</option>
+        <option value="3.5">3.5+</option>
+        <option value="4.0">4.0+</option>
+        <option value="4.5">4.5+</option>
+      </select>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Has MD</span>
+      <div class="filter-toggle-group" id="fb4-md">
+        <button class="filter-toggle on" data-val="all">Either</button>
+        <button class="filter-toggle" data-val="yes">Yes</button>
+      </div>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Ownership</span>
+      <div class="filter-toggle-group" id="fb4-ownership">
+        <button class="filter-toggle on" data-val="all">All</button>
+        <button class="filter-toggle" data-val="Target">Target</button>
+      </div>
+    </div>
+
+    <button class="filter-clear-btn" onclick="clearFilters('fb4')">Reset</button>
+    <span class="filter-tableau-note">Tableau: State, Tier, ReviewCount, AverageRating, Has Medical Director, Ownership → apply to sheet</span>
+  </div>
+
+  <div class="content" style="padding-top:8px">
     <div class="content-row col-2">
       <div class="card">
-        <div class="card-header">Average Rating Distribution</div>
-        <div class="card-body"><div id="ratingBars"></div></div>
+        <div class="card-header">Rating Distribution &nbsp;<span style="font-size:9px;font-weight:400;color:var(--muted);letter-spacing:0;text-transform:none">AverageRating field · % of universe</span></div>
+        <div class="card-body">
+          <div id="ratingBars"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid var(--border-lt);padding-top:10px;margin-top:6px">
+            <div class="stat-pill"><div class="stat-pill-val" style="color:var(--blue)">60%</div><div class="stat-pill-lbl">Rated 4.5+ (High Trust)</div></div>
+            <div class="stat-pill"><div class="stat-pill-val" style="color:var(--green)">4.6</div><div class="stat-pill-lbl">Median Rating</div></div>
+          </div>
+        </div>
       </div>
       <div class="card">
-        <div class="card-header">Review Count Tiers — % of Universe</div>
-        <div class="card-body"><div id="reviewBars"></div></div>
+        <div class="card-header">Review Volume &nbsp;<span style="font-size:9px;font-weight:400;color:var(--muted);letter-spacing:0;text-transform:none">ReviewCount field · % of universe</span></div>
+        <div class="card-body">
+          <div id="reviewBars"></div>
+          <div style="padding:8px 10px;background:var(--blue-xlt);border-radius:2px;font-size:11px;color:var(--blue);line-height:1.5;border-left:3px solid var(--blue);margin-top:12px">
+            <strong>PE sweet spot: 51–500 reviews.</strong> Proven demand, not yet institutionalized.
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">Business Maturity Signals — % of Opportunities with Attribute</div>
-      <div class="card-body" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
-        <div class="stat-pill"><div class="stat-pill-val" style="color:var(--blue)">34%</div><div class="stat-pill-lbl">Medical Director on Staff</div></div>
-        <div class="stat-pill"><div class="stat-pill-val" style="color:var(--indigo)">52%</div><div class="stat-pill-lbl">Has Registered Nurse(s)</div></div>
-        <div class="stat-pill"><div class="stat-pill-val" style="color:var(--navy)">61%</div><div class="stat-pill-lbl">Licensed Aesthetician</div></div>
-        <div class="stat-pill"><div class="stat-pill-val" style="color:var(--blue)">43%</div><div class="stat-pill-lbl">Website Verified</div></div>
-        <div class="stat-pill"><div class="stat-pill-val" style="color:var(--muted)">28%</div><div class="stat-pill-lbl">LinkedIn Present</div></div>
+    <div class="card" style="flex-shrink:0">
+      <div class="card-header">Business Maturity — % of Universe with Each Signal &nbsp;<span style="font-size:9px;font-weight:400;color:var(--muted);letter-spacing:0;text-transform:none">and what it means for acquisition</span></div>
+      <div style="padding:0">
+        <div class="mrow"><div class="mlabel">Medical Director on Staff <span class="msub">(Has Medical Director)</span></div><div class="mtrack"><div class="mfill" style="width:34%;background:linear-gradient(90deg,var(--blue),var(--indigo))"></div></div><div class="mval">34%</div><span class="mbadge" style="background:var(--indigo-lt);color:var(--indigo)">Required for PE compliance in most states</span></div>
+        <div class="mrow"><div class="mlabel">Registered Nurse(s) <span class="msub">(Registered Nurses Count &gt;0)</span></div><div class="mtrack"><div class="mfill" style="width:52%;background:linear-gradient(90deg,var(--blue),var(--teal))"></div></div><div class="mval">52%</div><span class="mbadge" style="background:var(--teal-lt);color:var(--teal)">Needed for injectables delegation</span></div>
+        <div class="mrow"><div class="mlabel">Licensed Aesthetician(s) <span class="msub">(Aestheticians Count &gt;0)</span></div><div class="mtrack"><div class="mfill" style="width:61%;background:linear-gradient(90deg,var(--blue),var(--blue-dark))"></div></div><div class="mval">61%</div><span class="mbadge" style="background:var(--blue-xlt);color:var(--blue)">Present in majority of viable targets</span></div>
+        <div class="mrow"><div class="mlabel">Multi-Location <span class="msub">(Location Count &gt;1)</span></div><div class="mtrack"><div class="mfill" style="width:42%;background:linear-gradient(90deg,var(--indigo),var(--navy))"></div></div><div class="mval">42%</div><span class="mbadge" style="background:var(--bg-alt);color:var(--navy)">Scalability already demonstrated</span></div>
+        <div class="mrow"><div class="mlabel">Chain / Franchise <span class="msub">(Chain = true)</span></div><div class="mtrack"><div class="mfill" style="width:18%;background:linear-gradient(90deg,var(--red),var(--amber))"></div></div><div class="mval">18%</div><span class="mbadge" style="background:var(--red-lt);color:var(--red)">Already consolidated — lower priority</span></div>
+        <div class="mrow" style="border-bottom:none"><div class="mlabel">8+ Services <span class="msub">(Service Count ≥8)</span></div><div class="mtrack"><div class="mfill" style="width:29%;background:linear-gradient(90deg,var(--amber),var(--green))"></div></div><div class="mval">29%</div><span class="mbadge" style="background:var(--amber-lt);color:var(--amber)">Reduces single-service concentration risk</span></div>
+      </div>
+    </div>
+
+    <div class="content-row col-2" style="flex:1;min-height:0;overflow:hidden">
+      <div class="card" style="overflow:auto">
+        <div class="card-header">Contact Readiness — Field Completion Rate</div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px">
+            <div class="vitem"><div class="vdot" style="background:var(--blue-xlt);color:var(--blue)">📞</div><div class="vpct" style="color:var(--blue)">78%</div><div class="vlbl">Phone</div></div>
+            <div class="vitem"><div class="vdot" style="background:var(--teal-lt);color:var(--teal)">✉</div><div class="vpct" style="color:var(--teal)">62%</div><div class="vlbl">Email</div></div>
+            <div class="vitem"><div class="vdot" style="background:var(--indigo-lt);color:var(--indigo)">in</div><div class="vpct" style="color:var(--indigo)">28%</div><div class="vlbl">LinkedIn</div></div>
+            <div class="vitem"><div class="vdot" style="background:var(--blue-xlt);color:var(--navy)">🌐</div><div class="vpct" style="color:var(--navy)">43%</div><div class="vlbl">Website</div></div>
+            <div class="vitem"><div class="vdot" style="background:var(--bg-alt);color:var(--slate)">📍</div><div class="vpct" style="color:var(--slate)">91%</div><div class="vlbl">Address</div></div>
+          </div>
+          <div style="margin-bottom:10px">
+            <div class="hbar-wrap" style="margin-bottom:7px"><div class="hbar-label" style="min-width:150px;font-size:11px">All 5 fields</div><div class="hbar-track"><div class="hbar-fill" style="width:22%;background:var(--blue)"></div></div><div class="hbar-pct" style="font-size:11px">22%</div></div>
+            <div class="hbar-wrap" style="margin-bottom:7px"><div class="hbar-label" style="min-width:150px;font-size:11px">4 of 5 fields</div><div class="hbar-track"><div class="hbar-fill" style="width:31%;background:var(--indigo)"></div></div><div class="hbar-pct" style="font-size:11px">31%</div></div>
+            <div class="hbar-wrap" style="margin-bottom:7px"><div class="hbar-label" style="min-width:150px;font-size:11px">3 of 5 fields</div><div class="hbar-track"><div class="hbar-fill" style="width:27%;background:var(--muted)"></div></div><div class="hbar-pct" style="font-size:11px">27%</div></div>
+            <div class="hbar-wrap"><div class="hbar-label" style="min-width:150px;font-size:11px">Fewer than 3</div><div class="hbar-track"><div class="hbar-fill" style="width:20%;background:var(--red)"></div></div><div class="hbar-pct" style="font-size:11px">20%</div></div>
+          </div>
+          <div style="padding:7px 10px;background:var(--green-lt);border-radius:2px;font-size:11px;color:var(--green);border-left:3px solid var(--green)"><strong>53% are immediately reachable</strong> (4–5 fields complete). Email + LinkedIn = highest-value combination for owner outreach.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Platform Fit Score — How Targets Are Ranked</div>
+        <div style="padding:12px 14px;border-bottom:1px solid var(--border-lt)">
+          <div style="font-size:11px;font-weight:600;color:var(--navy);margin-bottom:8px">Weighted composite of 5 signals</div>
+          <div id="fitScoreBars"></div>
+        </div>
+        <div style="padding:10px 14px;border-bottom:1px solid var(--border-lt)">
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:10px;font-size:11.5px"><span style="background:var(--blue);color:white;font-size:9px;font-weight:800;padding:2px 8px;border-radius:2px;min-width:48px;text-align:center">80–100</span><span style="color:var(--navy);font-weight:600">Tier 1</span><span style="color:var(--slate)">Immediate outreach · Sponsor-ready</span></div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:11.5px"><span style="background:var(--indigo);color:white;font-size:9px;font-weight:800;padding:2px 8px;border-radius:2px;min-width:48px;text-align:center">60–79</span><span style="color:var(--navy);font-weight:600">Tier 2</span><span style="color:var(--slate)">Strong add-on candidate</span></div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:11.5px"><span style="background:var(--muted);color:white;font-size:9px;font-weight:800;padding:2px 8px;border-radius:2px;min-width:48px;text-align:center">40–59</span><span style="color:var(--navy);font-weight:600">Tier 3</span><span style="color:var(--slate)">Monitor · enrich data before reaching out</span></div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:11.5px"><span style="background:var(--bg-alt);color:var(--muted);font-size:9px;font-weight:800;padding:2px 8px;border-radius:2px;border:1px solid var(--border);min-width:48px;text-align:center">&lt;40</span><span style="color:var(--muted);font-weight:600">Skip</span><span style="color:var(--muted)">Data too thin or operator too small</span></div>
+          </div>
+        </div>
+        <div style="padding:10px 14px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Universe by Score</div>
+          <div style="display:flex;gap:8px">
+            <div class="stat-pill"><div class="stat-pill-val" style="color:var(--blue)">18%</div><div class="stat-pill-lbl">Tier 1</div></div>
+            <div class="stat-pill"><div class="stat-pill-val" style="color:var(--indigo)">34%</div><div class="stat-pill-lbl">Tier 2</div></div>
+            <div class="stat-pill"><div class="stat-pill-val" style="color:var(--muted)">29%</div><div class="stat-pill-lbl">Tier 3</div></div>
+            <div class="stat-pill"><div class="stat-pill-val" style="color:var(--border)">19%</div><div class="stat-pill-lbl">Skip</div></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -919,96 +1335,138 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 </div>
 
 <script>
-/* ═══ NAV ACTIVE HIGHLIGHT ON SCROLL ═══ */
-const navItems = document.querySelectorAll('.nav-item');
-const sections = document.querySelectorAll('.slide');
+/* ══════════════════════════════════════════════════
+   SLIDE SWITCHING — 16:9 fixed panels, no scroll
+══════════════════════════════════════════════════ */
+const ACTIVE_SLIDES = ['s1','s2','s10','s4','s5'];
 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      navItems.forEach(n => n.classList.remove('active'));
-      const id = entry.target.id;
-      const match = document.querySelector(`.nav-item[href="#${id}"]`);
-      if (match) match.classList.add('active');
-    }
+function showSlide(id) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active-slide'));
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active-slide');
+  document.querySelectorAll('[data-slide]').forEach(n => {
+    n.classList.toggle('active', n.dataset.slide === id);
   });
-}, { threshold: 0.3 });
-sections.forEach(s => observer.observe(s));
+}
 
-/* ═══ HORIZONTAL BAR RENDERER ═══ */
+document.querySelectorAll('[data-slide]').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    showSlide(el.dataset.slide);
+  });
+});
+
+// Cover TOC clicks also switch slides
+document.querySelectorAll('.cover-toc-item[data-slide]').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    showSlide(el.dataset.slide);
+  });
+});
+
+// Keyboard arrow navigation between active slides
+document.addEventListener('keydown', e => {
+  const current = document.querySelector('.slide.active-slide');
+  if (!current) return;
+  const idx = ACTIVE_SLIDES.indexOf(current.id);
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    if (idx < ACTIVE_SLIDES.length - 1) showSlide(ACTIVE_SLIDES[idx + 1]);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    if (idx > 0) showSlide(ACTIVE_SLIDES[idx - 1]);
+  }
+});
+
+showSlide('s1');
+
+/* ══════════════════════════════════════════════════
+   SHARED RENDER HELPERS
+══════════════════════════════════════════════════ */
 function renderHbars(containerId, rows) {
   const el = document.getElementById(containerId);
   if (!el) return;
   el.innerHTML = rows.map(([label, pct, color]) => `
-    <div class="hbar-wrap" style="margin-bottom:10px">
+    <div class="hbar-wrap" style="margin-bottom:8px">
       <div class="hbar-label">${label}</div>
       <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%;background:${color}"></div></div>
       <div class="hbar-pct">${pct}%</div>
     </div>`).join('');
 }
 
-/* ═══ SLIDE 1: Top 10 States ═══ */
-const top10 = [
-  ["California","CA",680,"★★★"],["Texas","TX",520,"★★★"],["Florida","FL",490,"★★★"],
-  ["New York","NY",310,"★★☆"],["Georgia","GA",240,"★★☆"],["Illinois","IL",210,"★★☆"],
-  ["Arizona","AZ",195,"★★☆"],["Colorado","CO",170,"★★☆"],["Washington","WA",155,"★☆☆"],["Nevada","NV",140,"★☆☆"]
-];
-document.getElementById('top10States').innerHTML = top10.map(([state,abbr,count,stars],i) => `
-  <tr>
-    <td class="td-muted td-center" style="font-size:11px">${i+1}</td>
-    <td class="td-bold">${state}</td>
-    <td class="td-center td-blue" style="font-weight:700">${count.toLocaleString()}</td>
-    <td class="td-center" style="font-size:14px;letter-spacing:-1px;color:var(--blue)">${stars}</td>
-  </tr>`).join('');
+/* ══════════════════════════════════════════════════
+   SLIDE 1 — MARKET OVERVIEW
+   Region filter updates KPI tiles + top-10 table
+══════════════════════════════════════════════════ */
 
-/* ═══ SLIDE 4: Rating & Review bars ═══ */
-renderHbars('ratingBars', [
-  ["5.0 ★★★★★",22,"var(--green)"],
-  ["4.5–4.9 ★★★★",38,"var(--blue)"],
-  ["4.0–4.4 ★★★",24,"var(--indigo)"],
-  ["3.5–3.9 ★★",10,"var(--muted)"],
-  ["Below 3.5 ★",6,"var(--red)"]
-]);
-renderHbars('reviewBars', [
-  ["0–10 reviews",28,"var(--muted)"],
-  ["11–50 reviews",34,"var(--indigo)"],
-  ["51–100 reviews",18,"var(--blue)"],
-  ["101–500 reviews",14,"var(--navy)"],
-  ["500+ reviews",6,"var(--green)"]
-]);
+// Per-region KPI data: [total, cbsas, states, tier12pct]
+const regionKPIs = {
+  all:       { total:'4,800+', cbsas:'312', states:'48', t12:'67%' },
+  'South/SE':{ total:'1,820',  cbsas:'94',  states:'11', t12:'71%' },
+  West:      { total:'1,240',  cbsas:'72',  states:'6',  t12:'74%' },
+  Northeast: { total:'980',    cbsas:'58',  states:'8',  t12:'69%' },
+  Midwest:   { total:'760',    cbsas:'88',  states:'12', t12:'52%' },
+};
 
-/* ═══ HIDDEN SLIDES: Services & PE ═══ */
-renderHbars('servicesBarsHidden', [
-  ["Botox / Neurotoxin",88,"var(--blue)"],
-  ["Dermal Fillers",82,"var(--blue)"],
-  ["Laser / IPL Treatment",64,"var(--indigo)"],
-  ["Body Contouring",51,"var(--indigo)"],
-  ["Chemical Peels",44,"var(--light-blue)"],
-  ["Weight Loss (Semaglutide)",28,"var(--red)"]
-]);
+// Per-region top-10 rows: [state, abbr, count, stars]
+const regionTop10 = {
+  all: [
+    ["California","CA",680,"★★★"],["Texas","TX",520,"★★★"],["Florida","FL",490,"★★★"],
+    ["New York","NY",310,"★★☆"],["Georgia","GA",240,"★★☆"],["Illinois","IL",210,"★★☆"],
+    ["Arizona","AZ",195,"★★☆"],["Colorado","CO",170,"★★☆"],["Washington","WA",155,"★☆☆"],["Nevada","NV",140,"★☆☆"]
+  ],
+  'South/SE': [
+    ["Florida","FL",490,"★★★"],["Georgia","GA",240,"★★★"],["Tennessee","TN",142,"★★☆"],
+    ["North Carolina","NC",189,"★★☆"],["Virginia","VA",132,"★★☆"],["South Carolina","SC",78,"★★☆"],
+    ["Louisiana","LA",18,"★☆☆"],["Alabama","AL",22,"★☆☆"],["Kentucky","KY",33,"★☆☆"],["Arkansas","AR",28,"★☆☆"]
+  ],
+  West: [
+    ["California","CA",680,"★★★"],["Washington","WA",155,"★★☆"],["Colorado","CO",170,"★★☆"],
+    ["Arizona","AZ",195,"★★☆"],["Oregon","OR",87,"★★☆"],["Nevada","NV",140,"★★☆"],
+    ["Utah","UT",88,"★☆☆"],["Idaho","ID",43,"★☆☆"],["New Mexico","NM",31,"★☆☆"],["Montana","MT",18,"★☆☆"]
+  ],
+  Northeast: [
+    ["New York","NY",310,"★★★"],["New Jersey","NJ",142,"★★☆"],["Massachusetts","MA",117,"★★☆"],
+    ["Pennsylvania","PA",148,"★★☆"],["Maryland","MD",89,"★★☆"],["Connecticut","CT",17,"★☆☆"],
+    ["Virginia","VA",132,"★★☆"],["Delaware","DE",11,"★☆☆"],["New Hampshire","NH",14,"★☆☆"],["Maine","ME",9,"★☆☆"]
+  ],
+  Midwest: [
+    ["Illinois","IL",210,"★★★"],["Ohio","OH",112,"★★☆"],["Michigan","MI",98,"★★☆"],
+    ["Minnesota","MN",71,"★★☆"],["Missouri","MO",84,"★★☆"],["Wisconsin","WI",67,"★☆☆"],
+    ["Indiana","IN",60,"★☆☆"],["Iowa","IA",18,"★☆☆"],["Kansas","KS",23,"★☆☆"],["Nebraska","NE",19,"★☆☆"]
+  ]
+};
 
-const peRegions = [
-  ["Southeast","High",82,"pe-label-hot"],
-  ["Texas / SW","High",74,"pe-label-hot"],
-  ["West Coast","Medium",51,"pe-label-warm"],
-  ["Northeast","Medium",48,"pe-label-warm"],
-  ["Midwest","Low",28,"pe-label-cool"],
-  ["Mountain / CO","Low",22,"pe-label-cool"],
-  ["SE Rural","Minimal",8,"pe-label-min"]
-];
-document.getElementById('peHeatRowsHidden').innerHTML = peRegions.map(([region,label,pct,cls],i) => `
-  <div class="pe-heat-row" style="${i%2===0?'background:var(--bg)':''}">
-    <div class="pe-region">${region}</div>
-    <div class="${cls}">${label}</div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <div style="flex:1;height:6px;background:var(--border);border-radius:2px;overflow:hidden">
-        <div style="height:100%;width:${pct}%;background:${pct>70?'var(--red)':pct>40?'var(--amber)':pct>15?'var(--teal)':'var(--green)'};border-radius:2px"></div>
-      </div>
-      <span style="font-size:11px;color:var(--muted);min-width:28px">${pct}%</span>
-    </div>
-  </div>`).join('');
+function updateSlide1(region) {
+  const kpi = regionKPIs[region] || regionKPIs.all;
+  const setKpi = (sel, val) => { const el = document.querySelector(sel); if (el) el.textContent = val; };
+  setKpi('#s2 .kpi-value[data-kpi="total"]', kpi.total);
+  setKpi('#s2 .kpi-value[data-kpi="cbsas"]', kpi.cbsas);
+  setKpi('#s2 .kpi-value[data-kpi="states"]', kpi.states);
+  setKpi('#s2 .kpi-value[data-kpi="t12"]', kpi.t12);
+  const rows = regionTop10[region] || regionTop10.all;
+  const t10 = document.getElementById('top10States'); if(t10) t10.innerHTML = rows.map(([state,abbr,count,stars],i) => `
+    <tr>
+      <td class="td-muted td-center" style="font-size:10px">${i+1}</td>
+      <td class="td-bold">${state}</td>
+      <td class="td-center td-blue" style="font-weight:700">${count.toLocaleString()}</td>
+      <td class="td-center" style="font-size:13px;letter-spacing:-1px;color:var(--blue)">${stars}</td>
+    </tr>`).join('');
+}
+updateSlide1('all');
 
-/* ═══ SLIDE 2: By State Table ═══ */
+/* ══════════════════════════════════════════════════
+   SLIDE 2 — BY STATE SUMMARY
+   Filters: Region (show/hide rows), Tier view, Min Opps
+══════════════════════════════════════════════════ */
+const stateRegions = {
+  AL:'South/SE',AR:'South/SE',FL:'South/SE',GA:'South/SE',KY:'South/SE',
+  LA:'South/SE',NC:'South/SE',SC:'South/SE',TN:'South/SE',VA:'South/SE',
+  CA:'West',CO:'West',ID:'West',NV:'West',OR:'West',UT:'West',WA:'West',AZ:'West',
+  CT:'Northeast',DE:'Northeast',IL:'Northeast',MA:'Northeast',MD:'Northeast',
+  NJ:'Northeast',NY:'Northeast',PA:'Northeast',
+  IA:'Midwest',IN:'Midwest',KS:'Midwest',MI:'Midwest',MN:'Midwest',
+  MO:'Midwest',OH:'Midwest',WI:'Midwest',
+};
+
 const stateData = [
   ["AL",22,129,212,363,151,6.1,35.5,58.4],["AR",28,47,191,266,75,10.5,17.7,71.8],
   ["AZ",168,174,87,429,342,39.2,40.6,20.3],["CA",931,1786,567,3284,2717,28.3,54.4,17.3],
@@ -1033,26 +1491,227 @@ const stateData = [
 function pctHClass(v) { return v >= 30 ? 'td-pct-hot' : v >= 18 ? 'td-pct-warm' : 'td-pct-cool'; }
 function tierAccent(hp) { if (hp >= 25) return 'var(--blue)'; if (hp >= 15) return 'var(--indigo)'; return 'var(--light-blue)'; }
 
-document.getElementById('stateTableBody').innerHTML = stateData.map(([st,h,m,l,t,a,hp,mp,lp]) => `
-  <tr>
-    <td style="font-weight:700;font-size:12px;color:var(--navy);letter-spacing:0.08em;padding-left:16px;border-right:2px solid var(--border);position:relative">
-      <span style="position:absolute;left:6px;top:50%;transform:translateY(-50%);width:3px;height:14px;border-radius:2px;background:${tierAccent(hp)}"></span>
-      ${st}
-    </td>
-    <td class="td-center" style="color:var(--blue);font-weight:600">${h.toLocaleString()}</td>
-    <td class="td-center" style="color:var(--indigo)">${m.toLocaleString()}</td>
-    <td class="td-center" style="color:var(--muted)">${l.toLocaleString()}</td>
-    <td class="td-center td-bold" style="border-right:2px solid rgba(56,59,110,0.2)">${t.toLocaleString()}</td>
-    <td class="td-center" style="color:${a/t>0.3?'var(--teal)':'var(--slate)'};font-weight:${a/t>0.3?'700':'400'}">${a.toLocaleString()}</td>
-    <td class="td-center">
-      <div class="pct-cell" style="justify-content:center">
-        <span class="pct-val ${pctHClass(hp)}">${hp.toFixed(1)}%</span>
-        <div class="pct-mini-track"><div class="pct-mini-fill" style="width:${Math.min(hp*1.2,100)}%;background:${hp>=30?'var(--blue)':hp>=18?'var(--blue-dark)':'var(--border)'}"></div></div>
+function renderStateTable(filterRegion, tierMode, minOpps) {
+  let filtered = stateData.filter(([st,h,m,l,t]) => {
+    if (filterRegion !== 'all' && stateRegions[st] !== filterRegion) return false;
+    if (minOpps && t < minOpps) return false;
+    if (tierMode === 'High' && h === 0) return false;
+    return true;
+  });
+  const stb = document.getElementById('stateTableBody'); if(stb) stb.innerHTML = filtered.map(([st,h,m,l,t,a,hp,mp,lp]) => `
+    <tr>
+      <td style="font-weight:700;font-size:11px;color:var(--navy);letter-spacing:0.08em;padding-left:14px;border-right:2px solid var(--border);position:relative">
+        <span style="position:absolute;left:5px;top:50%;transform:translateY(-50%);width:3px;height:12px;border-radius:2px;background:${tierAccent(hp)}"></span>
+        ${st}
+      </td>
+      <td class="td-center" style="color:var(--blue);font-weight:600">${h.toLocaleString()}</td>
+      <td class="td-center" style="color:var(--indigo)">${tierMode === 'High' ? '—' : m.toLocaleString()}</td>
+      <td class="td-center" style="color:var(--muted)">${(tierMode === 'High' || tierMode === 'HM') ? '—' : l.toLocaleString()}</td>
+      <td class="td-center td-bold" style="border-right:2px solid rgba(56,59,110,0.2)">${t.toLocaleString()}</td>
+      <td class="td-center" style="color:${a/t>0.3?'var(--teal)':'var(--slate)'};font-weight:${a/t>0.3?'700':'400'}">${a.toLocaleString()}</td>
+      <td class="td-center">
+        <div class="pct-cell" style="justify-content:center">
+          <span class="pct-val ${pctHClass(hp)}">${hp.toFixed(1)}%</span>
+          <div class="pct-mini-track"><div class="pct-mini-fill" style="width:${Math.min(hp*1.2,100)}%;background:${hp>=30?'var(--blue)':hp>=18?'var(--blue-dark)':'var(--border)'}"></div></div>
+        </div>
+      </td>
+      <td class="td-center" style="color:var(--slate)">${mp.toFixed(1)}%</td>
+      <td class="td-center" style="color:var(--muted)">${lp.toFixed(1)}%</td>
+    </tr>`).join('') || '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted);font-style:italic">No states match current filters</td></tr>';
+}
+renderStateTable('all', 'all', 0);
+
+/* ══════════════════════════════════════════════════
+   SLIDE 3 — RADIUS CLUSTERING
+   Zone filter shows/hides table rows by zone column
+══════════════════════════════════════════════════ */
+const clusterRows = [
+  { name:'Aesthetica Prosper',    sub:'N. Frisco / Prosper', zone:'Z4', miles:16.2, nn:0,  risk:'None',   signal:'White Space' },
+  { name:'Luxe Laser S. Fort Worth', sub:'S. Fort Worth',   zone:'Z4', miles:18.8, nn:1,  risk:'None',   signal:'White Space' },
+  { name:'Glow Aesthetics DFW',   sub:'N. Frisco',           zone:'Z2', miles:4.1,  nn:2,  risk:'Low',    signal:'Tuck-In' },
+  { name:'Premier Skin Plano',    sub:'Plano / Allen',       zone:'Z2', miles:6.4,  nn:4,  risk:'Medium', signal:'Tuck-In' },
+  { name:'Refresh MedSpa Allen',  sub:'Plano / Allen',       zone:'Z3', miles:9.1,  nn:6,  risk:'Medium', signal:'Monitor' },
+  { name:'Knox-Henderson Skin',   sub:'Knox-Henderson',      zone:'Z1', miles:0.8,  nn:18, risk:'High',   signal:'Avoid' },
+];
+
+const riskCls = { High:'risk-high', Medium:'risk-med', Low:'risk-low', None:'risk-none' };
+const sigCls  = { 'White Space':'sig-ws', 'Tuck-In':'sig-ti', Monitor:'sig-mo', Avoid:'sig-av' };
+const zoneCol = { Z1:'var(--red)', Z2:'var(--amber)', Z3:'var(--blue)', Z4:'var(--green)' };
+
+function renderClusterTable(zoneFilter, riskFilter) {
+  const filtered = clusterRows.filter(r => {
+    if (zoneFilter === 'Z2' && r.zone !== 'Z2') return false;
+    if (zoneFilter === 'Z4' && r.zone !== 'Z4') return false;
+    if (zoneFilter === 'Z2Z4' && !['Z2','Z4'].includes(r.zone)) return false;
+    if (riskFilter === 'LN' && !['Low','None'].includes(r.risk)) return false;
+    return true;
+  });
+  const tbody = document.getElementById('clusterTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = filtered.map(r => `
+    <tr>
+      <td>
+        <div class="td-bold" style="font-size:11.5px">${r.name}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:1px">${r.sub}</div>
+      </td>
+      <td class="td-center">
+        <span style="font-size:11px;font-weight:800;color:${zoneCol[r.zone]};background:${zoneCol[r.zone]}18;padding:2px 8px;border-radius:2px;border:1px solid ${zoneCol[r.zone]}40">${r.zone}</span>
+      </td>
+      <td class="td-center td-muted" style="font-size:11px">${r.miles}</td>
+      <td class="td-center" style="font-size:12px;font-weight:700;color:${r.nn===0?'var(--green)':r.nn<=3?'var(--amber)':'var(--red)'}">
+        ${r.nn} <span style="font-size:9px;color:var(--muted);font-weight:400">nearby</span>
+      </td>
+      <td class="td-center"><span class="rbadge ${riskCls[r.risk]}">${r.risk}</span></td>
+      <td class="td-center"><span class="sbadge ${sigCls[r.signal]}">${r.signal === 'White Space' ? '★ White Space' : r.signal}</span></td>
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;padding:18px;color:var(--muted);font-style:italic">No targets match current filters</td></tr>';
+}
+renderClusterTable('all', 'all');
+
+/* ══════════════════════════════════════════════════
+   SLIDE 4 — QUALITY & MATURITY
+   Bars are national-level. Rating/review bars static.
+══════════════════════════════════════════════════ */
+renderHbars('ratingBars', [
+  ["5.0 ★★★★★",22,"var(--green)"],
+  ["4.5–4.9 ★★★★",38,"var(--blue)"],
+  ["4.0–4.4 ★★★",24,"var(--indigo)"],
+  ["3.5–3.9 ★★",10,"var(--muted)"],
+  ["Below 3.5 ★",6,"var(--red)"]
+]);
+renderHbars('reviewBars', [
+  ["0–10 reviews",28,"var(--muted)"],
+  ["11–50 reviews",34,"var(--indigo)"],
+  ["51–100 reviews",18,"var(--blue)"],
+  ["101–500 reviews",14,"var(--navy)"],
+  ["500+ reviews",6,"var(--green)"]
+]);
+
+/* ══════════════════════════════════════════════════
+   HIDDEN SLIDES
+══════════════════════════════════════════════════ */
+renderHbars('servicesBarsHidden', [
+  ["Botox / Neurotoxin",88,"var(--blue)"],
+  ["Dermal Fillers",82,"var(--blue)"],
+  ["Laser / IPL Treatment",64,"var(--indigo)"],
+  ["Body Contouring",51,"var(--indigo)"],
+  ["Chemical Peels",44,"var(--light-blue)"],
+  ["Weight Loss (Semaglutide)",28,"var(--red)"]
+]);
+
+const peRegions = [
+  ["Southeast","High",82,"pe-label-hot"],["Texas / SW","High",74,"pe-label-hot"],
+  ["West Coast","Medium",51,"pe-label-warm"],["Northeast","Medium",48,"pe-label-warm"],
+  ["Midwest","Low",28,"pe-label-cool"],["Mountain / CO","Low",22,"pe-label-cool"],
+  ["SE Rural","Minimal",8,"pe-label-min"]
+];
+const peEl = document.getElementById('peHeatRowsHidden');
+if (peEl) peEl.innerHTML = peRegions.map(([region,label,pct,cls],i) => `
+  <div class="pe-heat-row" style="${i%2===0?'background:var(--bg)':''}">
+    <div class="pe-region">${region}</div>
+    <div class="${cls}">${label}</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="flex:1;height:6px;background:var(--border);border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${pct>70?'var(--red)':pct>40?'var(--amber)':pct>15?'var(--teal)':'var(--green)'};border-radius:2px"></div>
       </div>
-    </td>
-    <td class="td-center" style="color:var(--slate)">${mp.toFixed(1)}%</td>
-    <td class="td-center" style="color:var(--muted)">${lp.toFixed(1)}%</td>
-  </tr>`).join('');
+      <span style="font-size:10px;color:var(--muted);min-width:26px">${pct}%</span>
+    </div>
+  </div>`).join('');
+
+/* ══════════════════════════════════════════════════
+   PLATFORM FIT SCORE BARS
+══════════════════════════════════════════════════ */
+const fbEl = document.getElementById('fitScoreBars');
+if(fbEl) fbEl.innerHTML = [
+  ["Review Strength",30,"var(--blue)"],["Business Maturity",25,"var(--indigo)"],
+  ["Contact Readiness",20,"var(--teal)"],["Service Breadth",15,"var(--amber)"],["Location Scale",10,"var(--navy)"]
+].map(([l,w,c]) => `
+  <div class="hbar-wrap" style="margin-bottom:7px">
+    <div class="hbar-label" style="min-width:130px;font-size:11px">${l}</div>
+    <div class="hbar-track"><div class="hbar-fill" style="width:${w*3}%;background:${c}"></div></div>
+    <div class="hbar-pct" style="font-size:11px">${w}%</div>
+  </div>`).join('');
+
+/* ══════════════════════════════════════════════════
+   FILTER BAR WIRING — all controls call real render fns
+══════════════════════════════════════════════════ */
+
+// State for each slide's filters
+const S1 = { region:'all', tier:'all', ownership:'all' };
+const S2 = { region:'all', tier:'all', minOpps:0 };
+const S3 = { zone:'all', risk:'all' };
+
+// Toggle group — mutual exclusion + callback
+function wireToggles(groupId, state, key, callback) {
+  const group = document.getElementById(groupId);
+  if (!group) return;
+  group.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-toggle');
+    if (!btn) return;
+    group.querySelectorAll('.filter-toggle').forEach(b => b.className = 'filter-toggle');
+    btn.classList.add('on');
+    state[key] = btn.dataset.val;
+    callback();
+  });
+}
+
+// Slide 1 filters
+wireToggles('fb1-region', S1, 'region', () => updateSlide1(S1.region));
+wireToggles('fb1-tier',   S1, 'tier',   () => {}); // KPI tiles don't have tier split
+
+// Slide 2 filters
+wireToggles('fb2-tier', S2, 'tier', () => renderStateTable(S2.region, S2.tier, S2.minOpps));
+const s2RegionSel = document.getElementById('fb2-region');
+if (s2RegionSel) s2RegionSel.addEventListener('change', () => {
+  S2.region = s2RegionSel.value;
+  renderStateTable(S2.region, S2.tier, S2.minOpps);
+});
+const s2MinSel = document.getElementById('fb2-minopps');
+if (s2MinSel) s2MinSel.addEventListener('change', () => {
+  S2.minOpps = parseInt(s2MinSel.value) || 0;
+  renderStateTable(S2.region, S2.tier, S2.minOpps);
+});
+
+// Slide 3 filters
+wireToggles('fb3-zone',      S3, 'zone', () => renderClusterTable(S3.zone, S3.risk));
+wireToggles('fb3-risk',      S3, 'risk', () => renderClusterTable(S3.zone, S3.risk));
+wireToggles('fb3-ownership', S3, 'ownership', () => {}); // ownership note only — data is already Target-only
+wireToggles('fb3-metrotype', S3, 'metrotype', () => {});
+
+// Slide 4 — all filters are Tableau-side; toggles update visual state only
+['fb4-tier','fb4-md','fb4-ownership'].forEach(id => {
+  const g = document.getElementById(id);
+  if (g) g.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-toggle');
+    if (!btn) return;
+    g.querySelectorAll('.filter-toggle').forEach(b => b.className = 'filter-toggle');
+    btn.classList.add('on');
+  });
+});
+
+// Reset functions
+function clearFilters(prefix) {
+  document.querySelectorAll(`[id^="${prefix}-"]`).forEach(el => {
+    if (el.classList.contains('filter-toggle-group')) {
+      el.querySelectorAll('.filter-toggle').forEach((b,i) => {
+        b.className = 'filter-toggle' + (i === 0 ? ' on' : '');
+      });
+    } else if (el.tagName === 'SELECT') {
+      el.selectedIndex = 0;
+    }
+  });
+  if (prefix === 'fb1') { S1.region = 'all'; updateSlide1('all'); }
+  if (prefix === 'fb2') { S2.region = 'all'; S2.tier = 'all'; S2.minOpps = 0; renderStateTable('all','all',0); }
+  if (prefix === 'fb3') { S3.zone = 'all'; S3.risk = 'all'; renderClusterTable('all','all'); }
+}
+
+// CBSA required-field highlight
+const cbsaSelect = document.getElementById('fb3-cbsa');
+if (cbsaSelect) {
+  cbsaSelect.addEventListener('change', () => {
+    cbsaSelect.style.borderColor = cbsaSelect.value ? 'rgba(186,202,236,0.18)' : 'rgba(196,122,15,0.6)';
+  });
+  cbsaSelect.style.borderColor = 'rgba(196,122,15,0.6)';
+}
 </script>
 </body>
 </html>
