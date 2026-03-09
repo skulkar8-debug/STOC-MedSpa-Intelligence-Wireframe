@@ -112,11 +112,31 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 /* Skipped slides still stack but are never shown as active */
 
 /* ═══ SKIPPED / HIDDEN SLIDES ═══
-   MUST NOT use position:relative (breaks stacking context) or opacity:0.55
-   (overrides .slide opacity:0 making them visible). display:none is the
-   only safe approach — nav rail dimming already signals hidden status. */
+   These stay in the normal slide stacking context (position:absolute, opacity:0)
+   via the .slide base class. Clicking their nav item calls showSlide() and makes
+   them active-slide just like any other slide.
+   The nav rail shows them dimmed with a strikethrough — that's the only visual diff. */
 .slide-skipped {
-  display: none !important;
+  /* inherits position:absolute; opacity:0; pointer-events:none from .slide */
+  /* becomes visible when showSlide() adds .active-slide */
+}
+
+/* When a skipped slide IS active, show a subtle "hidden" banner at top */
+.slide-skipped.active-slide .slide-header::after {
+  content: 'HIDDEN SLIDE — not included in active deck';
+  position: absolute;
+  right: 16px; top: 50%; transform: translateY(-50%);
+  font-size: 9px; font-weight: 700; letter-spacing: 0.14em;
+  color: var(--muted); background: var(--bg-alt);
+  border: 1px dashed var(--border);
+  padding: 3px 10px; border-radius: 2px;
+  text-transform: uppercase;
+}
+/* When a skipped slide is active, restore full colour on all greyed-out text */
+.slide-skipped.active-slide .slide-title,
+.slide-skipped.active-slide .slide-sub,
+.slide-skipped.active-slide .slide-num {
+  color: inherit !important;
 }
 
 /* ═══ SHARED COMPONENTS ═══ */
@@ -498,8 +518,8 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
   </div>
   <div class="cover-footer">
     <div class="cover-meta"><span>Firm</span>STOC Advisory</div>
-    <div class="cover-meta"><span>Date</span>March 2026</div>
-    <div class="cover-meta"><span>Sector</span>MedSpa — 01 of 03</div>
+    <div class="cover-meta"><span>Date</span>February 2026</div>
+    <div class="cover-meta"><span>Sector</span>MedSpa — 01 of 05</div>
     <div class="cover-meta"><span>Classification</span>Confidential</div>
   </div>
 </section>
