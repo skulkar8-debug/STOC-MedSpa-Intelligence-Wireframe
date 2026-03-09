@@ -491,7 +491,7 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 <section id="s1" class="slide">
   <div class="cover-body">
     <div class="cover-left">
-      <div class="cover-eyebrow">Sector Intelligence Report &nbsp;·&nbsp; MedSpa &nbsp;·&nbsp; Sector 01 of 05</div>
+      <div class="cover-eyebrow">Sector Intelligence Report &nbsp;·&nbsp; MedSpa &nbsp;·&nbsp; Sector 01 of 03</div>
       <div class="cover-title">MedSpa<br>Market<br><span>Intelligence</span><br>Report</div>
       <div class="cover-tagline">
         Fragmentation Analysis &nbsp;·&nbsp; Geographic Opportunity &nbsp;·&nbsp; Radius-Based Target Clustering &nbsp;·&nbsp; PE Consolidation Activity &nbsp;·&nbsp; Operator Quality Benchmarks
@@ -821,7 +821,8 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
     <div class="filter-group">
       <span class="filter-group-label">Ownership</span>
       <div class="filter-toggle-group" id="fb3-ownership">
-        <button class="filter-toggle on" data-val="Target">Target</button>
+        <button class="filter-toggle on" data-val="Target">Target Only</button>
+        <button class="filter-toggle" data-val="PE" style="color:#F4B942">+ PE View</button>
         <button class="filter-toggle" data-val="all">All</button>
       </div>
     </div>
@@ -839,7 +840,7 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
     </div>
 
     <button class="filter-clear-btn" onclick="clearFilters('fb3')">Reset</button>
-    <span class="filter-tableau-note">Tableau: CBSA City · Distance band column · Ownership · Cannibalization Risk</span>
+    <span class="filter-tableau-note">Tableau: CBSA City · Distance band column · Ownership (Target / PE / Chain) · Cannibalization Risk</span>
   </div>
 
   <!-- MAIN CONTENT: hero table left, right panel with insight + risk logic + zone ref -->
@@ -859,6 +860,7 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
               <th class="th-center">Zone</th>
               <th class="th-center">Miles from Core</th>
               <th class="th-center">Z1 Neighbors</th>
+              <th class="th-center" style="color:#F4B942;border-bottom:2px solid #F4B942">PE Z1</th>
               <th class="th-center">Cannibal. Risk</th>
               <th class="th-center">Signal</th>
             </tr></thead>
@@ -866,7 +868,7 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
           </table>
         </div>
         <div style="padding:7px 14px;background:var(--bg-alt);border-top:1px solid var(--border-lt);flex-shrink:0;display:flex;gap:16px;align-items:center">
-          <span style="font-size:10px;color:var(--muted);font-style:italic">Distance measured from nearest acquired platform clinic · Haversine formula · fields: Latitude, Longitude, Distance band column</span>
+          <span style="font-size:10px;color:var(--muted);font-style:italic">PE Z1 = platform-owned / PE-backed clinics within Zone 1 ring · weighted 1.5× in risk score · fields: Ownership, Latitude, Longitude, Distance band column</span>
         </div>
       </div>
 
@@ -877,27 +879,51 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
         <div style="padding:12px 14px;background:var(--navy);border-left:4px solid var(--blue);border-radius:0 2px 2px 0;flex-shrink:0">
           <div style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue);margin-bottom:6px">How to Read This</div>
           <div style="font-size:11.5px;color:var(--light-blue);line-height:1.65;margin-bottom:8px">
-            Zone rings are drawn from the <strong style="color:var(--white)">existing population center</strong> of a sub-market — not from any platform clinic. A Z4 record means that zip code has consumer demand but <strong style="color:var(--white)">no MedSpa supply within 15–25 miles</strong>. That is the gap.
+            Zone rings reveal where consumer demand exists but supply doesn't. A Z4 record means <strong style="color:var(--white)">no MedSpa supply within 15–25 miles</strong> of that sub-market's population center.
           </div>
-          <div style="font-size:10.5px;color:var(--muted);line-height:1.55;border-top:1px solid rgba(186,202,236,0.12);padding-top:7px">
-            Dallas ranks <strong style="color:var(--light-blue)">#1</strong> nationally by opportunity count — yet North Frisco and South Fort Worth show genuine white space. A CBSA score alone misses this. The rings reveal it.
+          <div style="font-size:10.5px;color:var(--muted);line-height:1.55;border-top:1px solid rgba(186,202,236,0.12);padding-top:7px;margin-bottom:6px">
+            Dallas ranks <strong style="color:var(--light-blue)">#1</strong> nationally by volume — yet North Frisco and South Fort Worth show genuine white space. A CBSA score alone misses this.
+          </div>
+          <div style="font-size:10.5px;line-height:1.55;border-top:1px solid rgba(186,202,236,0.12);padding-top:7px">
+            <span style="font-size:9px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#F4B942;display:block;margin-bottom:4px">⚠ PE / Platform Ownership</span>
+            <span style="color:rgba(186,202,236,0.8)">PE-backed and platform-owned clinics are <strong style="color:var(--white)">not acquisition targets</strong> — they are competitors. They are tracked separately in the <strong style="color:#F4B942">PE Z1</strong> column and weighted <strong style="color:var(--white)">1.5× an independent neighbor</strong> in the cannibalization risk score. A Z2 target with even one PE Z1 neighbor requires a differentiation plan before approach.</span>
           </div>
         </div>
 
-        <!-- Cannibalization risk key -->
         <div class="card" style="flex-shrink:0">
-          <div class="card-header">Cannibalization Risk Key</div>
+          <div class="card-header">Cannibalization Risk Key <span style="float:right;font-size:8.5px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">PE-weighted · 1 PE neighbor = 1.5× independent</span></div>
           <table class="data-table" style="font-size:10.5px">
             <thead><tr>
               <th style="width:60px">Level</th>
               <th>Condition</th>
+              <th style="color:#F4B942">PE Trigger</th>
               <th>Action</th>
             </tr></thead>
             <tbody>
-              <tr><td><span class="rbadge risk-high">High</span></td><td style="color:var(--slate)">≥3 Z1 neighbors · &gt;60% service overlap</td><td style="color:var(--slate)">Pause · run patient overlap</td></tr>
-              <tr><td><span class="rbadge risk-med">Med</span></td><td style="color:var(--slate)">1–2 Z1 neighbors · 30–60% overlap</td><td style="color:var(--slate)">Requires differentiation plan</td></tr>
-              <tr><td><span class="rbadge risk-low">Low</span></td><td style="color:var(--slate)">0 Z1 neighbors · &lt;30% overlap</td><td style="color:var(--slate)">Clear for tuck-in or de novo</td></tr>
-              <tr><td><span class="rbadge risk-none">None</span></td><td style="color:var(--slate)">Z4 — no supply present</td><td style="color:var(--slate)">White space confirmed</td></tr>
+              <tr>
+                <td><span class="rbadge risk-high">High</span></td>
+                <td style="color:var(--slate)">≥3 Z1 total · &gt;60% service overlap</td>
+                <td style="color:#C47A0F;font-weight:700;font-size:10px">≥2 PE Z1 neighbors</td>
+                <td style="color:var(--slate)">Pause · run patient overlap</td>
+              </tr>
+              <tr>
+                <td><span class="rbadge risk-med">Med</span></td>
+                <td style="color:var(--slate)">1–2 Z1 total · 30–60% overlap</td>
+                <td style="color:#C47A0F;font-weight:700;font-size:10px">1 PE Z1 neighbor</td>
+                <td style="color:var(--slate)">Differentiation plan required</td>
+              </tr>
+              <tr>
+                <td><span class="rbadge risk-low">Low</span></td>
+                <td style="color:var(--slate)">0 Z1 total · &lt;30% overlap</td>
+                <td style="color:var(--green);font-weight:600;font-size:10px">0 PE Z1</td>
+                <td style="color:var(--slate)">Clear for tuck-in or de novo</td>
+              </tr>
+              <tr>
+                <td><span class="rbadge risk-none">None</span></td>
+                <td style="color:var(--slate)">Z4 — no supply present</td>
+                <td style="color:var(--green);font-weight:600;font-size:10px">0 PE Z1</td>
+                <td style="color:var(--slate)">White space confirmed</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1545,13 +1571,16 @@ renderStateTable('all', 'all', 0);
    SLIDE 3 — RADIUS CLUSTERING
    Zone filter shows/hides table rows by zone column
 ══════════════════════════════════════════════════ */
+// peNN = PE-owned/platform-owned clinics within Zone 1 ring
+// These count 1.5× an independent neighbor in weighted risk calc
+// nn = total Z1 neighbors (all ownership types)
 const clusterRows = [
-  { name:'Aesthetica Prosper',    sub:'N. Frisco / Prosper', zone:'Z4', miles:16.2, nn:0,  risk:'None',   signal:'White Space' },
-  { name:'Luxe Laser S. Fort Worth', sub:'S. Fort Worth',   zone:'Z4', miles:18.8, nn:1,  risk:'None',   signal:'White Space' },
-  { name:'Glow Aesthetics DFW',   sub:'N. Frisco',           zone:'Z2', miles:4.1,  nn:2,  risk:'Low',    signal:'Tuck-In' },
-  { name:'Premier Skin Plano',    sub:'Plano / Allen',       zone:'Z2', miles:6.4,  nn:4,  risk:'Medium', signal:'Tuck-In' },
-  { name:'Refresh MedSpa Allen',  sub:'Plano / Allen',       zone:'Z3', miles:9.1,  nn:6,  risk:'Medium', signal:'Monitor' },
-  { name:'Knox-Henderson Skin',   sub:'Knox-Henderson',      zone:'Z1', miles:0.8,  nn:18, risk:'High',   signal:'Avoid' },
+  { name:'Aesthetica Prosper',       sub:'N. Frisco / Prosper', zone:'Z4', miles:16.2, nn:0,  peNN:0, risk:'None',   signal:'White Space' },
+  { name:'Luxe Laser S. Fort Worth', sub:'S. Fort Worth',       zone:'Z4', miles:18.8, nn:1,  peNN:0, risk:'None',   signal:'White Space' },
+  { name:'Glow Aesthetics DFW',      sub:'N. Frisco',           zone:'Z2', miles:4.1,  nn:2,  peNN:0, risk:'Low',    signal:'Tuck-In' },
+  { name:'Premier Skin Plano',       sub:'Plano / Allen',       zone:'Z2', miles:6.4,  nn:4,  peNN:1, risk:'Medium', signal:'Tuck-In',  peAdjacent:true },
+  { name:'Refresh MedSpa Allen',     sub:'Plano / Allen',       zone:'Z3', miles:9.1,  nn:6,  peNN:2, risk:'Medium', signal:'Monitor',  peAdjacent:true },
+  { name:'Knox-Henderson Skin',      sub:'Knox-Henderson',      zone:'Z1', miles:0.8,  nn:18, peNN:3, risk:'High',   signal:'Avoid',    peAdjacent:true },
 ];
 
 const riskCls = { High:'risk-high', Medium:'risk-med', Low:'risk-low', None:'risk-none' };
@@ -1568,7 +1597,17 @@ function renderClusterTable(zoneFilter, riskFilter) {
   });
   const tbody = document.getElementById('clusterTableBody');
   if (!tbody) return;
-  tbody.innerHTML = filtered.map(r => `
+  tbody.innerHTML = filtered.map(r => {
+    // PE-adjacent badge appended to signal cell
+    const peAdjacentBadge = r.peAdjacent
+      ? `<span style="display:inline-block;margin-left:5px;font-size:8.5px;font-weight:800;letter-spacing:0.08em;color:#C47A0F;background:#FDF3E3;border:1px solid rgba(196,122,15,0.3);padding:1px 5px;border-radius:2px;vertical-align:middle">⚠ PE-ADJ</span>`
+      : '';
+    // PE Z1 cell coloring
+    const peColor = r.peNN === 0 ? 'var(--green)' : r.peNN === 1 ? 'var(--amber)' : 'var(--red)';
+    const peLabel = r.peNN === 0
+      ? `<span style="font-size:11px;font-weight:700;color:var(--green)">0</span>`
+      : `<span style="font-size:11px;font-weight:800;color:${peColor}">${r.peNN}</span><span style="font-size:8.5px;font-weight:700;color:${peColor};margin-left:2px">PE</span>`;
+    return `
     <tr>
       <td>
         <div class="td-bold" style="font-size:11.5px">${r.name}</div>
@@ -1579,11 +1618,15 @@ function renderClusterTable(zoneFilter, riskFilter) {
       </td>
       <td class="td-center td-muted" style="font-size:11px">${r.miles}</td>
       <td class="td-center" style="font-size:12px;font-weight:700;color:${r.nn===0?'var(--green)':r.nn<=3?'var(--amber)':'var(--red)'}">
-        ${r.nn} <span style="font-size:9px;color:var(--muted);font-weight:400">nearby</span>
+        ${r.nn} <span style="font-size:9px;color:var(--muted);font-weight:400">total</span>
       </td>
+      <td class="td-center">${peLabel}</td>
       <td class="td-center"><span class="rbadge ${riskCls[r.risk]}">${r.risk}</span></td>
-      <td class="td-center"><span class="sbadge ${sigCls[r.signal]}">${r.signal === 'White Space' ? '★ White Space' : r.signal}</span></td>
-    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;padding:18px;color:var(--muted);font-style:italic">No targets match current filters</td></tr>';
+      <td class="td-center">
+        <span class="sbadge ${sigCls[r.signal]}">${r.signal === 'White Space' ? '★ White Space' : r.signal}</span>${peAdjacentBadge}
+      </td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="7" style="text-align:center;padding:18px;color:var(--muted);font-style:italic">No targets match current filters</td></tr>';
 }
 renderClusterTable('all', 'all');
 
