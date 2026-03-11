@@ -402,65 +402,61 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 
 /* ══ FILTER BAR ══ */
 .filter-bar {
-  display: flex; align-items: center; flex-wrap: wrap; gap: 5px;
-  padding: 5px 16px; background: var(--navy-mid);
+  background: var(--navy-mid);
   border-bottom: 1px solid rgba(186,202,236,0.12);
-  flex-shrink: 0; overflow: hidden;
+  flex-shrink: 0;
 }
-.filter-label {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--muted); white-space: nowrap; padding-right: 6px;
-  border-right: 1px solid rgba(186,202,236,0.15); margin-right: 2px;
+.filter-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 4px 14px;
+  border-bottom: 1px solid rgba(186,202,236,0.07);
 }
-.filter-group { display: flex; align-items: center; gap: 6px; }
-.filter-group-label {
-  font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-  color: rgba(186,202,236,0.45); white-space: nowrap;
+.filter-row:last-child { border-bottom: none; }
+.filter-row-label {
+  font-size: 8px; font-weight: 800; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--muted);
+  white-space: nowrap; min-width: 52px;
+  border-right: 1px solid rgba(186,202,236,0.12);
+  padding-right: 10px; align-self: stretch;
+  display: flex; align-items: center;
 }
-.filter-select {
+.filter-item { display: flex; align-items: center; gap: 5px; }
+.filter-item-label {
+  font-size: 9px; font-weight: 600; color: rgba(186,202,236,0.4);
+  white-space: nowrap; letter-spacing: 0.05em;
+}
+.filter-item select {
   appearance: none; -webkit-appearance: none;
-  background: rgba(255,255,255,0.05) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238299B8'/%3E%3C/svg%3E") no-repeat right 8px center;
-  border: 1px solid rgba(186,202,236,0.18); border-radius: 2px;
-  color: var(--light-blue); font-family: var(--font); font-size: 11px; font-weight: 500;
-  padding: 4px 26px 4px 9px; cursor: pointer; min-width: 130px;
-  transition: border-color 0.15s, background 0.15s;
+  background: rgba(255,255,255,0.04) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%238299B8'/%3E%3C/svg%3E") no-repeat right 6px center;
+  border: 1px solid rgba(186,202,236,0.15); border-radius: 2px;
+  color: var(--light-blue); font-family: var(--font); font-size: 10px; font-weight: 500;
+  padding: 2px 20px 2px 7px; cursor: pointer; min-width: 110px;
 }
-.filter-select:focus { outline: none; border-color: var(--blue); background-color: rgba(15,117,189,0.12); }
-.filter-select option { background: var(--navy); color: var(--white); }
-.filter-toggle-group { display: flex; gap: 2px; }
-.filter-toggle {
-  padding: 4px 10px; border-radius: 2px; font-size: 10.5px; font-weight: 700;
-  border: 1px solid rgba(186,202,236,0.18); background: transparent;
-  color: var(--muted); cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em;
+.filter-item select.wide { min-width: 160px; }
+.filter-item select.narrow { min-width: 76px; }
+.filter-div { width: 1px; height: 14px; background: rgba(186,202,236,0.1); flex-shrink: 0; }
+/* Context summary strip */
+.filter-summary {
+  display: flex; align-items: stretch;
+  border-bottom: 2px solid rgba(15,117,189,0.3);
+  flex-shrink: 0; background: var(--navy);
 }
-.filter-toggle.on { background: var(--blue); color: var(--white); border-color: var(--blue); }
-.filter-toggle.on-indigo { background: var(--indigo); color: var(--white); border-color: var(--indigo); }
-.filter-toggle.on-green { background: var(--green); color: var(--white); border-color: var(--green); }
-.filter-toggle.on-amber { background: var(--amber); color: var(--white); border-color: rgba(196,122,15,0.6); }
-.filter-toggle.on-red { background: var(--red); color: var(--white); border-color: var(--red); }
-.filter-sep { width: 1px; height: 20px; background: rgba(186,202,236,0.12); margin: 0 4px; flex-shrink: 0; }
-.filter-pill {
-  display: flex; align-items: center; gap: 5px; padding: 3px 8px 3px 10px;
-  background: rgba(15,117,189,0.15); border: 1px solid rgba(15,117,189,0.3);
-  border-radius: 2px; font-size: 10.5px; font-weight: 600; color: var(--light-blue); cursor: pointer;
+.fsumm-item {
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 2px; padding: 7px 20px;
+  border-right: 1px solid rgba(186,202,236,0.08);
+  flex: 1;
 }
-.filter-pill:hover { background: rgba(15,117,189,0.25); }
-.filter-clear-btn {
-  margin-left: auto; padding: 4px 10px; border-radius: 2px; font-size: 9.5px;
-  font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  border: 1px dashed rgba(186,202,236,0.2); background: transparent;
-  color: rgba(186,202,236,0.4); cursor: pointer; transition: all 0.15s;
+.fsumm-item:last-child { border-right: none; }
+.fsumm-val {
+  font-size: 20px; font-weight: 800; color: var(--white);
+  line-height: 1; letter-spacing: -0.02em;
 }
-.filter-clear-btn:hover { color: var(--light-blue); border-color: rgba(186,202,236,0.4); }
-/* Tableau note tag */
-.filter-tableau-note {
-  font-size: 9px; color: rgba(186,202,236,0.3); font-style: italic;
-  letter-spacing: 0.04em; margin-left: auto; white-space: nowrap;
+.fsumm-lbl {
+  font-size: 8.5px; font-weight: 600; color: var(--muted);
+  letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
 }
-/* Required filter — slightly highlighted */
-.filter-group.required .filter-group-label::after {
-  content: ' ✱'; color: var(--blue); font-style: normal;
-}
+
 </style>
 </head>
 <body>
@@ -472,7 +468,8 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
   <!-- Active slides -->
   <a data-slide="s2"  class="nav-item" title="Market Overview">01</a>
   <a data-slide="s10" class="nav-item" title="By State Summary">02</a>
-  <a data-slide="s4"  class="nav-item" title="Radius Clustering">03</a>
+  <a data-slide="s4"  class="nav-item" title="Radius Zone Clustering">03</a>
+  <a data-slide="s4b" class="nav-item" title="Radius Clustering v2">3.1</a>
   <a data-slide="s5"  class="nav-item" title="Quality &amp; Maturity">04</a>
   <!-- Divider before hidden slides -->
   <div class="nav-divider"></div>
@@ -491,7 +488,7 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 <section id="s1" class="slide">
   <div class="cover-body">
     <div class="cover-left">
-      <div class="cover-eyebrow">Sector Intelligence Report &nbsp;·&nbsp; MedSpa &nbsp;·&nbsp; Sector 01 of 03</div>
+      <div class="cover-eyebrow">Sector Intelligence Report &nbsp;·&nbsp; MedSpa &nbsp;·&nbsp; Sector 01 of 05</div>
       <div class="cover-title">MedSpa<br>Market<br><span>Intelligence</span><br>Report</div>
       <div class="cover-tagline">
         Fragmentation Analysis &nbsp;·&nbsp; Geographic Opportunity &nbsp;·&nbsp; Radius-Based Target Clustering &nbsp;·&nbsp; PE Consolidation Activity &nbsp;·&nbsp; Operator Quality Benchmarks
@@ -502,7 +499,8 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
       <!-- Active slides -->
       <a data-slide="s2"  class="cover-toc-item active"><span class="cover-toc-num">01</span> Market Overview</a>
       <a data-slide="s10" class="cover-toc-item"><span class="cover-toc-num">02</span> By State Summary</a>
-      <a data-slide="s4"  class="cover-toc-item"><span class="cover-toc-num">03</span> Radius-Based Target Clustering</a>
+      <a data-slide="s4"  class="cover-toc-item"><span class="cover-toc-num">03</span> Radius-Based Zone Clustering</a>
+      <a data-slide="s4b" class="cover-toc-item"><span class="cover-toc-num">3.1</span> Radius Clustering v2 — AY–BF</a>
       <a data-slide="s5"  class="cover-toc-item"><span class="cover-toc-num">04</span> Quality &amp; Maturity</a>
       <!-- Divider in TOC -->
       <div style="height:1px;background:rgba(186,202,236,0.1);margin:10px 10px 8px;"></div>
@@ -532,47 +530,31 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
     <div class="slide-sub">Total opportunity universe, geographic spread &amp; CBSA concentration — sourced from STOC MedSpa dataset</div>
   </div>
 
-  <!-- FILTER BAR — Slide 1: Market Overview -->
   <div class="filter-bar">
-    <span class="filter-label">Filters</span>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Region</span>
-      <div class="filter-toggle-group" id="fb1-region">
-        <button class="filter-toggle on" data-val="all">All</button>
-        <button class="filter-toggle" data-val="South/SE">South / SE</button>
-        <button class="filter-toggle" data-val="West">West Coast</button>
-        <button class="filter-toggle" data-val="Northeast">Northeast</button>
-        <button class="filter-toggle" data-val="Midwest">Midwest</button>
+    <div class="filter-row">
+      <span class="filter-row-label">Context</span>
+      <div class="filter-item">
+        <span class="filter-item-label">State</span>
+        <select class="wide"><option>All States</option><option>Texas</option><option>California</option><option>Florida</option><option>Georgia</option><option>Colorado</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Region</span>
+        <select><option>All Regions</option><option>South / SE</option><option>West Coast</option><option>Northeast</option><option>Midwest</option><option>Mountain / SW</option></select>
       </div>
     </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Tier</span>
-      <div class="filter-toggle-group" id="fb1-tier">
-        <button class="filter-toggle on" data-val="all">All</button>
-        <button class="filter-toggle" data-val="High">High</button>
-        <button class="filter-toggle" data-val="Med">Med</button>
-        <button class="filter-toggle" data-val="Low">Low</button>
+    <div class="filter-row">
+      <span class="filter-row-label">Segment</span>
+      <div class="filter-item">
+        <span class="filter-item-label">Tier</span>
+        <select class="narrow"><option>All Tiers</option><option>High</option><option>Med</option><option>Low</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Ownership</span>
+        <select><option>All Ownership</option><option>Independent</option><option>Chain</option><option>PE Owned</option><option>Target Only</option></select>
       </div>
     </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Ownership</span>
-      <select class="filter-select" id="fb1-ownership">
-        <option value="all">All ownership types</option>
-        <option value="Independent">Independent</option>
-        <option value="Chain">Chain / Franchise</option>
-        <option value="Target">Target only</option>
-      </select>
-    </div>
-
-    <button class="filter-clear-btn" onclick="clearFilters('fb1')">Reset</button>
-    <span class="filter-tableau-note">Tableau: Region, Tier, Ownership fields → apply to sheet</span>
   </div>
 
   <div class="kpi-grid kpi-grid-4">
@@ -647,48 +629,42 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
     <div class="slide-sub">Opportunity breakdown by state — High / Med / Low tiers, total count, and attractiveness percentage</div>
   </div>
 
-  <!-- FILTER BAR — Slide 2: By State Summary -->
   <div class="filter-bar">
-    <span class="filter-label">Filters</span>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Region</span>
-      <select class="filter-select" id="fb2-region">
-        <option value="all">All regions</option>
-        <option value="South/SE">South / SE</option>
-        <option value="West">West Coast</option>
-        <option value="Northeast">Northeast</option>
-        <option value="Midwest">Midwest</option>
-        <option value="Mountain">Mountain / SW</option>
-      </select>
-    </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Show Tier</span>
-      <div class="filter-toggle-group" id="fb2-tier">
-        <button class="filter-toggle on" data-val="all">All</button>
-        <button class="filter-toggle" data-val="High">High only</button>
-        <button class="filter-toggle" data-val="HM">High + Med</button>
+    <div class="filter-row">
+      <span class="filter-row-label">Context</span>
+      <div class="filter-item">
+        <span class="filter-item-label">State</span>
+        <select class="wide"><option>All States</option><option>Texas</option><option>California</option><option>Florida</option><option>Georgia</option><option>Colorado</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Region</span>
+        <select><option>All Regions</option><option>South / SE</option><option>West Coast</option><option>Northeast</option><option>Midwest</option><option>Mountain / SW</option></select>
       </div>
     </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Min. Opportunities</span>
-      <select class="filter-select" id="fb2-minopps" style="min-width:100px">
-        <option value="0">No minimum</option>
-        <option value="50">50+</option>
-        <option value="100">100+</option>
-        <option value="200">200+</option>
-        <option value="500">500+</option>
-      </select>
+    <div class="filter-row">
+      <span class="filter-row-label">Refine</span>
+      <div class="filter-item">
+        <span class="filter-item-label">Tier</span>
+        <select class="narrow"><option>All Tiers</option><option>High Only</option><option>High + Med</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Min. Opportunities</span>
+        <select class="narrow"><option>No Min.</option><option>50+</option><option>100+</option><option>200+</option><option>500+</option></select>
+      </div>
     </div>
-
-    <button class="filter-clear-btn" onclick="clearFilters('fb2')">Reset</button>
-    <span class="filter-tableau-note">Tableau: Region, Tier, Total Count fields → apply to sheet</span>
+  </div>
+  <div class="filter-summary">
+    <div class="fsumm-item"><span class="fsumm-val">36</span><span class="fsumm-lbl">States</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val">14,800+</span><span class="fsumm-lbl">Total Opportunities</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val">2,837</span><span class="fsumm-lbl">High Tier</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val">7,104</span><span class="fsumm-lbl">Med Tier</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val" style="color:var(--blue)">67%</span><span class="fsumm-lbl">High + Med Share</span></div>
   </div>
 
   <div style="display:grid;grid-template-columns:repeat(4,1fr);background:var(--navy-mid);border-bottom:2px solid var(--blue);flex-shrink:0">
@@ -754,234 +730,235 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 <section id="s4" class="slide">
   <div class="slide-header">
     <div class="slide-num">03 &nbsp;·&nbsp; Radius Clustering</div>
-    <div class="slide-title">Radius-Based Target Clustering</div>
-    <div class="slide-sub">The same CBSA contains both oversaturated cores and genuinely underserved sub-markets. Zone rings reveal exactly where demand exists but supply doesn't.</div>
+    <div class="slide-title">Radius-Based Zone Clustering</div>
+    <div class="slide-sub">Identifies white-space sub-markets, cluster acquisition opportunities, and saturated markets within each CBSA — using supply proximity, PE competition, and population-adjusted demand.</div>
   </div>
 
-  <!-- FILTER BAR — Slide 3 -->
-  <div class="filter-bar" style="background:var(--navy);border-bottom:2px solid rgba(15,117,189,0.4)">
-    <span class="filter-label">Filters</span>
-
-    <div class="filter-group required">
-      <span class="filter-group-label">CBSA Market</span>
-      <select class="filter-select" id="fb3-cbsa" style="min-width:200px">
-        <option value="">— Select a market —</option>
-        <optgroup label="Dense Urban">
-          <option>New York–Newark</option>
-          <option>Los Angeles–Long Beach</option>
-          <option>Chicago–Naperville</option>
-          <option>San Francisco–Oakland</option>
-          <option>Boston–Cambridge</option>
-          <option>Washington–Arlington</option>
-        </optgroup>
-        <optgroup label="Mid-Density">
-          <option selected>Dallas–Fort Worth</option>
-          <option>Atlanta–Sandy Springs</option>
-          <option>Houston–The Woodlands</option>
-          <option>Phoenix–Mesa</option>
-          <option>Seattle–Tacoma</option>
-          <option>Denver–Aurora</option>
-          <option>Miami–Fort Lauderdale</option>
-        </optgroup>
-        <optgroup label="Suburban / Spread">
-          <option>Nashville–Murfreesboro</option>
-          <option>Charlotte–Concord</option>
-          <option>Austin–Round Rock</option>
-          <option>Raleigh–Cary</option>
-          <option>Salt Lake City</option>
-          <option>Orlando–Kissimmee</option>
-        </optgroup>
-      </select>
-    </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Show Zones</span>
-      <div class="filter-toggle-group" id="fb3-zone">
-        <button class="filter-toggle on" data-val="all">All</button>
-        <button class="filter-toggle" data-val="Z2">Z2 Tuck-In</button>
-        <button class="filter-toggle" data-val="Z4">Z4 White Space</button>
-        <button class="filter-toggle" data-val="Z2Z4">Z2 + Z4</button>
+  <div class="filter-bar">
+    <div class="filter-row">
+      <span class="filter-row-label">Context</span>
+      <div class="filter-item">
+        <span class="filter-item-label">State</span>
+        <select class="wide"><option>All States</option><option>Texas</option><option>California</option><option>Florida</option><option>Georgia</option><option>Colorado</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">CBSA Market</span>
+        <select class="wide"><option>All CBSAs</option><option>Dallas–Fort Worth</option><option>Atlanta–Sandy Springs</option><option>Houston–The Woodlands</option><option>Phoenix–Mesa</option><option>Denver–Aurora</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Market Type (AY)</span>
+        <select><option>All Types</option><option>Dense Urban</option><option>Mid-Density</option><option>Suburban</option></select>
       </div>
     </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Risk</span>
-      <div class="filter-toggle-group" id="fb3-risk">
-        <button class="filter-toggle on" data-val="all">All</button>
-        <button class="filter-toggle" data-val="LN">Low / None</button>
+    <div class="filter-row">
+      <span class="filter-row-label">Refine</span>
+      <div class="filter-item">
+        <span class="filter-item-label">Zone (BA)</span>
+        <select class="narrow"><option>All Zones</option><option>Z1</option><option>Z2</option><option>Z3</option><option>Z4</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Risk (BF)</span>
+        <select class="narrow"><option>All Risk</option><option>None</option><option>Low</option><option>Med</option><option>High</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Signal</span>
+        <select><option>All Signals</option><option>White Space</option><option>Tuck-In</option><option>Monitor</option><option>Avoid</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Ownership</span>
+        <select><option>Target Only</option><option>All Ownership</option><option>PE Owned</option></select>
       </div>
     </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Ownership</span>
-      <div class="filter-toggle-group" id="fb3-ownership">
-        <button class="filter-toggle on" data-val="Target">Target Only</button>
-        <button class="filter-toggle" data-val="PE" style="color:#F4B942">+ PE View</button>
-        <button class="filter-toggle" data-val="all">All</button>
-      </div>
-    </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Metro Type</span>
-      <div class="filter-toggle-group" id="fb3-metrotype">
-        <button class="filter-toggle on-indigo on" data-val="auto">Auto</button>
-        <button class="filter-toggle" data-val="dense">Dense</button>
-        <button class="filter-toggle" data-val="mid">Mid</button>
-        <button class="filter-toggle" data-val="suburban">Suburban</button>
-      </div>
-    </div>
-
-    <button class="filter-clear-btn" onclick="clearFilters('fb3')">Reset</button>
-    <span class="filter-tableau-note">Tableau: CBSA City · Distance band column · Ownership (Target / PE / Chain) · Cannibalization Risk</span>
+  </div>
+  <div class="filter-summary">
+    <div class="fsumm-item"><span class="fsumm-val">Dallas–Fort Worth</span><span class="fsumm-lbl">Active CBSA</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val">410</span><span class="fsumm-lbl">Targets in View</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val" style="color:var(--green)">38</span><span class="fsumm-lbl">Z4 White Space</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val" style="color:var(--amber)">94</span><span class="fsumm-lbl">Z2 Tuck-In</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val" style="color:var(--red)">61</span><span class="fsumm-lbl">High Risk</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val" style="color:var(--blue)">74</span><span class="fsumm-lbl">Avg Score</span></div>
   </div>
 
-  <!-- MAIN CONTENT: hero table left, right panel with insight + risk logic + zone ref -->
   <div class="content" style="padding-top:8px;gap:8px">
     <div class="content-row col-2" style="gap:10px;align-items:stretch;flex:1;min-height:0;overflow:hidden">
 
-      <!-- LEFT: The ranked target table — THE VALUE -->
+      <!-- LEFT: Target table — sorted by Opportunity Score desc -->
       <div class="card" style="overflow:hidden;display:flex;flex-direction:column;">
         <div class="card-header" style="flex-shrink:0;background:var(--navy);color:var(--white);border-bottom:2px solid var(--blue)">
-          Dallas–Fort Worth — Underserved Sub-Markets by Zone
-          <span style="float:right;font-size:9px;font-weight:400;opacity:0.6;letter-spacing:0;text-transform:none">Mid-Density bands · independent targets only</span>
+          Dallas–Fort Worth — Targets by Opportunity Score
+          <span style="float:right;font-size:9px;font-weight:400;opacity:0.6;letter-spacing:0;text-transform:none">sorted: Opportunity Score (BK) desc · Target-only</span>
         </div>
         <div style="overflow-y:auto;flex:1">
           <table class="data-table">
             <thead><tr>
-              <th>Clinic / Sub-Market</th>
+              <th>Clinic</th>
               <th class="th-center">Zone</th>
-              <th class="th-center">Miles from Core</th>
-              <th class="th-center">Z1 Neighbors</th>
-              <th class="th-center" style="color:#F4B942;border-bottom:2px solid #F4B942">PE Z1</th>
-              <th class="th-center">Cannibal. Risk</th>
+              <th class="th-center">Risk (BF)</th>
+              <th class="th-center" style="color:#F4B942">PE Z1 (BD)</th>
+              <th class="th-center">Supply Gap</th>
+              <th class="th-center">Opp. Index</th>
+              <th class="th-center" style="color:var(--blue);font-weight:800">Score</th>
               <th class="th-center">Signal</th>
-            </tr></thead>
-            <tbody id="clusterTableBody"></tbody>
-          </table>
-        </div>
-        <div style="padding:7px 14px;background:var(--bg-alt);border-top:1px solid var(--border-lt);flex-shrink:0;display:flex;gap:16px;align-items:center">
-          <span style="font-size:10px;color:var(--muted);font-style:italic">PE Z1 = platform-owned / PE-backed clinics within Zone 1 ring · weighted 1.5× in risk score · fields: Ownership, Latitude, Longitude, Distance band column</span>
-        </div>
-      </div>
-
-      <!-- RIGHT PANEL: insight box + risk key + compact zone reference -->
-      <div style="display:flex;flex-direction:column;gap:8px;overflow:hidden;min-height:0">
-
-        <!-- Core insight: underserved sub-market thesis -->
-        <div style="padding:12px 14px;background:var(--navy);border-left:4px solid var(--blue);border-radius:0 2px 2px 0;flex-shrink:0">
-          <div style="font-size:9px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue);margin-bottom:6px">How to Read This</div>
-          <div style="font-size:11.5px;color:var(--light-blue);line-height:1.65;margin-bottom:8px">
-            Zone rings reveal where consumer demand exists but supply doesn't. A Z4 record means <strong style="color:var(--white)">no MedSpa supply within 15–25 miles</strong> of that sub-market's population center.
-          </div>
-          <div style="font-size:10.5px;color:var(--muted);line-height:1.55;border-top:1px solid rgba(186,202,236,0.12);padding-top:7px;margin-bottom:6px">
-            Dallas ranks <strong style="color:var(--light-blue)">#1</strong> nationally by volume — yet North Frisco and South Fort Worth show genuine white space. A CBSA score alone misses this.
-          </div>
-          <div style="font-size:10.5px;line-height:1.55;border-top:1px solid rgba(186,202,236,0.12);padding-top:7px">
-            <span style="font-size:9px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#F4B942;display:block;margin-bottom:4px">⚠ PE / Platform Ownership</span>
-            <span style="color:rgba(186,202,236,0.8)">PE-backed and platform-owned clinics are <strong style="color:var(--white)">not acquisition targets</strong> — they are competitors. They are tracked separately in the <strong style="color:#F4B942">PE Z1</strong> column and weighted <strong style="color:var(--white)">1.5× an independent neighbor</strong> in the cannibalization risk score. A Z2 target with even one PE Z1 neighbor requires a differentiation plan before approach.</span>
-          </div>
-        </div>
-
-        <div class="card" style="flex-shrink:0">
-          <div class="card-header">Cannibalization Risk Key <span style="float:right;font-size:8.5px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">PE-weighted · 1 PE neighbor = 1.5× independent</span></div>
-          <table class="data-table" style="font-size:10.5px">
-            <thead><tr>
-              <th style="width:60px">Level</th>
-              <th>Condition</th>
-              <th style="color:#F4B942">PE Trigger</th>
-              <th>Action</th>
             </tr></thead>
             <tbody>
               <tr>
-                <td><span class="rbadge risk-high">High</span></td>
-                <td style="color:var(--slate)">≥3 Z1 total · &gt;60% service overlap</td>
-                <td style="color:#C47A0F;font-weight:700;font-size:10px">≥2 PE Z1 neighbors</td>
-                <td style="color:var(--slate)">Pause · run patient overlap</td>
+                <td><div class="td-bold" style="font-size:11px">Aesthetica Prosper</div><div style="font-size:9.5px;color:var(--muted)">N. Frisco / Prosper · Mid</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--green);background:rgba(26,154,108,0.1);padding:2px 7px;border-radius:2px;border:1px solid rgba(26,154,108,0.3);font-size:10.5px">Z4</span></td>
+                <td class="td-center"><span class="rbadge risk-none">None</span></td>
+                <td class="td-center" style="color:var(--green);font-weight:700">0</td>
+                <td class="td-center" style="color:var(--green);font-weight:600;font-size:11px">+4.2</td>
+                <td class="td-center" style="color:var(--green);font-weight:600;font-size:11px">0.84</td>
+                <td class="td-center"><span style="font-size:13px;font-weight:800;color:var(--green)">91</span></td>
+                <td class="td-center"><span class="sbadge sig-ws">★ White Space</span></td>
               </tr>
               <tr>
-                <td><span class="rbadge risk-med">Med</span></td>
-                <td style="color:var(--slate)">1–2 Z1 total · 30–60% overlap</td>
-                <td style="color:#C47A0F;font-weight:700;font-size:10px">1 PE Z1 neighbor</td>
-                <td style="color:var(--slate)">Differentiation plan required</td>
+                <td><div class="td-bold" style="font-size:11px">Luxe Laser S. Fort Worth</div><div style="font-size:9.5px;color:var(--muted)">S. Fort Worth · Mid</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--green);background:rgba(26,154,108,0.1);padding:2px 7px;border-radius:2px;border:1px solid rgba(26,154,108,0.3);font-size:10.5px">Z4</span></td>
+                <td class="td-center"><span class="rbadge risk-none">None</span></td>
+                <td class="td-center" style="color:var(--green);font-weight:700">0</td>
+                <td class="td-center" style="color:var(--green);font-weight:600;font-size:11px">+3.8</td>
+                <td class="td-center" style="color:var(--green);font-weight:600;font-size:11px">0.76</td>
+                <td class="td-center"><span style="font-size:13px;font-weight:800;color:var(--green)">87</span></td>
+                <td class="td-center"><span class="sbadge sig-ws">★ White Space</span></td>
               </tr>
               <tr>
-                <td><span class="rbadge risk-low">Low</span></td>
-                <td style="color:var(--slate)">0 Z1 total · &lt;30% overlap</td>
-                <td style="color:var(--green);font-weight:600;font-size:10px">0 PE Z1</td>
-                <td style="color:var(--slate)">Clear for tuck-in or de novo</td>
+                <td><div class="td-bold" style="font-size:11px">Glow Aesthetics DFW</div><div style="font-size:9.5px;color:var(--muted)">N. Frisco · Mid</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--amber);background:rgba(196,122,15,0.1);padding:2px 7px;border-radius:2px;border:1px solid rgba(196,122,15,0.3);font-size:10.5px">Z2</span></td>
+                <td class="td-center"><span class="rbadge risk-low">Low</span></td>
+                <td class="td-center" style="color:var(--green);font-weight:700">0</td>
+                <td class="td-center" style="color:var(--blue);font-weight:600;font-size:11px">+1.4</td>
+                <td class="td-center" style="color:var(--blue);font-weight:600;font-size:11px">0.41</td>
+                <td class="td-center"><span style="font-size:13px;font-weight:800;color:var(--amber)">74</span></td>
+                <td class="td-center"><span class="sbadge sig-ti">Tuck-In</span></td>
               </tr>
               <tr>
-                <td><span class="rbadge risk-none">None</span></td>
-                <td style="color:var(--slate)">Z4 — no supply present</td>
-                <td style="color:var(--green);font-weight:600;font-size:10px">0 PE Z1</td>
-                <td style="color:var(--slate)">White space confirmed</td>
+                <td><div class="td-bold" style="font-size:11px">Premier Skin Plano</div><div style="font-size:9.5px;color:var(--muted)">Plano / Allen · Mid</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--amber);background:rgba(196,122,15,0.1);padding:2px 7px;border-radius:2px;border:1px solid rgba(196,122,15,0.3);font-size:10.5px">Z2</span></td>
+                <td class="td-center"><span class="rbadge risk-med">Med</span></td>
+                <td class="td-center" style="color:var(--amber);font-weight:700">1</td>
+                <td class="td-center" style="color:var(--muted);font-size:11px">+0.6</td>
+                <td class="td-center" style="color:var(--muted);font-size:11px">0.18</td>
+                <td class="td-center"><span style="font-size:13px;font-weight:800;color:var(--muted)">52</span></td>
+                <td class="td-center"><span class="sbadge sig-mo">Monitor</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-bold" style="font-size:11px">Refresh MedSpa Allen</div><div style="font-size:9.5px;color:var(--muted)">Plano / Allen · Mid</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--blue);background:rgba(15,117,189,0.1);padding:2px 7px;border-radius:2px;border:1px solid rgba(15,117,189,0.3);font-size:10.5px">Z3</span></td>
+                <td class="td-center"><span class="rbadge risk-med">Med</span></td>
+                <td class="td-center" style="color:var(--amber);font-weight:700">2</td>
+                <td class="td-center" style="color:var(--muted);font-size:11px">−0.2</td>
+                <td class="td-center" style="color:var(--muted);font-size:11px">−0.06</td>
+                <td class="td-center"><span style="font-size:13px;font-weight:800;color:var(--muted)">41</span></td>
+                <td class="td-center"><span class="sbadge sig-mo">Monitor</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-bold" style="font-size:11px">Knox-Henderson Skin</div><div style="font-size:9.5px;color:var(--muted)">Knox-Henderson · Mid</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--red);background:rgba(220,53,69,0.1);padding:2px 7px;border-radius:2px;border:1px solid rgba(220,53,69,0.3);font-size:10.5px">Z1</span></td>
+                <td class="td-center"><span class="rbadge risk-high">High</span></td>
+                <td class="td-center" style="color:var(--red);font-weight:700">3</td>
+                <td class="td-center" style="color:var(--red);font-size:11px">−3.1</td>
+                <td class="td-center" style="color:var(--red);font-size:11px">−0.62</td>
+                <td class="td-center"><span style="font-size:13px;font-weight:800;color:var(--red)">18</span></td>
+                <td class="td-center"><span class="sbadge sig-av">Avoid</span></td>
               </tr>
             </tbody>
           </table>
         </div>
+        <div style="padding:6px 14px;background:var(--bg-alt);border-top:1px solid var(--border-lt);flex-shrink:0">
+          <span style="font-size:9.5px;color:var(--muted);font-style:italic">Supply Gap = Expected − Actual supply &nbsp;·&nbsp; Opp. Index = Gap ÷ Expected &nbsp;·&nbsp; Score 0–100 normalized &nbsp;·&nbsp; Map view in Tableau</span>
+        </div>
+      </div>
 
-        <!-- Compact zone reference — now at bottom as a lookup, not the hero -->
-        <div class="card" style="flex:1;overflow:hidden;min-height:0">
-          <div class="card-header" style="flex-shrink:0">Zone Band Reference <span style="float:right;font-size:9px;font-weight:400;color:var(--muted);letter-spacing:0;text-transform:none">bands vary by metro density · see filter above</span></div>
-          <div style="overflow-y:auto;flex:1;display:flex;flex-direction:column">
+      <!-- RIGHT: Score breakdown + Signal legend + Zone reference -->
+      <div style="display:flex;flex-direction:column;gap:8px;overflow:hidden;min-height:0">
+
+        <!-- Opportunity Score breakdown -->
+        <div class="card" style="flex-shrink:0">
+          <div class="card-header">Final Opportunity Score (0–100)
+            <span style="float:right;font-size:9px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">weighted composite · normalized</span>
+          </div>
+          <table class="data-table" style="font-size:10.5px">
+            <thead><tr><th>Range</th><th>Interpretation</th><th class="th-center">Action</th></tr></thead>
+            <tbody>
+              <tr><td><span style="font-weight:800;color:var(--green)">80–100</span></td><td style="color:var(--slate)">Prime expansion market</td><td class="td-center"><span class="sbadge sig-ws">★ White Space</span></td></tr>
+              <tr><td><span style="font-weight:800;color:var(--blue)">65–79</span></td><td style="color:var(--slate)">Strong opportunity</td><td class="td-center"><span class="sbadge sig-ti">Tuck-In</span></td></tr>
+              <tr><td><span style="font-weight:800;color:var(--muted)">50–64</span></td><td style="color:var(--slate)">Selective acquisition</td><td class="td-center"><span class="sbadge sig-mo">Monitor</span></td></tr>
+              <tr><td><span style="font-weight:800;color:var(--muted)">35–49</span></td><td style="color:var(--slate)">Monitor only</td><td class="td-center"><span class="sbadge sig-mo">Monitor</span></td></tr>
+              <tr><td><span style="font-weight:800;color:var(--red)">0–34</span></td><td style="color:var(--slate)">Saturated / avoid</td><td class="td-center"><span class="sbadge sig-av">Avoid</span></td></tr>
+            </tbody>
+          </table>
+          <div style="padding:6px 12px;background:var(--navy);border-top:1px solid rgba(186,202,236,0.1);font-size:9.5px;color:var(--muted)">
+            Score inputs: supply opportunity · target clustering · PE competition · cannibalization risk · population demand
+          </div>
+        </div>
+
+        <!-- Cannibalization Risk key -->
+        <div class="card" style="flex-shrink:0">
+          <div class="card-header">Cannibalization Risk (BF)
+            <span style="float:right;font-size:9px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">BE = BB + (0.5 × BD)</span>
+          </div>
+          <table class="data-table" style="font-size:10.5px">
+            <thead><tr><th style="width:55px">BF</th><th>BB (Z1 All Supply)</th><th style="color:#F4B942">BD (PE Z1)</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><span class="rbadge risk-high">High</span></td><td style="color:var(--slate)">≥ 3 and high overlap pressure</td><td style="color:#C47A0F;font-weight:700">or ≥ 2 PE Z1</td><td style="color:var(--slate)">Pause</td></tr>
+              <tr><td><span class="rbadge risk-med">Med</span></td><td style="color:var(--slate)">1–2 and moderate overlap pressure</td><td style="color:#C47A0F;font-weight:700">or 1 PE Z1</td><td style="color:var(--slate)">Differentiation plan</td></tr>
+              <tr><td><span class="rbadge risk-low">Low</span></td><td style="color:var(--slate)">0 and low immediate pressure</td><td style="color:var(--green);font-weight:600">0 PE Z1</td><td style="color:var(--slate)">Clear to proceed</td></tr>
+              <tr><td><span class="rbadge risk-none">None</span></td><td style="color:var(--slate)" colspan="2">Z4 — no immediate supply</td><td style="color:var(--slate)">White space</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Zone Band Reference -->
+        <div class="card" style="flex:1;overflow:hidden;min-height:0;display:flex;flex-direction:column">
+          <div class="card-header" style="flex-shrink:0">Zone Band Reference (BA)
+            <span style="float:right;font-size:9px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">radius from nearest supply (AZ) · varies by Market Type (AY)</span>
+          </div>
+          <div style="overflow-y:auto;flex:1">
             <table class="data-table" style="font-size:10.5px">
-              <thead>
-                <tr>
-                  <th>Zone</th>
-                  <th>Name</th>
-                  <th class="th-center" style="color:var(--indigo)">Dense Urban</th>
-                  <th class="th-center" style="color:var(--blue)">Mid-Density</th>
-                  <th class="th-center" style="color:var(--teal)">Suburban</th>
-                  <th class="th-center">Action</th>
-                </tr>
-              </thead>
+              <thead><tr>
+                <th>Zone</th><th>Name</th>
+                <th class="th-center" style="color:var(--indigo)">Dense Urban</th>
+                <th class="th-center" style="color:var(--blue)">Mid-Density</th>
+                <th class="th-center" style="color:var(--muted)">Suburban</th>
+                <th class="th-center">Action</th>
+              </tr></thead>
               <tbody>
                 <tr>
                   <td><span style="font-weight:800;color:var(--red)">Z1</span></td>
                   <td style="color:var(--slate)">Saturation Ring</td>
-                  <td class="td-center td-muted">0–2 mi</td>
-                  <td class="td-center td-muted">0–3 mi</td>
-                  <td class="td-center td-muted">0–5 mi</td>
+                  <td class="td-center td-muted">0–2 mi</td><td class="td-center td-muted">0–3 mi</td><td class="td-center td-muted">0–5 mi</td>
                   <td class="td-center"><span style="font-size:9.5px;font-weight:700;color:var(--red)">Avoid</span></td>
                 </tr>
                 <tr>
                   <td><span style="font-weight:800;color:var(--amber)">Z2</span></td>
                   <td style="color:var(--slate)">Acquisition Zone</td>
-                  <td class="td-center td-muted">2–5 mi</td>
-                  <td class="td-center td-muted">3–7 mi</td>
-                  <td class="td-center td-muted">5–10 mi</td>
+                  <td class="td-center td-muted">2–5 mi</td><td class="td-center td-muted">3–7 mi</td><td class="td-center td-muted">5–10 mi</td>
                   <td class="td-center"><span style="font-size:9.5px;font-weight:700;color:var(--amber)">Tuck-In</span></td>
                 </tr>
                 <tr>
                   <td><span style="font-weight:800;color:var(--blue)">Z3</span></td>
                   <td style="color:var(--slate)">Competitive Watch</td>
-                  <td class="td-center td-muted">5–10 mi</td>
-                  <td class="td-center td-muted">7–15 mi</td>
-                  <td class="td-center td-muted">10–20 mi</td>
-                  <td class="td-center"><span style="font-size:9.5px;font-weight:700;color:var(--blue)">Track</span></td>
+                  <td class="td-center td-muted">5–10 mi</td><td class="td-center td-muted">7–15 mi</td><td class="td-center td-muted">10–20 mi</td>
+                  <td class="td-center"><span style="font-size:9.5px;font-weight:700;color:var(--blue)">Monitor</span></td>
                 </tr>
                 <tr>
                   <td><span style="font-weight:800;color:var(--green)">Z4</span></td>
                   <td style="color:var(--slate)">Supply Gap</td>
-                  <td class="td-center td-muted">10–15 mi</td>
-                  <td class="td-center td-muted">15–25 mi</td>
-                  <td class="td-center td-muted">20–30 mi</td>
-                  <td class="td-center"><span style="font-size:9.5px;font-weight:700;color:var(--green)">De Novo</span></td>
+                  <td class="td-center td-muted">10–15 mi</td><td class="td-center td-muted">15–25 mi</td><td class="td-center td-muted">20–30 mi</td>
+                  <td class="td-center"><span style="font-size:9.5px;font-weight:700;color:var(--green)">De Novo / White Space</span></td>
                 </tr>
               </tbody>
             </table>
-            <div style="padding:6px 12px;background:var(--amber-lt);border-top:1px solid rgba(196,122,15,0.2);margin-top:auto;flex-shrink:0">
-              <span style="font-size:9.5px;color:var(--amber);font-weight:700">Dense markets (NYC·BOS·DC·SF):</span>
-              <span style="font-size:9.5px;color:var(--slate)"> max cap is 15 mi — anything beyond is a separate sub-market thesis, not a tuck-in.</span>
-            </div>
           </div>
         </div>
 
@@ -991,7 +968,198 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 
   <div class="slide-footer">
     <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
-    <span>Slide 3 / 4 · Radius-Based Target Clustering</span>
+    <span>Slide 3 · Radius-Based Zone Clustering</span>
+  </div>
+</section>
+
+<!-- ══ SLIDE 3.1 — RADIUS CLUSTERING v2 ══ -->
+<section id="s4b" class="slide">
+  <div class="slide-header">
+    <div class="slide-num">03.1 &nbsp;·&nbsp; Radius Clustering</div>
+    <div class="slide-title">Radius-Based Target Clustering <span style="font-size:13px;font-weight:400;color:var(--muted);font-family:var(--font)">v2 — dataset columns AY–BF</span></div>
+    <div class="slide-sub">Each target is assigned a zone (BA) based on distance to nearest supply (AZ) and market type (AY). Cannibalization risk (BF) is driven by Z1 neighbor counts (BB, BD) with PE neighbors weighted 1.5×.</div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-row">
+      <span class="filter-row-label">Context</span>
+      <div class="filter-item">
+        <span class="filter-item-label">State</span>
+        <select class="wide"><option>All States</option><option>Texas</option><option>California</option><option>Florida</option><option>Georgia</option><option>Colorado</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">CBSA Market</span>
+        <select class="wide"><option>All CBSAs</option><option>Dallas–Fort Worth</option><option>Atlanta–Sandy Springs</option><option>Houston–The Woodlands</option><option>Phoenix–Mesa</option><option>Denver–Aurora</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Market Type (AY)</span>
+        <select><option>All Types</option><option>Dense Urban</option><option>Mid-Density</option><option>Suburban</option></select>
+      </div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-row-label">Refine</span>
+      <div class="filter-item">
+        <span class="filter-item-label">Zone (BA)</span>
+        <select class="narrow"><option>All Zones</option><option>Z1</option><option>Z2</option><option>Z3</option><option>Z4</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Risk (BF)</span>
+        <select class="narrow"><option>All Risk</option><option>None</option><option>Low</option><option>Med</option><option>High</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Ownership</span>
+        <select><option>Target Only</option><option>All Ownership</option><option>PE Owned</option></select>
+      </div>
+    </div>
+  </div>
+  <div class="filter-summary">
+    <div class="fsumm-item"><span class="fsumm-val">Dallas–Fort Worth</span><span class="fsumm-lbl">Active CBSA</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val">410</span><span class="fsumm-lbl">Targets in View</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val" style="color:var(--green)">38</span><span class="fsumm-lbl">Z4 White Space</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val" style="color:var(--amber)">94</span><span class="fsumm-lbl">Z2 Tuck-In</span></div>
+    
+    <div class="fsumm-item"><span class="fsumm-val" style="color:var(--red)">61</span><span class="fsumm-lbl">High Risk</span></div>
+  </div>
+
+  <div class="content" style="padding-top:8px;gap:8px">
+    <div class="content-row col-2" style="gap:10px;align-items:stretch;flex:1;min-height:0;overflow:hidden">
+
+      <!-- LEFT: Target table -->
+      <div class="card" style="overflow:hidden;display:flex;flex-direction:column;">
+        <div class="card-header" style="flex-shrink:0;background:var(--navy);color:var(--white);border-bottom:2px solid var(--blue)">
+          Dallas–Fort Worth — Targets by Zone
+          <span style="float:right;font-size:9px;font-weight:400;opacity:0.6;letter-spacing:0;text-transform:none">sorted: Risk (BF) · PE-Weighted Index (BE)</span>
+        </div>
+        <div style="overflow-y:auto;flex:1">
+          <table class="data-table">
+            <thead><tr>
+              <th>Clinic</th>
+              <th class="th-center">Zone (BA)</th>
+              <th class="th-center">Dist. mi (AZ)</th>
+              <th class="th-center">Z1 Supply (BB)</th>
+              <th class="th-center" style="color:#F4B942">PE Z1 (BD)</th>
+              <th class="th-center">PE-Wtd Index (BE)</th>
+              <th class="th-center">Risk (BF)</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td><div class="td-bold" style="font-size:11.5px">Aesthetica Prosper</div><div style="font-size:10px;color:var(--muted)">N. Frisco / Prosper</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--green);background:rgba(26,154,108,0.1);padding:2px 8px;border-radius:2px;border:1px solid rgba(26,154,108,0.3)">Z4</span></td>
+                <td class="td-center td-muted">16.2</td>
+                <td class="td-center" style="color:var(--green);font-weight:700">0</td>
+                <td class="td-center" style="color:var(--green);font-weight:700">0</td>
+                <td class="td-center td-muted">0.0</td>
+                <td class="td-center"><span class="rbadge risk-none">None</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-bold" style="font-size:11.5px">Luxe Laser S. Fort Worth</div><div style="font-size:10px;color:var(--muted)">S. Fort Worth</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--green);background:rgba(26,154,108,0.1);padding:2px 8px;border-radius:2px;border:1px solid rgba(26,154,108,0.3)">Z4</span></td>
+                <td class="td-center td-muted">18.8</td>
+                <td class="td-center" style="color:var(--green);font-weight:700">1</td>
+                <td class="td-center" style="color:var(--green);font-weight:700">0</td>
+                <td class="td-center td-muted">1.0</td>
+                <td class="td-center"><span class="rbadge risk-none">None</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-bold" style="font-size:11.5px">Glow Aesthetics DFW</div><div style="font-size:10px;color:var(--muted)">N. Frisco</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--amber);background:rgba(196,122,15,0.1);padding:2px 8px;border-radius:2px;border:1px solid rgba(196,122,15,0.3)">Z2</span></td>
+                <td class="td-center td-muted">4.1</td>
+                <td class="td-center" style="color:var(--amber);font-weight:700">2</td>
+                <td class="td-center" style="color:var(--green);font-weight:700">0</td>
+                <td class="td-center td-muted">2.0</td>
+                <td class="td-center"><span class="rbadge risk-low">Low</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-bold" style="font-size:11.5px">Premier Skin Plano</div><div style="font-size:10px;color:var(--muted)">Plano / Allen</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--amber);background:rgba(196,122,15,0.1);padding:2px 8px;border-radius:2px;border:1px solid rgba(196,122,15,0.3)">Z2</span></td>
+                <td class="td-center td-muted">6.4</td>
+                <td class="td-center" style="color:var(--amber);font-weight:700">4</td>
+                <td class="td-center" style="color:var(--amber);font-weight:700">1</td>
+                <td class="td-center td-muted">4.5</td>
+                <td class="td-center"><span class="rbadge risk-med">Med</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-bold" style="font-size:11.5px">Refresh MedSpa Allen</div><div style="font-size:10px;color:var(--muted)">Plano / Allen</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--blue);background:rgba(15,117,189,0.1);padding:2px 8px;border-radius:2px;border:1px solid rgba(15,117,189,0.3)">Z3</span></td>
+                <td class="td-center td-muted">9.1</td>
+                <td class="td-center" style="color:var(--amber);font-weight:700">6</td>
+                <td class="td-center" style="color:var(--amber);font-weight:700">2</td>
+                <td class="td-center td-muted">7.0</td>
+                <td class="td-center"><span class="rbadge risk-med">Med</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-bold" style="font-size:11.5px">Knox-Henderson Skin</div><div style="font-size:10px;color:var(--muted)">Knox-Henderson</div></td>
+                <td class="td-center"><span style="font-weight:800;color:var(--red);background:rgba(220,53,69,0.1);padding:2px 8px;border-radius:2px;border:1px solid rgba(220,53,69,0.3)">Z1</span></td>
+                <td class="td-center td-muted">0.8</td>
+                <td class="td-center" style="color:var(--red);font-weight:700">18</td>
+                <td class="td-center" style="color:var(--red);font-weight:700">3</td>
+                <td class="td-center td-muted">19.5</td>
+                <td class="td-center"><span class="rbadge risk-high">High</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:7px 14px;background:var(--bg-alt);border-top:1px solid var(--border-lt);flex-shrink:0">
+          <span style="font-size:10px;color:var(--muted);font-style:italic">BE = BB + (0.5 × BD) &nbsp;·&nbsp; Target-only rows shown by default &nbsp;·&nbsp; Map view in Tableau</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Column key + Risk key -->
+      <div style="display:flex;flex-direction:column;gap:8px;overflow:hidden;min-height:0">
+
+        <!-- Column reference -->
+        <div class="card" style="flex-shrink:0">
+          <div class="card-header">Column Reference</div>
+          <table class="data-table" style="font-size:10.5px">
+            <thead><tr><th>Col</th><th>Field</th><th>What it tells you</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:700;color:var(--blue)">AY</td><td style="color:var(--slate)">Market Type</td><td style="color:var(--muted)">Sets zone radius thresholds (Dense / Mid / Suburban)</td></tr>
+              <tr><td style="font-weight:700;color:var(--blue)">AZ</td><td style="color:var(--slate)">Nearest Supply Distance</td><td style="color:var(--muted)">Miles to closest other MedSpa (Haversine)</td></tr>
+              <tr><td style="font-weight:700;color:var(--blue)">BA</td><td style="color:var(--slate)">Zone</td><td style="color:var(--muted)">Z1 – Z4 or Outside, derived from AZ + AY</td></tr>
+              <tr><td style="font-weight:700;color:var(--blue)">BB</td><td style="color:var(--slate)">Z1 All Supply</td><td style="color:var(--muted)">All MedSpas within Z1 radius</td></tr>
+              <tr><td style="font-weight:700;color:var(--blue)">BC</td><td style="color:var(--slate)">Z1 Target Neighbors</td><td style="color:var(--muted)">Target-only within Z1 radius</td></tr>
+              <tr><td style="font-weight:700;color:#F4B942">BD</td><td style="color:var(--slate)">PE Z1 Neighbors</td><td style="color:var(--muted)">PE-owned within Z1 radius</td></tr>
+              <tr><td style="font-weight:700;color:#F4B942">BE</td><td style="color:var(--slate)">PE-Weighted Index</td><td style="color:var(--muted)">BB + (0.5 × BD) — higher = more contested</td></tr>
+              <tr><td style="font-weight:700;color:var(--indigo)">BF</td><td style="color:var(--slate)">Cannibalization Risk</td><td style="color:var(--muted)">High / Med / Low / None — primary sort field</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Risk key — simplified, matches BF logic exactly -->
+        <div class="card" style="flex-shrink:0">
+          <div class="card-header">Cannibalization Risk (BF) <span style="float:right;font-size:9px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">service overlap not yet built — using neighbor counts as proxy</span></div>
+          <table class="data-table" style="font-size:10.5px">
+            <thead><tr><th style="width:55px">BF</th><th>BB (Z1 All Supply)</th><th style="color:#F4B942">BD (PE Z1)</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><span class="rbadge risk-high">High</span></td><td style="color:var(--slate)">≥ 3 Z1 total and high overlap pressure</td><td style="color:#C47A0F;font-weight:700">or ≥ 2 PE Z1</td><td style="color:var(--slate)">Pause · run patient overlap</td></tr>
+              <tr><td><span class="rbadge risk-med">Med</span></td><td style="color:var(--slate)">1–2 Z1 total and moderate overlap pressure</td><td style="color:#C47A0F;font-weight:700">or 1 PE Z1</td><td style="color:var(--slate)">Differentiation plan required</td></tr>
+              <tr><td><span class="rbadge risk-low">Low</span></td><td style="color:var(--slate)">0 Z1 total and low immediate pressure</td><td style="color:var(--green);font-weight:600">0 PE Z1</td><td style="color:var(--slate)">Clear for tuck-in or de novo</td></tr>
+              <tr><td><span class="rbadge risk-none">None</span></td><td style="color:var(--slate)">Z4 — no immediate supply present</td><td style="color:var(--green);font-weight:600">0 PE Z1</td><td style="color:var(--slate)">White space confirmed</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Map placeholder -->
+        <div class="card" style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--navy);border:1px dashed rgba(186,202,236,0.15)">
+          <div style="font-size:28px;opacity:0.15;margin-bottom:8px">🗺</div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)">Tableau Map</div>
+          <div style="font-size:9.5px;color:rgba(130,153,184,0.5);margin-top:4px;text-align:center;padding:0 20px">Points by Lat/Long · colored by Zone (BA) · filtered by CBSA City</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>STOC Advisory · MedSpa Market Intelligence · Confidential</span>
+    <span>Slide 3.1 · Radius Clustering v2</span>
   </div>
 </section>
 
@@ -1027,91 +1195,41 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
     </div>
   </div>
 
-  <!-- FILTER BAR — Slide 4: Market Quality & Maturity -->
   <div class="filter-bar">
-    <span class="filter-label">Filters</span>
-
-    <div class="filter-group">
-      <span class="filter-group-label">State / Region</span>
-      <select class="filter-select" id="fb4-state">
-        <option value="all">All states</option>
-        <optgroup label="Region">
-          <option value="r-south">South / SE</option>
-          <option value="r-west">West Coast</option>
-          <option value="r-ne">Northeast</option>
-          <option value="r-mw">Midwest</option>
-        </optgroup>
-        <optgroup label="Top States">
-          <option>California</option>
-          <option>Texas</option>
-          <option>Florida</option>
-          <option>Georgia</option>
-          <option>Colorado</option>
-          <option>Tennessee</option>
-          <option>Arizona</option>
-          <option>North Carolina</option>
-        </optgroup>
-      </select>
-    </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Tier</span>
-      <div class="filter-toggle-group" id="fb4-tier">
-        <button class="filter-toggle on" data-val="all">All</button>
-        <button class="filter-toggle" data-val="High">High</button>
-        <button class="filter-toggle" data-val="Med">Med</button>
+    <div class="filter-row">
+      <span class="filter-row-label">Context</span>
+      <div class="filter-item">
+        <span class="filter-item-label">State</span>
+        <select class="wide"><option>All States</option><option>Texas</option><option>California</option><option>Florida</option><option>Georgia</option><option>Colorado</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Tier</span>
+        <select class="narrow"><option>All Tiers</option><option>High</option><option>Med</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Ownership</span>
+        <select><option>Target Only</option><option>All Ownership</option></select>
       </div>
     </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Min. Reviews</span>
-      <select class="filter-select" id="fb4-reviews" style="min-width:90px">
-        <option value="0">Any</option>
-        <option value="10">10+</option>
-        <option value="50">50+</option>
-        <option value="100">100+</option>
-        <option value="250">250+</option>
-      </select>
-    </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Min. Rating</span>
-      <select class="filter-select" id="fb4-rating" style="min-width:80px">
-        <option value="0">Any</option>
-        <option value="3.5">3.5+</option>
-        <option value="4.0">4.0+</option>
-        <option value="4.5">4.5+</option>
-      </select>
-    </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Has MD</span>
-      <div class="filter-toggle-group" id="fb4-md">
-        <button class="filter-toggle on" data-val="all">Either</button>
-        <button class="filter-toggle" data-val="yes">Yes</button>
+    <div class="filter-row">
+      <span class="filter-row-label">Quality</span>
+      <div class="filter-item">
+        <span class="filter-item-label">Min. Reviews</span>
+        <select class="narrow"><option>Any</option><option>10+</option><option>50+</option><option>100+</option><option>250+</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Min. Rating</span>
+        <select class="narrow"><option>Any</option><option>3.5+</option><option>4.0+</option><option>4.5+</option></select>
+      </div>
+      <div class="filter-div"></div>
+      <div class="filter-item">
+        <span class="filter-item-label">Has Medical Director</span>
+        <select class="narrow"><option>Either</option><option>Yes</option><option>No</option></select>
       </div>
     </div>
-
-    <div class="filter-sep"></div>
-
-    <div class="filter-group">
-      <span class="filter-group-label">Ownership</span>
-      <div class="filter-toggle-group" id="fb4-ownership">
-        <button class="filter-toggle on" data-val="all">All</button>
-        <button class="filter-toggle" data-val="Target">Target</button>
-      </div>
-    </div>
-
-    <button class="filter-clear-btn" onclick="clearFilters('fb4')">Reset</button>
-    <span class="filter-tableau-note">Tableau: State, Tier, ReviewCount, AverageRating, Has Medical Director, Ownership → apply to sheet</span>
   </div>
 
   <div class="content" style="padding-top:8px">
@@ -1384,7 +1502,7 @@ body { font-family: var(--font); background: #1A2438; color: var(--navy); line-h
 /* ══════════════════════════════════════════════════
    SLIDE SWITCHING — 16:9 fixed panels, no scroll
 ══════════════════════════════════════════════════ */
-const ACTIVE_SLIDES = ['s1','s2','s10','s4','s5'];
+const ACTIVE_SLIDES = ['s1','s2','s10','s4','s4b','s5'];
 
 function showSlide(id) {
   document.querySelectorAll('.slide').forEach(s => s.classList.remove('active-slide'));
@@ -1440,7 +1558,8 @@ function renderHbars(containerId, rows) {
 
 /* ══════════════════════════════════════════════════
    SLIDE 1 — MARKET OVERVIEW
-   Region filter updates KPI tiles + top-10 table
+   Static KPI tiles + top-10 table (national / "all" view)
+   Filtering is Tableau-side — see filter spec strip above
 ══════════════════════════════════════════════════ */
 
 // Per-region KPI data: [total, cbsas, states, tier12pct]
@@ -1501,7 +1620,8 @@ updateSlide1('all');
 
 /* ══════════════════════════════════════════════════
    SLIDE 2 — BY STATE SUMMARY
-   Filters: Region (show/hide rows), Tier view, Min Opps
+   Static table — full national dataset shown by default
+   Filtering is Tableau-side — see filter spec strip above
 ══════════════════════════════════════════════════ */
 const stateRegions = {
   AL:'South/SE',AR:'South/SE',FL:'South/SE',GA:'South/SE',KY:'South/SE',
@@ -1569,7 +1689,8 @@ renderStateTable('all', 'all', 0);
 
 /* ══════════════════════════════════════════════════
    SLIDE 3 — RADIUS CLUSTERING
-   Zone filter shows/hides table rows by zone column
+   Static DFW example table — shown unfiltered by default
+   Filtering is Tableau-side — see filter spec strip above
 ══════════════════════════════════════════════════ */
 // peNN = PE-owned/platform-owned clinics within Zone 1 ring
 // These count 1.5× an independent neighbor in weighted risk calc
@@ -1698,83 +1819,11 @@ if(fbEl) fbEl.innerHTML = [
    FILTER BAR WIRING — all controls call real render fns
 ══════════════════════════════════════════════════ */
 
-// State for each slide's filters
-const S1 = { region:'all', tier:'all', ownership:'all' };
-const S2 = { region:'all', tier:'all', minOpps:0 };
-const S3 = { zone:'all', risk:'all' };
-
-// Toggle group — mutual exclusion + callback
-function wireToggles(groupId, state, key, callback) {
-  const group = document.getElementById(groupId);
-  if (!group) return;
-  group.addEventListener('click', e => {
-    const btn = e.target.closest('.filter-toggle');
-    if (!btn) return;
-    group.querySelectorAll('.filter-toggle').forEach(b => b.className = 'filter-toggle');
-    btn.classList.add('on');
-    state[key] = btn.dataset.val;
-    callback();
-  });
-}
-
-// Slide 1 filters
-wireToggles('fb1-region', S1, 'region', () => updateSlide1(S1.region));
-wireToggles('fb1-tier',   S1, 'tier',   () => {}); // KPI tiles don't have tier split
-
-// Slide 2 filters
-wireToggles('fb2-tier', S2, 'tier', () => renderStateTable(S2.region, S2.tier, S2.minOpps));
-const s2RegionSel = document.getElementById('fb2-region');
-if (s2RegionSel) s2RegionSel.addEventListener('change', () => {
-  S2.region = s2RegionSel.value;
-  renderStateTable(S2.region, S2.tier, S2.minOpps);
-});
-const s2MinSel = document.getElementById('fb2-minopps');
-if (s2MinSel) s2MinSel.addEventListener('change', () => {
-  S2.minOpps = parseInt(s2MinSel.value) || 0;
-  renderStateTable(S2.region, S2.tier, S2.minOpps);
-});
-
-// Slide 3 filters
-wireToggles('fb3-zone',      S3, 'zone', () => renderClusterTable(S3.zone, S3.risk));
-wireToggles('fb3-risk',      S3, 'risk', () => renderClusterTable(S3.zone, S3.risk));
-wireToggles('fb3-ownership', S3, 'ownership', () => {}); // ownership note only — data is already Target-only
-wireToggles('fb3-metrotype', S3, 'metrotype', () => {});
-
-// Slide 4 — all filters are Tableau-side; toggles update visual state only
-['fb4-tier','fb4-md','fb4-ownership'].forEach(id => {
-  const g = document.getElementById(id);
-  if (g) g.addEventListener('click', e => {
-    const btn = e.target.closest('.filter-toggle');
-    if (!btn) return;
-    g.querySelectorAll('.filter-toggle').forEach(b => b.className = 'filter-toggle');
-    btn.classList.add('on');
-  });
-});
-
-// Reset functions
-function clearFilters(prefix) {
-  document.querySelectorAll(`[id^="${prefix}-"]`).forEach(el => {
-    if (el.classList.contains('filter-toggle-group')) {
-      el.querySelectorAll('.filter-toggle').forEach((b,i) => {
-        b.className = 'filter-toggle' + (i === 0 ? ' on' : '');
-      });
-    } else if (el.tagName === 'SELECT') {
-      el.selectedIndex = 0;
-    }
-  });
-  if (prefix === 'fb1') { S1.region = 'all'; updateSlide1('all'); }
-  if (prefix === 'fb2') { S2.region = 'all'; S2.tier = 'all'; S2.minOpps = 0; renderStateTable('all','all',0); }
-  if (prefix === 'fb3') { S3.zone = 'all'; S3.risk = 'all'; renderClusterTable('all','all'); }
-}
-
-// CBSA required-field highlight
-const cbsaSelect = document.getElementById('fb3-cbsa');
-if (cbsaSelect) {
-  cbsaSelect.addEventListener('change', () => {
-    cbsaSelect.style.borderColor = cbsaSelect.value ? 'rgba(186,202,236,0.18)' : 'rgba(196,122,15,0.6)';
-  });
-  cbsaSelect.style.borderColor = 'rgba(196,122,15,0.6)';
-}
+/* ══════════════════════════════════════════════════
+   NOTE: Filter bars are WIREFRAME ANNOTATIONS only.
+   All filtering is implemented in Tableau.
+   No interactive filter JS in this file.
+══════════════════════════════════════════════════ */
 </script>
 </body>
 </html>
